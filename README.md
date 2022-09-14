@@ -29,8 +29,8 @@ default = {
 ```
 
 ## Command
-| Command            | desctiption          |
-| -------------      | -------------        |
-| SmoothCursorStart  | start smooth cursor  |
-| SmoothCursorStop   | stop smooth cursor   |
-| SmoothCursorToggle | toggle smooth cursor |
+| Command             | desctiption          |
+| -------------       | -------------        |
+| :SmoothCursorStart  | start smooth cursor  |
+| :SmoothCursorStop   | stop smooth cursor   |
+| :SmoothCursorToggle | toggle smooth cursor |
