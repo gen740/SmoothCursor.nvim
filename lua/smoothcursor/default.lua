@@ -1,6 +1,9 @@
 return {
     default_args = {
-        cursor = "",
+        cursor = "",
+        cursorID = 23874823,
         intervals = 35,
+        timeout = 3000,
+        speed = 25
     }
 }
