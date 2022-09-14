@@ -1,0 +1,24 @@
+# Mac
+.DS_Store
+
+# Executables
+*.a
+*.o
+
+# Build_directories
+cmake_build
+build*
+.build
+
+# python
+typings
+__pycache__
+.python-version
+poetry.lock
+
+# nodejs
+node_modules
+
+# Rust
+target
+
