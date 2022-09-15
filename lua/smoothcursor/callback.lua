@@ -16,6 +16,18 @@ end
 local uv = vim.loop
 local cursor_timer = uv.new_timer()
 
+local function replace_sign(position)
+    local file = vim.fn.expand("%:p")
+    vim.cmd(string.format("silent! sign unplace %d file=%s",
+        config.default_args.cursorID,
+        file))
+    vim.cmd(string.format("silent! sign place %d line=%d name=smoothcursor priority=%d file=%s",
+        config.default_args.cursorID,
+        position,
+        config.default_args.priority,
+        file))
+end
+
 local function smoothcursor()
     -- 前のカーソルの位置が存在しないなら、現在の位置にする
     if vim.b.cursor_row_prev == nil then
@@ -38,14 +50,7 @@ local function smoothcursor()
                         and math.ceil(vim.b.diff / 100 * config.default_args.speed)
                         or math.floor(vim.b.diff / 100 * config.default_args.speed)
                     )
-                vim.cmd(string.format("silent! sign unplace %d file=%s",
-                    config.default_args.cursorID,
-                    vim.fn.expand("%:p")))
-                vim.cmd(string.format("silent! sign place %d line=%d name=smoothcursor priority=%d file=%s",
-                    config.default_args.cursorID,
-                    vim.b.cursor_row_prev,
-                    config.default_args.priority,
-                    vim.fn.expand("%:p")))
+                replace_sign(vim.b.cursor_row_prev)
                 counter = counter + 1
                 if counter > (config.default_args.timeout / config.default_args.intervals) or vim.b.diff == 0 then
                     cursor_timer:stop()
@@ -54,12 +59,7 @@ local function smoothcursor()
         )
     else
         vim.b.cursor_row_prev = vim.b.cursor_row_now
-        vim.cmd(string.format("silent! sign unplace %d file=%s", config.default_args.cursorID, vim.fn.expand("%:p")))
-        vim.cmd(string.format("silent! sign place %d line=%d name=smoothcursor priority=%d file=%s",
-            config.default_args.cursorID,
-            vim.b.cursor_row_now,
-            config.default_args.priority,
-            vim.fn.expand("%:p")))
+        replace_sign(vim.b.cursor_row_prev)
     end
 end
 

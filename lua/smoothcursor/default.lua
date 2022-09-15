@@ -7,6 +7,7 @@ return {
         speed = 25,
         autostart = true,
         texthl = "SmoothCursor",
+        linehl = nil,
         priority = 10,
     }
 }

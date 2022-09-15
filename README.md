@@ -25,6 +25,7 @@ default = {
     speed = 25,               -- max is 100 to stick to your current position
     autostart = true,
     texthl = "SmoothCursor",  -- highlight group, default is { bg = nil, fg = "#FFD400" }
+    linehl = nil,             -- highlight sub-cursor line like 'cursorline', "CursorLine" recommended
     priority = 10,            -- set marker priority
 }
 ```
