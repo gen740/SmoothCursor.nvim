@@ -1,18 +1,5 @@
 local config = require("smoothcursor.default")
 
-local function dump(o)
-    if type(o) == 'table' then
-        local s = '{ '
-        for k, v in pairs(o) do
-            if type(k) ~= 'number' then k = '"' .. k .. '"' end
-            s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
-        end
-        return s .. '} '
-    else
-        return tostring(o)
-    end
-end
-
 local uv = vim.loop
 local cursor_timer = uv.new_timer()
 
@@ -63,11 +50,6 @@ local function smoothcursor()
     end
 end
 
-local function test()
-    print(dump(config.default_args))
-end
-
 return {
-    smoothcursor_callback = smoothcursor,
-    debug_func = test
+    smoothcursor_callback = smoothcursor
 }
