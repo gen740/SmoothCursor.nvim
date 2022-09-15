@@ -19,18 +19,19 @@ use { 'gen740/SmoothCursor.nvim',
 - default value
 ```lua
 default = {
+    autostart = true,
     cursor = "",             -- cursor shape
     intervals = 35,           -- tick interval
-    timeout = 3000,
-    speed = 25,               -- max is 100 to stick to your current position
-    autostart = true,
-    texthl = "SmoothCursor",  -- highlight group, default is { bg = nil, fg = "#FFD400" }
     linehl = nil,             -- highlight sub-cursor line like 'cursorline', "CursorLine" recommended
     priority = 10,            -- set marker priority
+    speed = 25,               -- max is 100 to stick to your current position
+    texthl = "SmoothCursor",  -- highlight group, default is { bg = nil, fg = "#FFD400" }
+    threshold = 3,
+    timeout = 3000,
 }
 ```
 
-## Command
+## Commands
 | Command             | desctiption          |
 | -------------       | -------------        |
 | :SmoothCursorStart  | start smooth cursor  |

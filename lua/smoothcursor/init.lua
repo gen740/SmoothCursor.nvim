@@ -17,6 +17,11 @@ local function setup(args)
             config.default_args.texthl
         ))
     end
+    if config.default_args.type == "exp" then
+        config.callback = require('smoothcursor.callback').sc_callback_exp
+    else
+        config.callback = require('smoothcursor.callback').sc_callback_classic
+    end
     if config.default_args.autostart then
         require('smoothcursor.utils').smoothcursor_start()
     end

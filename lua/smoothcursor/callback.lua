@@ -50,6 +50,45 @@ local function smoothcursor()
     end
 end
 
+local function sc_exp()
+    -- 前のカーソルの位置が存在しないなら、現在の位置にする
+    if vim.b.cursor_row_prev == nil then
+        vim.b.cursor_row_prev = vim.fn.getcurpos(vim.fn.win_getid())[2]
+    end
+    vim.b.cursor_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
+    vim.b.diff = vim.b.cursor_row_prev - vim.b.cursor_row_now
+    if math.abs(vim.b.diff) > 1 then -- たくさんジャンプしたら
+        -- 動いているタイマーがあればストップする
+        cursor_timer:stop()
+        local counter = 1
+        -- タイマーをスタートする
+        uv.timer_start(cursor_timer, 0, config.default_args.intervals, vim.schedule_wrap(
+            function()
+                vim.b.cursor_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
+                vim.b.diff = vim.b.cursor_row_prev - vim.b.cursor_row_now
+                vim.b.cursor_row_prev = vim.b.cursor_row_prev
+                    - vim.b.diff / 100 * config.default_args.speed
+                if math.abs(vim.b.diff) < 0.5 then
+                    vim.b.cursor_row_prev = vim.b.cursor_row_now
+                end
+                replace_sign(
+                    (vim.b.diff > 0)
+                    and math.ceil(vim.b.cursor_row_prev)
+                    or math.floor(vim.b.cursor_row_prev)
+                )
+                counter = counter + 1
+                if counter > (config.default_args.timeout / config.default_args.intervals) or vim.b.diff == 0 then
+                    cursor_timer:stop()
+                end
+            end)
+        )
+    else
+        vim.b.cursor_row_prev = vim.b.cursor_row_now
+        replace_sign(vim.b.cursor_row_prev)
+    end
+end
+
 return {
-    smoothcursor_callback = smoothcursor
+    sc_callback_classic = smoothcursor,
+    sc_callback_exp = sc_exp,
 }

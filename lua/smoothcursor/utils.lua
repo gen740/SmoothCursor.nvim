@@ -1,17 +1,18 @@
 local sc = {}
 local smoothcursor_started = false
 local config = require("smoothcursor.default")
-local callback = require("smoothcursor.callback")
+local sc_callback = require("smoothcursor.callback").sc_callback_classic
 
 sc.smoothcursor_start = function()
     if smoothcursor_started then
         return
     end
-    callback.smoothcursor_callback()
+    sc_callback()
     vim.api.nvim_create_augroup("SmoothCursor", { clear = true })
     vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
         group = "SmoothCursor",
-        callback = require("smoothcursor.callback").smoothcursor_callback
+        callback = sc_callback
+
     })
     smoothcursor_started = true
 end
@@ -28,6 +29,5 @@ end
 sc.smoothcursor_toggle = function()
     return smoothcursor_started and sc.smoothcursor_stop() or sc.smoothcursor_start()
 end
-
 
 return sc
