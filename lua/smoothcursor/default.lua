@@ -6,6 +6,7 @@ return {
         timeout = 3000,
         speed = 25,
         autostart = true,
-        texthl = "SmoothCursor"
+        texthl = "SmoothCursor",
+        priority = 10,
     }
 }

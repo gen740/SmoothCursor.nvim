@@ -41,9 +41,10 @@ local function smoothcursor()
                 vim.cmd(string.format("silent! sign unplace %d file=%s",
                     config.default_args.cursorID,
                     vim.fn.expand("%:p")))
-                vim.cmd(string.format("silent! sign place %d line=%d name=smoothcursor file=%s",
+                vim.cmd(string.format("silent! sign place %d line=%d name=smoothcursor priority=%d file=%s",
                     config.default_args.cursorID,
                     vim.b.cursor_row_prev,
+                    config.default_args.priority,
                     vim.fn.expand("%:p")))
                 counter = counter + 1
                 if counter > (config.default_args.timeout / config.default_args.intervals) or vim.b.diff == 0 then
@@ -54,8 +55,11 @@ local function smoothcursor()
     else
         vim.b.cursor_row_prev = vim.b.cursor_row_now
         vim.cmd(string.format("silent! sign unplace %d file=%s", config.default_args.cursorID, vim.fn.expand("%:p")))
-        vim.cmd(string.format("silent! sign place %d line=%d name=smoothcursor file=%s",
-            config.default_args.cursorID, vim.b.cursor_row_now, vim.fn.expand("%:p")))
+        vim.cmd(string.format("silent! sign place %d line=%d name=smoothcursor priority=%d file=%s",
+            config.default_args.cursorID,
+            vim.b.cursor_row_now,
+            config.default_args.priority,
+            vim.fn.expand("%:p")))
     end
 end
 
