@@ -6,10 +6,11 @@ Author: Gen Fujimoto
 ===============================================================================
 FUNCTIONS                                                   *smoothcursor-functions*
 
-smoothcursor.setup({opts})                                       *smoothcursor-setup()*
+smoothcursor.setup({opts})                                      *smoothcursor-setup()*
     Overwrites the default options with the options in the table `opts`,
 
     Example with all the default options: >
+
         require('smoothcursor').setup({
             autostart = true,
             cursor = "",             -- cursor shape (need nerd font)
@@ -37,9 +38,20 @@ smoothcursor.setup({opts})                                       *smoothcursor-s
             timeout = 3000,
         })
 
+smoothcursor.utils.with_smoothcursor(func, args...)                        *smoothcursor-utils-with_smoothcursor*
+    Call func(args...) with smoothcursor. Func will be some move command. (like
+    `vim.cmd("nomrmal n")`)
+
+    Example:
+        SmoothCursor when press 'n'
+
+        vim.keymap.set('n', 'n', function()
+            require("smoothcursor.utils").with_smoothcursor(pcall, vim.cmd, 'normal! n')
+        end
+            , { noremap = true, silent = true })
 
 ===============================================================================
-COMMANDS                                                     *smoothcursor-commands*
+COMMANDS                                                    *smoothcursor-commands*
 
 |SmoothCursorStart|
     Start Smooth Cursor

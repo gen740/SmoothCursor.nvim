@@ -42,4 +42,11 @@ sc.smoothcursor_delete_signs = function()
     require("smoothcursor.callback").unplace_signs()
 end
 
+sc.with_smoothcursor = function(func, ...)
+    vim.b.cursor_row_prev = vim.fn.getcurpos(vim.fn.win_getid())[2]
+    require("smoothcursor.callback").normalize_buffer(vim.b.cursor_row_prev)
+    func(...)
+    require("smoothcursor.callback").sc_callback()
+end
+
 return sc

@@ -34,6 +34,12 @@ local function unplace_signs()
         file))
 end
 
+local function normalize_buffer(value)
+    for _ = 1, #buffer, 1 do
+        buffer:push_front(value)
+    end
+end
+
 ---@param position number
 ---@param name string
 local function place_sign(position, name)
@@ -164,4 +170,5 @@ return {
     sc_callback_exp = sc_exp,
     sc_callback = nil,
     unplace_signs = unplace_signs,
+    normalize_buffer = normalize_buffer,
 }
