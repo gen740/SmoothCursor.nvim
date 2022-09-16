@@ -23,7 +23,7 @@ default = {
     cursor = "",             -- cursor shape
     intervals = 35,           -- tick interval
     linehl = nil,             -- highlight sub-cursor line like 'cursorline', "CursorLine" recommended
-    type = "default"          -- "default" or "exp"
+    type = "default"          -- define cursor movement calculate function, "default" or "exp" (exponential).
     fancy = {
         enable = false,       -- enable fancy mode
         head = { cursor = "▷", texthl = "SmoothCursor", linehl = nil },
@@ -45,6 +45,9 @@ default = {
     timeout = 3000,
 }
 ```
+
+### funcy mode
+![FancyMode](https://user-images.githubusercontent.com/54583542/190571662-1d4d0398-8b2d-4237-be5d-2ae7183b839c.mov)
 
 ## Commands
 | Command             | desctiption          |
