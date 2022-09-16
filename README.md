@@ -21,7 +21,7 @@ use { 'gen740/SmoothCursor.nvim',
 ```lua
 default = {
     autostart = true,
-    cursor = "",             -- cursor shape
+    cursor = "",             -- cursor shape (need nerd font)
     intervals = 35,           -- tick interval
     linehl = nil,             -- highlight sub-cursor line like 'cursorline', "CursorLine" recommended
     type = "default"          -- define cursor movement calculate function, "default" or "exp" (exponential).
