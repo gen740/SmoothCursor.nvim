@@ -7,7 +7,7 @@ end, {})
 vim.api.nvim_create_user_command('SmoothCursorDeleteSigns', require("smoothcursor.utils").smoothcursor_delete_signs, {})
 
 vim.api.nvim_create_namespace('SmoothCursor')
-vim.api.nvim_set_hl(0, 'SmoothCursor', { bg = nil, fg = "#FFD400" })
+vim.api.nvim_set_hl(0, 'SmoothCursor', { bg = nil, fg = "#FFD400", default = true })
 
 vim.api.nvim_create_namespace('SmoothCursorWhite')
 vim.api.nvim_create_namespace('SmoothCursorRed')
