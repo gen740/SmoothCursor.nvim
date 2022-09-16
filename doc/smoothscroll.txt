@@ -2,11 +2,18 @@
 
 Author: Gen Fujimoto
 
+================================================================================
+INTRODUCTION                                                    *SmoothCursor.nvim*
+
+    SmoothCursor.nvim is a plugin for show colorful sub-cursor in neovim.
+
+    It is easy to lose current cursor position, when using commands like `%`
+    or `<c-f>`,`<c-b>`. This plugin add sub-cursor to show scroll direction!!
 
 ===============================================================================
-FUNCTIONS                                                   *smoothcursor-functions*
+FUNCTIONS                                                       *smoothcursor-functions*
 
-smoothcursor.setup({opts})                                      *smoothcursor-setup()*
+setup({opts})                                                   *smoothcursor-setup()*
     Overwrites the default options with the options in the table `opts`,
 
     Example with all the default options:
@@ -38,7 +45,7 @@ smoothcursor.setup({opts})                                      *smoothcursor-se
             timeout = 3000,
         })
 
-smoothcursor.utils.with_smoothcursor(func, args...)                        *smoothcursor-utils-with_smoothcursor*
+utils.with_smoothcursor(func, args...)                      *smoothcursor-utils-with_smoothcursor*
     Call func(args...) with smoothcursor. Func will be some move command. (like
     `vim.cmd("nomrmal n")` )
 
@@ -51,6 +58,9 @@ smoothcursor.utils.with_smoothcursor(func, args...)                        *smoo
             end,
             { noremap = true, silent = true }
         )
+
+utils.smoothcursor_status()
+    Get SmoothCursor Status (boolean).
 
 ===============================================================================
 COMMANDS                                                    *smoothcursor-commands*
