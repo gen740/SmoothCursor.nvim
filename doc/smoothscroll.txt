@@ -9,7 +9,7 @@ FUNCTIONS                                                   *smoothcursor-functi
 smoothcursor.setup({opts})                                      *smoothcursor-setup()*
     Overwrites the default options with the options in the table `opts`,
 
-    Example with all the default options: >
+    Example with all the default options:
 
         require('smoothcursor').setup({
             autostart = true,
@@ -40,15 +40,17 @@ smoothcursor.setup({opts})                                      *smoothcursor-se
 
 smoothcursor.utils.with_smoothcursor(func, args...)                        *smoothcursor-utils-with_smoothcursor*
     Call func(args...) with smoothcursor. Func will be some move command. (like
-    `vim.cmd("nomrmal n")`)
+    `vim.cmd("nomrmal n")` )
 
     Example:
         SmoothCursor when press 'n'
 
-        vim.keymap.set('n', 'n', function()
-            require("smoothcursor.utils").with_smoothcursor(pcall, vim.cmd, 'normal! n')
-        end
-            , { noremap = true, silent = true })
+        vim.keymap.set("n", "n",
+            function()
+                require("smoothcursor.utils").with_smoothcursor(pcall, vim.cmd, "normal! n")
+            end,
+            { noremap = true, silent = true }
+        )
 
 ===============================================================================
 COMMANDS                                                    *smoothcursor-commands*
