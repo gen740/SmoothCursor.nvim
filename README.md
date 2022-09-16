@@ -7,6 +7,7 @@ It is easy to lose current cursor position, when using commands like `%` or `<c-
 This plugin add sub-cursor to show scroll direction!!
 
 ## Installtion
+- Require `neovim >= 0.7.0`
 - packer
 ```lua
 use { 'gen740/SmoothCursor.nvim',
