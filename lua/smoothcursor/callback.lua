@@ -49,6 +49,10 @@ local function place_sign(position, name)
     end
 end
 
+local function fancy_head_exists()
+    return config.default_args.fancy.head ~= nil and config.default_args.fancy.head.cursor ~= nil
+end
+
 local function sc_default()
     -- 前のカーソルの位置が存在しないなら、現在の位置にする
     if vim.b.cursor_row_prev == nil then
@@ -81,12 +85,15 @@ local function sc_default()
                 if config.default_args.fancy.tail ~= nil and config.default_args.fancy.tail.cursor ~= nil then
                     place_sign(buffer[#buffer], "smoothcursor_tail")
                 end
-                if config.default_args.fancy.head ~= nil and config.default_args.fancy.head.cursor ~= nil then
+                if fancy_head_exists() then
                     place_sign(buffer[1], "smoothcursor")
                 end
                 counter = counter + 1
                 if counter > (config.default_args.timeout / config.default_args.intervals) or
                     (vim.b.diff == 0 and buffer[1] == buffer[#buffer]) then
+                    if not fancy_head_exists() then
+                        unplace_sign()
+                    end
                     cursor_timer:stop()
                 end
             end)
@@ -130,12 +137,15 @@ local function sc_exp()
                 if config.default_args.fancy.tail ~= nil and config.default_args.fancy.tail.cursor ~= nil then
                     place_sign(buffer[#buffer], "smoothcursor_tail")
                 end
-                if config.default_args.fancy.head ~= nil and config.default_args.fancy.head.cursor ~= nil then
+                if fancy_head_exists() then
                     place_sign(buffer[1], "smoothcursor")
                 end
                 counter = counter + 1
                 if counter > (config.default_args.timeout / config.default_args.intervals) or
                     (vim.b.diff == 0 and buffer[1] == buffer[#buffer]) then
+                    if not fancy_head_exists() then
+                        unplace_sign()
+                    end
                     cursor_timer:stop()
                 end
             end)
