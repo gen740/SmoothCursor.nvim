@@ -5,40 +5,40 @@ local function define_signs(args)
     if args.fancy.enable then
         if args.fancy.head ~= nil and args.fancy.head.cursor ~= nil then
             if args.fancy.head.linehl ~= nil then
-                vim.cmd.sign(string.format("define smoothcursor text=%s texthl=%s linehl=%s",
+                vim.cmd(string.format("sign define smoothcursor text=%s texthl=%s linehl=%s",
                     args.fancy.head.cursor,
                     args.fancy.head.texthl,
                     args.fancy.head.linehl
                 ))
             else
-                vim.cmd.sign(string.format("define smoothcursor text=%s texthl=%s",
+                vim.cmd(string.format("sign define smoothcursor text=%s texthl=%s",
                     args.fancy.head.cursor,
                     args.fancy.head.texthl
                 ))
             end
         end
         for idx, value in ipairs(args.fancy.body) do
-            vim.cmd.sign(string.format("define smoothcursor_%s text=%s texthl=%s",
+            vim.cmd(string.format("sign define smoothcursor_%s text=%s texthl=%s",
                 string.format("body%s", idx),
                 value.cursor,
                 value.texthl
             ))
         end
         if args.fancy.tail ~= nil and args.fancy.tail.cursor ~= nil then
-            vim.cmd.sign(string.format("define smoothcursor_tail text=%s texthl=%s",
+            vim.cmd(string.format("sign define smoothcursor_tail text=%s texthl=%s",
                 args.fancy.tail.cursor,
                 args.fancy.tail.texthl
             ))
         end
     else
         if args.linehl ~= nil then
-            vim.cmd.sign(string.format("define smoothcursor text=%s texthl=%s linehl=%s",
+            vim.cmd(string.format("sign define smoothcursor text=%s texthl=%s linehl=%s",
                 args.cursor,
                 args.texthl,
                 args.linehl
             ))
         else
-            vim.cmd.sign(string.format("define smoothcursor text=%s texthl=%s",
+            vim.cmd(string.format("sign define smoothcursor text=%s texthl=%s",
                 args.cursor,
                 args.texthl
             ))
