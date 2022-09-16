@@ -1,14 +1,17 @@
 # Smooth Cursor
+
 https://user-images.githubusercontent.com/54583542/190581351-2e86f140-73a0-4523-80e1-f5c64d67be85.mp4
 
-
 ## What is this
+
 It is easy to lose current cursor position, when using commands like `%` or `<c-f>`,`<c-b>`.
 This plugin add sub-cursor to show scroll direction!!
 
-## Installtion
+## Install
+
 - Require `neovim >= 0.7.0`
-- packer
+- Packer
+
 ```lua
 use { 'gen740/SmoothCursor.nvim',
   config = function()
@@ -17,15 +20,15 @@ use { 'gen740/SmoothCursor.nvim',
 }
 ```
 
-## config
-- default value
+## Config
+
 ```lua
 default = {
     autostart = true,
     cursor = "",             -- cursor shape (need nerd font)
     intervals = 35,           -- tick interval
     linehl = nil,             -- highlight sub-cursor line like 'cursorline', "CursorLine" recommended
-    type = "default"          -- define cursor movement calculate function, "default" or "exp" (exponential).
+    type = "default",         -- define cursor movement calculate function, "default" or "exp" (exponential).
     fancy = {
         enable = false,       -- enable fancy mode
         head = { cursor = "▷", texthl = "SmoothCursor", linehl = nil },
@@ -48,13 +51,14 @@ default = {
 }
 ```
 
-### funcy mode
+### Fancy mode
+
 https://user-images.githubusercontent.com/54583542/190581464-0b72c057-4644-406a-89e9-424e29d73257.mp4
 
-
 ## Commands
+
 | Command             | desctiption               |
-| -------------       | -------------             |
+| ------------------- | ------------------------- |
 | :SmoothCursorStart  | start smooth cursor       |
 | :SmoothCursorStop   | stop smooth cursor        |
 | :SmoothCursorStatus | show smooth cursor status |
