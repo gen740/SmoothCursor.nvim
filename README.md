@@ -1,5 +1,5 @@
 # Smooth Cursor
-![Image](https://user-images.githubusercontent.com/54583542/190307057-780cda84-de7f-41e7-9cdf-9efe93f7f0c7.mov)
+![Image](https://user-images.githubusercontent.com/54583542/190580106-ecaf7662-fa2f-48a6-8758-625c86a9a193.mp4)
 
 ## What is this
 It is easy to lose current cursor position, when using commands like `%` or `<c-f>`,`<c-b>`.
@@ -47,7 +47,7 @@ default = {
 ```
 
 ### funcy mode
-![FancyMode](https://user-images.githubusercontent.com/54583542/190571662-1d4d0398-8b2d-4237-be5d-2ae7183b839c.mov)
+![FancyMode](https://user-images.githubusercontent.com/54583542/190580351-4af7b6d3-ca6d-466c-a6c7-bf6b027ab520.mp4)
 
 ## Commands
 | Command             | desctiption          |
