@@ -18,7 +18,7 @@ return {
         cursorID = 23874823,
         intervals = 35,
         timeout = 3000,
-        type = "classic",
+        type = "default",
         threshold = 3,
         speed = 25,
         autostart = true,

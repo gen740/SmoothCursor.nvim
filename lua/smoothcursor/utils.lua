@@ -1,7 +1,7 @@
 local sc = {}
 local smoothcursor_started = false
 local config = require("smoothcursor.default")
-local sc_callback = require("smoothcursor.callback").sc_callback_classic
+local sc_callback = require("smoothcursor.callback").sc_callback
 
 sc.smoothcursor_start = function()
     if smoothcursor_started then

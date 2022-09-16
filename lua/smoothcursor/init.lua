@@ -63,10 +63,15 @@ local function setup(args)
     if default_args.type == "exp" then
         config.callback = require('smoothcursor.callback').sc_callback_exp
     else
-        config.callback = require('smoothcursor.callback').sc_callback_classic
+        config.callback = require('smoothcursor.callback').sc_callback_default
     end
 
     require("smoothcursor.callback").init()
+    if default_args.type == "default" then
+        require("smoothcursor.callback").sc_callback = require("smoothcursor.callback").sc_callback_default
+    elseif default_args.type == "exp" then
+        require("smoothcursor.callback").sc_callback = require("smoothcursor.callback").sc_callback_exp
+    end
     if default_args.autostart then
         require('smoothcursor.utils').smoothcursor_start()
     end

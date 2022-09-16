@@ -29,11 +29,9 @@ end
 
 local function unplace_sign()
     local file = vim.fn.expand("%:p")
-    for _ = 1, math.abs(buffer[1] - buffer[#buffer]) + 10, 1 do
-        vim.cmd(string.format("silent! sign unplace %d file=%s",
-            config.default_args.cursorID,
-            file))
-    end
+    vim.cmd(string.format("silent! sign unplace %d group=* file=%s",
+        config.default_args.cursorID,
+        file))
 end
 
 ---@param position number
@@ -41,19 +39,17 @@ end
 local function place_sign(position, name)
     local file = vim.fn.expand("%:p")
     if name ~= nil then
-        vim.cmd(string.format("silent! sign place %d line=%d name=%s priority=%d file=%s",
+        vim.cmd(string.format("silent! sign place %d line=%d name=%s group=%s priority=%d file=%s",
             config.default_args.cursorID,
             position,
             name,
+            "SmoothCursor",
             config.default_args.priority,
             file))
     end
 end
 
--- local function fancy_place()
--- end
-
-local function smoothcursor()
+local function sc_default()
     -- 前のカーソルの位置が存在しないなら、現在の位置にする
     if vim.b.cursor_row_prev == nil then
         vim.b.cursor_row_prev = vim.fn.getcurpos(vim.fn.win_getid())[2]
@@ -152,6 +148,7 @@ end
 
 return {
     init = init,
-    sc_callback_classic = smoothcursor,
+    sc_callback_default = sc_default,
     sc_callback_exp = sc_exp,
+    sc_callback = nil,
 }

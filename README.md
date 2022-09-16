@@ -23,6 +23,7 @@ default = {
     cursor = "",             -- cursor shape
     intervals = 35,           -- tick interval
     linehl = nil,             -- highlight sub-cursor line like 'cursorline', "CursorLine" recommended
+    type = "default"          -- "default" or "exp"
     fancy = {
         enable = false,       -- enable fancy mode
         head = { cursor = "▷", texthl = "SmoothCursor", linehl = nil },
