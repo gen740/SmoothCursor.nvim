@@ -30,4 +30,8 @@ sc.smoothcursor_toggle = function()
     return smoothcursor_started and sc.smoothcursor_stop() or sc.smoothcursor_start()
 end
 
+sc.smoothcursor_status = function()
+    return smoothcursor_started
+end
+
 return sc

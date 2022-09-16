@@ -53,8 +53,9 @@ https://user-images.githubusercontent.com/54583542/190581464-0b72c057-4644-406a-
 
 
 ## Commands
-| Command             | desctiption          |
-| -------------       | -------------        |
-| :SmoothCursorStart  | start smooth cursor  |
-| :SmoothCursorStop   | stop smooth cursor   |
-| :SmoothCursorToggle | toggle smooth cursor |
+| Command             | desctiption               |
+| -------------       | -------------             |
+| :SmoothCursorStart  | start smooth cursor       |
+| :SmoothCursorStop   | stop smooth cursor        |
+| :SmoothCursorStatus | show smooth cursor status |
+| :SmoothCursorToggle | toggle smooth cursor      |
