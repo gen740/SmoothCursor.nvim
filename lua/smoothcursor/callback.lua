@@ -93,6 +93,7 @@ local function sc_default()
         )
     else
         vim.b.cursor_row_prev = vim.b.cursor_row_now
+        buffer:push_front(vim.b.cursor_row_prev)
         unplace_sign()
         place_sign(vim.b.cursor_row_prev, "smoothcursor")
     end
@@ -141,6 +142,7 @@ local function sc_exp()
         )
     else
         vim.b.cursor_row_prev = vim.b.cursor_row_now
+        buffer:push_front(vim.b.cursor_row_prev)
         unplace_sign()
         place_sign(vim.b.cursor_row_prev, "smoothcursor")
     end
