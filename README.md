@@ -57,7 +57,7 @@ https://user-images.githubusercontent.com/54583542/190581464-0b72c057-4644-406a-
 
 ## Commands
 
-| Command             | desctiption               |
+| Command             | Description               |
 | ------------------- | ------------------------- |
 | :SmoothCursorStart  | start smooth cursor       |
 | :SmoothCursorStop   | stop smooth cursor        |
