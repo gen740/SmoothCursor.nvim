@@ -23,10 +23,15 @@ sc.smoothcursor_stop = function()
     vim.b.cursor_row_prev = nil
     require("smoothcursor.callback").unplace_signs()
     vim.api.nvim_del_augroup_by_name("SmoothCursor")
+    smoothcursor_started = false
 end
 
 sc.smoothcursor_toggle = function()
-    return smoothcursor_started and sc.smoothcursor_stop() or sc.smoothcursor_start()
+    if smoothcursor_started then
+        sc.smoothcursor_stop()
+    else
+        sc.smoothcursor_start()
+    end
 end
 
 sc.smoothcursor_status = function()
