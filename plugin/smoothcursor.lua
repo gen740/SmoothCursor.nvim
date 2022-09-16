@@ -4,3 +4,21 @@ vim.api.nvim_create_user_command('SmoothCursorToggle', require("smoothcursor.uti
 
 vim.api.nvim_create_namespace('SmoothCursor')
 vim.api.nvim_set_hl(0, 'SmoothCursor', { bg = nil, fg = "#FFD400" })
+
+vim.api.nvim_create_namespace('SmoothCursorWhite')
+vim.api.nvim_create_namespace('SmoothCursorRed')
+vim.api.nvim_create_namespace('SmoothCursorOrange')
+vim.api.nvim_create_namespace('SmoothCursorYellow')
+vim.api.nvim_create_namespace('SmoothCursorGreen')
+vim.api.nvim_create_namespace('SmoothCursorAqua')
+vim.api.nvim_create_namespace('SmoothCursorBlue')
+vim.api.nvim_create_namespace('SmoothCursorPurple')
+
+vim.api.nvim_set_hl(0, 'SmoothCursorRed', { bg = nil, fg = '#FFFFFF' })
+vim.api.nvim_set_hl(0, 'SmoothCursorRed', { bg = nil, fg = '#FF0000' })
+vim.api.nvim_set_hl(0, 'SmoothCursorOrange', { bg = nil, fg = '#FFA500' })
+vim.api.nvim_set_hl(0, 'SmoothCursorYellow', { bg = nil, fg = '#FFFF00' })
+vim.api.nvim_set_hl(0, 'SmoothCursorGreen', { bg = nil, fg = '#008000' })
+vim.api.nvim_set_hl(0, 'SmoothCursorAqua', { bg = nil, fg = '#00FFFF' })
+vim.api.nvim_set_hl(0, 'SmoothCursorBlue', { bg = nil, fg = '#0000FF' })
+vim.api.nvim_set_hl(0, 'SmoothCursorPurple', { bg = nil, fg = '#800080' })

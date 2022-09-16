@@ -1,28 +1,73 @@
 local config = require('smoothcursor.default')
+local default_args = config.default_args
+
+local function define_signs(args)
+    if args.fancy.enable then
+        if args.fancy.head ~= nil and args.fancy.head.cursor ~= nil then
+            if args.fancy.head.linehl ~= nil then
+                vim.cmd.sign(string.format("define smoothcursor text=%s texthl=%s linehl=%s",
+                    args.fancy.head.cursor,
+                    args.fancy.head.texthl,
+                    args.fancy.head.linehl
+                ))
+            else
+                vim.cmd.sign(string.format("define smoothcursor text=%s texthl=%s",
+                    args.fancy.head.cursor,
+                    args.fancy.head.texthl
+                ))
+            end
+        end
+        for idx, value in ipairs(args.fancy.body) do
+            vim.cmd.sign(string.format("define smoothcursor_%s text=%s texthl=%s",
+                string.format("body%s", idx),
+                value.cursor,
+                value.texthl
+            ))
+        end
+        if args.fancy.tail ~= nil and args.fancy.tail.cursor ~= nil then
+            vim.cmd.sign(string.format("define smoothcursor_tail text=%s texthl=%s",
+                args.fancy.tail.cursor,
+                args.fancy.tail.texthl
+            ))
+        end
+    else
+        if args.linehl ~= nil then
+            vim.cmd.sign(string.format("define smoothcursor text=%s texthl=%s linehl=%s",
+                args.cursor,
+                args.texthl,
+                args.linehl
+            ))
+        else
+            vim.cmd.sign(string.format("define smoothcursor text=%s texthl=%s",
+                args.cursor,
+                args.texthl
+            ))
+        end
+    end
+end
 
 local function setup(args)
     args = args == nil and {} or args
     for key, value in pairs(args) do
-        config.default_args[key] = value
+        if type(value) == "table" then
+            for key2, value2 in pairs(value) do
+                default_args[key][key2] = value2
+            end
+        else
+            default_args[key] = value
+        end
     end
-    if config.default_args.linehl ~= nil then
-        vim.cmd.sign(string.format("define smoothcursor text=%s texthl=%s linehl=%s",
-            config.default_args.cursor,
-            config.default_args.texthl,
-            config.default_args.linehl
-        ))
-    else
-        vim.cmd.sign(string.format("define smoothcursor text=%s texthl=%s",
-            config.default_args.cursor,
-            config.default_args.texthl
-        ))
-    end
-    if config.default_args.type == "exp" then
+
+    define_signs(default_args)
+
+    if default_args.type == "exp" then
         config.callback = require('smoothcursor.callback').sc_callback_exp
     else
         config.callback = require('smoothcursor.callback').sc_callback_classic
     end
-    if config.default_args.autostart then
+
+    require("smoothcursor.callback").init()
+    if default_args.autostart then
         require('smoothcursor.utils').smoothcursor_start()
     end
 end
