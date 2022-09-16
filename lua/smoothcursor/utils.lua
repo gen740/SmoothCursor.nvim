@@ -1,6 +1,5 @@
 local sc = {}
 local smoothcursor_started = false
-local config = require("smoothcursor.default")
 local sc_callback = require("smoothcursor.callback").sc_callback
 
 sc.smoothcursor_start = function()
@@ -22,7 +21,7 @@ sc.smoothcursor_stop = function()
         return
     end
     vim.b.cursor_row_prev = nil
-    vim.cmd(string.format("silent! sign unplace %d file=%s", config.default_args.cursorID, vim.fn.expand("%:p")))
+    require("smoothcursor.callback").unplace_signs()
     vim.api.nvim_del_augroup_by_name("SmoothCursor")
 end
 
@@ -32,6 +31,10 @@ end
 
 sc.smoothcursor_status = function()
     return smoothcursor_started
+end
+
+sc.smoothcursor_delete_signs = function()
+    require("smoothcursor.callback").unplace_signs()
 end
 
 return sc

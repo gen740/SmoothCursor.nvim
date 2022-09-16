@@ -27,7 +27,7 @@ local function init()
     end
 end
 
-local function unplace_sign()
+local function unplace_signs()
     local file = vim.fn.expand("%:p")
     vim.cmd(string.format("silent! sign unplace %d group=* file=%s",
         config.default_args.cursorID,
@@ -76,7 +76,7 @@ local function sc_default()
                         or math.floor(vim.b.diff / 100 * config.default_args.speed)
                     )
                 buffer:push_front(vim.b.cursor_row_prev)
-                unplace_sign()
+                unplace_signs()
                 for i = #buffer, 2, -1 do
                     for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
                         place_sign(j, string.format("smoothcursor_body%d", i - 1))
@@ -92,7 +92,7 @@ local function sc_default()
                 if counter > (config.default_args.timeout / config.default_args.intervals) or
                     (vim.b.diff == 0 and buffer[1] == buffer[#buffer]) then
                     if not fancy_head_exists() then
-                        unplace_sign()
+                        unplace_signs()
                     end
                     cursor_timer:stop()
                 end
@@ -101,7 +101,7 @@ local function sc_default()
     else
         vim.b.cursor_row_prev = vim.b.cursor_row_now
         buffer:push_front(vim.b.cursor_row_prev)
-        unplace_sign()
+        unplace_signs()
         place_sign(vim.b.cursor_row_prev, "smoothcursor")
     end
 end
@@ -128,7 +128,7 @@ local function sc_exp()
                     vim.b.cursor_row_prev = vim.b.cursor_row_now
                 end
                 buffer:push_front(vim.b.cursor_row_prev)
-                unplace_sign()
+                unplace_signs()
                 for i = #buffer, 2, -1 do
                     for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
                         place_sign(j, string.format("smoothcursor_body%d", i - 1))
@@ -144,7 +144,7 @@ local function sc_exp()
                 if counter > (config.default_args.timeout / config.default_args.intervals) or
                     (vim.b.diff == 0 and buffer[1] == buffer[#buffer]) then
                     if not fancy_head_exists() then
-                        unplace_sign()
+                        unplace_signs()
                     end
                     cursor_timer:stop()
                 end
@@ -153,7 +153,7 @@ local function sc_exp()
     else
         vim.b.cursor_row_prev = vim.b.cursor_row_now
         buffer:push_front(vim.b.cursor_row_prev)
-        unplace_sign()
+        unplace_signs()
         place_sign(vim.b.cursor_row_prev, "smoothcursor")
     end
 end
@@ -163,4 +163,5 @@ return {
     sc_callback_default = sc_default,
     sc_callback_exp = sc_exp,
     sc_callback = nil,
+    unplace_signs = unplace_signs,
 }

@@ -4,6 +4,7 @@ vim.api.nvim_create_user_command('SmoothCursorToggle', require("smoothcursor.uti
 vim.api.nvim_create_user_command('SmoothCursorStatus', function()
     print(string.format("Status: %s", tostring(require("smoothcursor.utils").smoothcursor_status())))
 end, {})
+vim.api.nvim_create_user_command('SmoothCursorDeleteSigns', require("smoothcursor.utils").smoothcursor_delete_signs, {})
 
 vim.api.nvim_create_namespace('SmoothCursor')
 vim.api.nvim_set_hl(0, 'SmoothCursor', { bg = nil, fg = "#FFD400" })

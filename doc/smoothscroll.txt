@@ -53,4 +53,7 @@ COMMANDS                                                     *smoothcursor-comma
 |SmoothCursorToggle|
     Toggle Smooth Cursor
 
+|SmoothCursorDeleteSigns|
+    Delete all cursors placed by SmoothCursor.
+
 vim:tw=78:ts=4:et:ft=help:norl:
