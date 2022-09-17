@@ -67,11 +67,17 @@ local function setup(args)
     end
 
     require("smoothcursor.callback").init()
+
     if default_args.type == "default" then
         require("smoothcursor.callback").sc_callback = require("smoothcursor.callback").sc_callback_default
     elseif default_args.type == "exp" then
         require("smoothcursor.callback").sc_callback = require("smoothcursor.callback").sc_callback_exp
+    else
+        vim.notify(string.format([=[[SmoothCursor.nvim] type %s does not exists, use "default"]=], default_args.type),
+            vim.log.levels.WARN)
+        require("smoothcursor.callback").sc_callback = require("smoothcursor.callback").sc_callback_default
     end
+
     if default_args.autostart then
         require('smoothcursor.utils').smoothcursor_start()
     end
