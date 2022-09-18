@@ -1,17 +1,15 @@
 local sc = {}
 local smoothcursor_started = false
-local sc_callback = require("smoothcursor.callback").sc_callback
 
 sc.smoothcursor_start = function()
     if smoothcursor_started then
         return
     end
-    sc_callback()
+    require("smoothcursor.callback").sc_callback()
     vim.api.nvim_create_augroup("SmoothCursor", { clear = true })
     vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
         group = "SmoothCursor",
-        callback = sc_callback
-
+        callback = require("smoothcursor.callback").sc_callback
     })
     smoothcursor_started = true
 end
@@ -47,6 +45,25 @@ sc.with_smoothcursor = function(func, ...)
     require("smoothcursor.callback").normalize_buffer(vim.b.cursor_row_prev)
     func(...)
     require("smoothcursor.callback").sc_callback()
+end
+
+sc.set_smoothcursor_highlight = function()
+    -- vim.api.nvim_create_namespace('SmoothCursor')
+    -- vim.api.nvim_create_namespace('SmoothCursorRed')
+    -- vim.api.nvim_create_namespace('SmoothCursorOrange')
+    -- vim.api.nvim_create_namespace('SmoothCursorYellow')
+    -- vim.api.nvim_create_namespace('SmoothCursorGreen')
+    -- vim.api.nvim_create_namespace('SmoothCursorAqua')
+    -- vim.api.nvim_create_namespace('SmoothCursorBlue')
+    -- vim.api.nvim_create_namespace('SmoothCursorPurple')
+    vim.api.nvim_set_hl(0, 'SmoothCursor', { bg = nil, fg = "#FFD400", default = true })
+    vim.api.nvim_set_hl(0, 'SmoothCursorRed', { bg = nil, fg = '#FF0000', default = true })
+    vim.api.nvim_set_hl(0, 'SmoothCursorOrange', { bg = nil, fg = '#FFA500', default = true })
+    vim.api.nvim_set_hl(0, 'SmoothCursorYellow', { bg = nil, fg = '#FFFF00', default = true })
+    vim.api.nvim_set_hl(0, 'SmoothCursorGreen', { bg = nil, fg = '#008000', default = true })
+    vim.api.nvim_set_hl(0, 'SmoothCursorAqua', { bg = nil, fg = '#00FFFF', default = true })
+    vim.api.nvim_set_hl(0, 'SmoothCursorBlue', { bg = nil, fg = '#0000FF', default = true })
+    vim.api.nvim_set_hl(0, 'SmoothCursorPurple', { bg = nil, fg = '#800080', default = true })
 end
 
 return sc

@@ -9,8 +9,6 @@ vim.api.nvim_create_user_command('SmoothCursorDeleteSigns', require("smoothcurso
 
 -- Color Schemes
 vim.api.nvim_create_namespace('SmoothCursor')
-vim.api.nvim_set_hl(0, 'SmoothCursor', { bg = nil, fg = "#FFD400", default = true })
-
 vim.api.nvim_create_namespace('SmoothCursorRed')
 vim.api.nvim_create_namespace('SmoothCursorOrange')
 vim.api.nvim_create_namespace('SmoothCursorYellow')
@@ -19,10 +17,17 @@ vim.api.nvim_create_namespace('SmoothCursorAqua')
 vim.api.nvim_create_namespace('SmoothCursorBlue')
 vim.api.nvim_create_namespace('SmoothCursorPurple')
 
-vim.api.nvim_set_hl(0, 'SmoothCursorRed', { bg = nil, fg = '#FF0000', default = true })
-vim.api.nvim_set_hl(0, 'SmoothCursorOrange', { bg = nil, fg = '#FFA500', default = true })
-vim.api.nvim_set_hl(0, 'SmoothCursorYellow', { bg = nil, fg = '#FFFF00', default = true })
-vim.api.nvim_set_hl(0, 'SmoothCursorGreen', { bg = nil, fg = '#008000', default = true })
-vim.api.nvim_set_hl(0, 'SmoothCursorAqua', { bg = nil, fg = '#00FFFF', default = true })
-vim.api.nvim_set_hl(0, 'SmoothCursorBlue', { bg = nil, fg = '#0000FF', default = true })
-vim.api.nvim_set_hl(0, 'SmoothCursorPurple', { bg = nil, fg = '#800080', default = true })
+--
+-- local autocmd = vim.api.nvim_create_autocmd
+-- local augroup = vim.api.nvim_create_augroup
+--
+-- local smoothcursor_set_highlight = function()
+-- end
+--
+-- smoothcursor_set_highlight()
+--
+-- augroup('SmoothCursorHightlight', { clear = true })
+-- autocmd({ 'ColorScheme' }, {
+--     group = 'CustomColorScheme',
+--     callback = smoothcursor_set_highlight
+-- })

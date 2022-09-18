@@ -60,12 +60,6 @@ local function setup(args)
 
     define_signs(default_args)
 
-    if default_args.type == "exp" then
-        config.callback = require('smoothcursor.callback').sc_callback_exp
-    else
-        config.callback = require('smoothcursor.callback').sc_callback_default
-    end
-
     require("smoothcursor.callback").init()
 
     if default_args.type == "default" then
@@ -77,6 +71,15 @@ local function setup(args)
             vim.log.levels.WARN)
         require("smoothcursor.callback").sc_callback = require("smoothcursor.callback").sc_callback_default
     end
+
+    local set_sc_hl = require("smoothcursor.utils").set_smoothcursor_highlight
+    set_sc_hl()
+
+    vim.api.nvim_create_augroup('SmoothCursorHightlight', { clear = true })
+    vim.api.nvim_create_autocmd({ 'ColorScheme' }, {
+        group = 'SmoothCursorHightlight',
+        callback = set_sc_hl
+    })
 
     if default_args.autostart then
         require('smoothcursor.utils').smoothcursor_start()

@@ -25,6 +25,5 @@ return {
         texthl = "SmoothCursor",
         linehl = nil,
         priority = 10,
-    },
-    callback = nil
+    }
 }
