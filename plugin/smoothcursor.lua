@@ -19,7 +19,6 @@ vim.api.nvim_create_namespace('SmoothCursorAqua')
 vim.api.nvim_create_namespace('SmoothCursorBlue')
 vim.api.nvim_create_namespace('SmoothCursorPurple')
 
-vim.api.nvim_set_hl(0, 'SmoothCursorRed', { bg = nil, fg = '#FFFFFF', default = true })
 vim.api.nvim_set_hl(0, 'SmoothCursorRed', { bg = nil, fg = '#FF0000', default = true })
 vim.api.nvim_set_hl(0, 'SmoothCursorOrange', { bg = nil, fg = '#FFA500', default = true })
 vim.api.nvim_set_hl(0, 'SmoothCursorYellow', { bg = nil, fg = '#FFFF00', default = true })
