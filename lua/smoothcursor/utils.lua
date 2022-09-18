@@ -42,20 +42,22 @@ end
 
 sc.with_smoothcursor = function(func, ...)
     vim.b.cursor_row_prev = vim.fn.getcurpos(vim.fn.win_getid())[2]
-    require("smoothcursor.callback").normalize_buffer(vim.b.cursor_row_prev)
+    require("smoothcursor.callback").reset_buffer(vim.b.cursor_row_prev)
     func(...)
     require("smoothcursor.callback").sc_callback()
 end
 
 sc.set_smoothcursor_highlight = function()
-    -- vim.api.nvim_create_namespace('SmoothCursor')
-    -- vim.api.nvim_create_namespace('SmoothCursorRed')
-    -- vim.api.nvim_create_namespace('SmoothCursorOrange')
-    -- vim.api.nvim_create_namespace('SmoothCursorYellow')
-    -- vim.api.nvim_create_namespace('SmoothCursorGreen')
-    -- vim.api.nvim_create_namespace('SmoothCursorAqua')
-    -- vim.api.nvim_create_namespace('SmoothCursorBlue')
-    -- vim.api.nvim_create_namespace('SmoothCursorPurple')
+    if vim.api.nvim_get_namespaces().SmoothCursor == nil then
+        vim.api.nvim_create_namespace('SmoothCursor')
+        vim.api.nvim_create_namespace('SmoothCursorRed')
+        vim.api.nvim_create_namespace('SmoothCursorOrange')
+        vim.api.nvim_create_namespace('SmoothCursorYellow')
+        vim.api.nvim_create_namespace('SmoothCursorGreen')
+        vim.api.nvim_create_namespace('SmoothCursorAqua')
+        vim.api.nvim_create_namespace('SmoothCursorBlue')
+        vim.api.nvim_create_namespace('SmoothCursorPurple')
+    end
     vim.api.nvim_set_hl(0, 'SmoothCursor', { bg = nil, fg = "#FFD400", default = true })
     vim.api.nvim_set_hl(0, 'SmoothCursorRed', { bg = nil, fg = '#FF0000', default = true })
     vim.api.nvim_set_hl(0, 'SmoothCursorOrange', { bg = nil, fg = '#FFA500', default = true })

@@ -3,11 +3,12 @@ local config = require("smoothcursor.default")
 local uv = vim.loop
 local cursor_timer = uv.new_timer()
 
+-- List For cursor position bufferStart
 List = {}
-
 ---@param length number
 List.new = function(length)
-    local obj = { buffer = {} }
+    vim.b.smooth_cursor_buffer = {}
+    local obj = { buffer = vim.b.smooth_cursor_buffer }
     for _ = 1, length, 1 do
         table.insert(obj.buffer, 1, 0)
     end
@@ -20,10 +21,17 @@ function List:push_front(data)
 end
 
 local buffer = List.new(1)
+-- List For cursor position buffer End
 
 local function init()
     if config.default_args.fancy.enable then
         buffer = List.new(#config.default_args.fancy.body + 1)
+    end
+end
+
+local function reset_buffer(value)
+    for _ = 1, #buffer, 1 do
+        buffer:push_front(value)
     end
 end
 
@@ -32,12 +40,6 @@ local function unplace_signs()
     vim.cmd(string.format("silent! sign unplace %d group=* file=%s",
         config.default_args.cursorID,
         file))
-end
-
-local function normalize_buffer(value)
-    for _ = 1, #buffer, 1 do
-        buffer:push_front(value)
-    end
 end
 
 ---@param position number
@@ -176,5 +178,5 @@ return {
     sc_callback_exp = sc_exp,
     sc_callback = nil,
     unplace_signs = unplace_signs,
-    normalize_buffer = normalize_buffer,
+    reset_buffer = reset_buffer,
 }

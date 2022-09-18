@@ -1,3 +1,4 @@
+-- Default Config Values
 return {
     default_args = {
         cursor = "",
