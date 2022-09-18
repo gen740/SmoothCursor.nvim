@@ -61,10 +61,10 @@ end
 
 local function sc_default()
     -- 前のカーソルの位置が存在しないなら、現在の位置にする
-    if vim.b.cursor_row_prev == nil then
-        vim.b.cursor_row_prev = vim.fn.getcurpos(vim.fn.win_getid())[2]
-    end
     vim.b.cursor_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
+    if vim.b.cursor_row_prev == nil then
+        vim.b.cursor_row_prev = vim.b.cursor_row_now
+    end
     vim.b.diff = vim.b.cursor_row_prev - vim.b.cursor_row_now
     if math.abs(vim.b.diff) > config.default_args.threshold then -- たくさんジャンプしたら
         -- 動いているタイマーがあればストップする
@@ -74,6 +74,9 @@ local function sc_default()
         uv.timer_start(cursor_timer, 0, config.default_args.intervals, vim.schedule_wrap(
             function()
                 vim.b.cursor_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
+                if vim.b.cursor_row_prev == nil then
+                    vim.b.cursor_row_prev = vim.b.cursor_row_now
+                end
                 vim.b.diff = vim.b.cursor_row_prev - vim.b.cursor_row_now
                 vim.b.cursor_row_prev = vim.b.cursor_row_prev
                     - (
@@ -114,10 +117,10 @@ end
 
 local function sc_exp()
     -- 前のカーソルの位置が存在しないなら、現在の位置にする
-    if vim.b.cursor_row_prev == nil then
-        vim.b.cursor_row_prev = vim.fn.getcurpos(vim.fn.win_getid())[2]
-    end
     vim.b.cursor_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
+    if vim.b.cursor_row_prev == nil then
+        vim.b.cursor_row_prev = vim.b.cursor_row_now
+    end
     vim.b.diff = vim.b.cursor_row_prev - vim.b.cursor_row_now
     if math.abs(vim.b.diff) > config.default_args.threshold then -- たくさんジャンプしたら
         -- 動いているタイマーがあればストップする
@@ -127,6 +130,9 @@ local function sc_exp()
         uv.timer_start(cursor_timer, 0, config.default_args.intervals, vim.schedule_wrap(
             function()
                 vim.b.cursor_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
+                if vim.b.cursor_row_prev == nil then
+                    vim.b.cursor_row_prev = vim.b.cursor_row_now
+                end
                 vim.b.diff = vim.b.cursor_row_prev - vim.b.cursor_row_now
                 vim.b.cursor_row_prev = vim.b.cursor_row_prev
                     - vim.b.diff / 100 * config.default_args.speed
