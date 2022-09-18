@@ -1,10 +1,9 @@
 local config = require("smoothcursor.default")
 
-local uv = vim.loop
-local cursor_timer = uv.new_timer()
-
--- List For cursor position bufferStart
+-- List For cursor position bufferStart ----------------------------------------
+-- This List hold buffer local list of cursor position hiostory.
 List = {}
+
 ---@param length number
 List.new = function(length)
     vim.b.smooth_cursor_buffer = {}
@@ -20,8 +19,17 @@ function List:push_front(data)
     table.remove(self, #self)
 end
 
+function List:is_stay_still()
+    local first_val = self[1]
+    for _, value in ipairs(self) do
+        if first_val ~= value then
+            return false
+        end
+    end
+    return true
+end
+
 local buffer = List.new(1)
--- List For cursor position buffer End
 
 local function init()
     if config.default_args.fancy.enable then
@@ -35,19 +43,44 @@ local function reset_buffer(value)
     end
 end
 
+-- sc_timer --------------------------------------------------------------------
+-- Hold unique uv timer.
+local uv = vim.loop
+
+local sc_timer = {
+    is_running = false,
+    timer = uv.new_timer()
+}
+
+-- post if timer is stop
+---@param func function
+function sc_timer:post(func)
+    if self.is_runnig then
+        return
+    end
+    uv.timer_start(self.timer, 0, config.default_args.intervals, vim.schedule_wrap(func))
+    self.is_running = true
+end
+
+function sc_timer:abort()
+    self.timer:stop()
+    self.is_running = false
+end
+
 local function unplace_signs()
     local file = vim.fn.expand("%:p")
-    vim.cmd(string.format("silent! sign unplace %d group=* file=%s",
+    pcall(vim.cmd, string.format("silent! sign unplace %d group=* file=%s",
         config.default_args.cursorID,
         file))
 end
 
+-- place 'name' sign to the 'position'
 ---@param position number
 ---@param name string
 local function place_sign(position, name)
     local file = vim.fn.expand("%:p")
     if name ~= nil then
-        vim.cmd(string.format("silent! sign place %d line=%d name=%s group=%s priority=%d file=%s",
+        pcall(vim.cmd, string.format("silent! sign place %d line=%d name=%s group=%s priority=%d file=%s",
             config.default_args.cursorID,
             position,
             name,
@@ -61,32 +94,30 @@ local function fancy_head_exists()
     return config.default_args.fancy.head ~= nil and config.default_args.fancy.head.cursor ~= nil
 end
 
+-- Default corsor callback. b:smoothcursor_row_prev is always integer
 local function sc_default()
     -- 前のカーソルの位置が存在しないなら、現在の位置にする
-    vim.b.cursor_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
-    if vim.b.cursor_row_prev == nil then
-        vim.b.cursor_row_prev = vim.b.cursor_row_now
+    vim.b.smoothcurosr_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
+    if vim.b.smoothcursor_row_prev == nil then
+        vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
     end
-    vim.b.diff = vim.b.cursor_row_prev - vim.b.cursor_row_now
-    if math.abs(vim.b.diff) > config.default_args.threshold then -- たくさんジャンプしたら
-        -- 動いているタイマーがあればストップする
-        cursor_timer:stop()
+    vim.b.smoothcursor_diff = vim.b.smoothcursor_row_prev - vim.b.smoothcurosr_row_now
+    if math.abs(vim.b.smoothcursor_diff) > config.default_args.threshold then
         local counter = 1
-        -- タイマーをスタートする
-        uv.timer_start(cursor_timer, 0, config.default_args.intervals, vim.schedule_wrap(
+        sc_timer:post(
             function()
-                vim.b.cursor_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
-                if vim.b.cursor_row_prev == nil then
-                    vim.b.cursor_row_prev = vim.b.cursor_row_now
+                vim.b.smoothcurosr_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
+                if vim.b.smoothcursor_row_prev == nil then
+                    vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
                 end
-                vim.b.diff = vim.b.cursor_row_prev - vim.b.cursor_row_now
-                vim.b.cursor_row_prev = vim.b.cursor_row_prev
+                vim.b.smoothcursor_diff = vim.b.smoothcursor_row_prev - vim.b.smoothcurosr_row_now
+                vim.b.smoothcursor_row_prev = vim.b.smoothcursor_row_prev
                     - (
-                    (vim.b.diff > 0)
-                        and math.ceil(vim.b.diff / 100 * config.default_args.speed)
-                        or math.floor(vim.b.diff / 100 * config.default_args.speed)
+                    (vim.b.smoothcursor_diff > 0)
+                        and math.ceil(vim.b.smoothcursor_diff / 100 * config.default_args.speed)
+                        or math.floor(vim.b.smoothcursor_diff / 100 * config.default_args.speed)
                     )
-                buffer:push_front(vim.b.cursor_row_prev)
+                buffer:push_front(vim.b.smoothcursor_row_prev)
                 unplace_signs()
                 for i = #buffer, 2, -1 do
                     for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
@@ -101,47 +132,44 @@ local function sc_default()
                 end
                 counter = counter + 1
                 if counter > (config.default_args.timeout / config.default_args.intervals) or
-                    (vim.b.diff == 0 and buffer[1] == buffer[#buffer]) then
+                    (vim.b.smoothcursor_diff == 0 and buffer[1] == buffer[#buffer]) then
                     if not fancy_head_exists() then
                         unplace_signs()
                     end
-                    cursor_timer:stop()
+                    sc_timer:abort()
                 end
             end)
-        )
     else
-        vim.b.cursor_row_prev = vim.b.cursor_row_now
-        buffer:push_front(vim.b.cursor_row_prev)
+        vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
+        buffer:push_front(vim.b.smoothcursor_row_prev)
         unplace_signs()
-        place_sign(vim.b.cursor_row_prev, "smoothcursor")
+        place_sign(vim.b.smoothcursor_row_prev, "smoothcursor")
     end
 end
 
+-- Exponential corsor callback. b:smoothcursor_row_prev is no longer integer.
 local function sc_exp()
-    -- 前のカーソルの位置が存在しないなら、現在の位置にする
-    vim.b.cursor_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
-    if vim.b.cursor_row_prev == nil then
-        vim.b.cursor_row_prev = vim.b.cursor_row_now
+    -- If previous cursor position is not exists, use now position.
+    vim.b.smoothcurosr_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
+    if vim.b.smoothcursor_row_prev == nil then
+        vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
     end
-    vim.b.diff = vim.b.cursor_row_prev - vim.b.cursor_row_now
-    if math.abs(vim.b.diff) > config.default_args.threshold then -- たくさんジャンプしたら
-        -- 動いているタイマーがあればストップする
-        cursor_timer:stop()
+    vim.b.smoothcursor_diff = vim.b.smoothcursor_row_prev - vim.b.smoothcurosr_row_now
+    if math.abs(vim.b.smoothcursor_diff) > config.default_args.threshold then
         local counter = 1
-        -- タイマーをスタートする
-        uv.timer_start(cursor_timer, 0, config.default_args.intervals, vim.schedule_wrap(
+        sc_timer:post(
             function()
-                vim.b.cursor_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
-                if vim.b.cursor_row_prev == nil then
-                    vim.b.cursor_row_prev = vim.b.cursor_row_now
+                vim.b.smoothcurosr_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
+                if vim.b.smoothcursor_row_prev == nil then
+                    vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
                 end
-                vim.b.diff = vim.b.cursor_row_prev - vim.b.cursor_row_now
-                vim.b.cursor_row_prev = vim.b.cursor_row_prev
-                    - vim.b.diff / 100 * config.default_args.speed
-                if math.abs(vim.b.diff) < 0.5 then
-                    vim.b.cursor_row_prev = vim.b.cursor_row_now
+                vim.b.smoothcursor_diff = vim.b.smoothcursor_row_prev - vim.b.smoothcurosr_row_now
+                vim.b.smoothcursor_row_prev = vim.b.smoothcursor_row_prev
+                    - vim.b.smoothcursor_diff / 100 * config.default_args.speed
+                if math.abs(vim.b.smoothcursor_diff) < 0.5 then
+                    vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
                 end
-                buffer:push_front(vim.b.cursor_row_prev)
+                buffer:push_front(vim.b.smoothcursor_row_prev)
                 unplace_signs()
                 for i = #buffer, 2, -1 do
                     for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
@@ -156,19 +184,18 @@ local function sc_exp()
                 end
                 counter = counter + 1
                 if counter > (config.default_args.timeout / config.default_args.intervals) or
-                    (vim.b.diff == 0 and buffer[1] == buffer[#buffer]) then
+                    (vim.b.smoothcursor_diff == 0 and buffer:is_stay_still()) then
                     if not fancy_head_exists() then
                         unplace_signs()
                     end
-                    cursor_timer:stop()
+                    sc_timer:abort()
                 end
             end)
-        )
     else
-        vim.b.cursor_row_prev = vim.b.cursor_row_now
-        buffer:push_front(vim.b.cursor_row_prev)
+        vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
+        buffer:push_front(vim.b.smoothcursor_row_prev)
         unplace_signs()
-        place_sign(vim.b.cursor_row_prev, "smoothcursor")
+        place_sign(vim.b.smoothcursor_row_prev, "smoothcursor")
     end
 end
 
