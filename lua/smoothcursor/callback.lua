@@ -68,25 +68,25 @@ function sc_timer:abort()
 end
 
 local function unplace_signs()
-    local file = vim.fn.expand("%:p")
-    pcall(vim.cmd, string.format("silent! sign unplace %d group=* file=%s",
-        config.default_args.cursorID,
-        file))
+    vim.fn.sign_unplace('*', { buffer = vim.fn.bufname(), id = config.default_args.cursorID})
 end
 
 -- place 'name' sign to the 'position'
 ---@param position number
 ---@param name string
 local function place_sign(position, name)
-    local file = vim.fn.expand("%:p")
+    -- TODO: I would also cache vim.fn.line outside this call
+    if position < vim.fn.line('w0') or position > vim.fn.line('w$') then
+      return
+    end
     if name ~= nil then
-        pcall(vim.cmd, string.format("silent! sign place %d line=%d name=%s group=%s priority=%d file=%s",
-            config.default_args.cursorID,
-            position,
-            name,
-            "SmoothCursor",
-            config.default_args.priority,
-            file))
+      vim.fn.sign_place(
+      config.default_args.cursorID,
+      "SmoothCursor",
+      name,
+      vim.fn.bufname(),
+      { lnum = position, priority = config.default_args.priority}
+    )
     end
 end
 
@@ -102,6 +102,7 @@ local function sc_default()
         vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
     end
     vim.b.smoothcursor_diff = vim.b.smoothcursor_row_prev - vim.b.smoothcurosr_row_now
+    vim.b.smoothcursor_diff = math.min(vim.b.smoothcursor_diff, vim.fn.winheight(0))
     if math.abs(vim.b.smoothcursor_diff) > config.default_args.threshold then
         local counter = 1
         sc_timer:post(
@@ -110,6 +111,8 @@ local function sc_default()
                 if vim.b.smoothcursor_row_prev == nil then
                     vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
                 end
+                vim.b.smoothcursor_row_prev = math.max(vim.b.smoothcursor_row_prev, vim.fn.line('w0'))
+                vim.b.smoothcursor_row_prev = math.min(vim.b.smoothcursor_row_prev, vim.fn.line('w$'))
                 vim.b.smoothcursor_diff = vim.b.smoothcursor_row_prev - vim.b.smoothcurosr_row_now
                 vim.b.smoothcursor_row_prev = vim.b.smoothcursor_row_prev
                     - (
@@ -155,6 +158,7 @@ local function sc_exp()
         vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
     end
     vim.b.smoothcursor_diff = vim.b.smoothcursor_row_prev - vim.b.smoothcurosr_row_now
+    vim.b.smoothcursor_diff = math.min(vim.b.smoothcursor_diff, vim.fn.winheight(0))
     if math.abs(vim.b.smoothcursor_diff) > config.default_args.threshold then
         local counter = 1
         sc_timer:post(
@@ -163,6 +167,8 @@ local function sc_exp()
                 if vim.b.smoothcursor_row_prev == nil then
                     vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
                 end
+                vim.b.smoothcursor_row_prev = math.max(vim.b.smoothcursor_row_prev, vim.fn.line('w0'))
+                vim.b.smoothcursor_row_prev = math.min(vim.b.smoothcursor_row_prev, vim.fn.line('w$'))
                 vim.b.smoothcursor_diff = vim.b.smoothcursor_row_prev - vim.b.smoothcurosr_row_now
                 vim.b.smoothcursor_row_prev = vim.b.smoothcursor_row_prev
                     - vim.b.smoothcursor_diff / 100 * config.default_args.speed
