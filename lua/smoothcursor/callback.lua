@@ -85,7 +85,7 @@ local function place_sign(position, name)
             "SmoothCursor",
             name,
             vim.fn.bufname(),
-            { lnum = position, priority = config.default_args.priority }
+            { lnum = math.floor(position + 0.5), priority = config.default_args.priority }
         )
     end
 end
@@ -181,7 +181,7 @@ local function sc_exp()
                 unplace_signs()
                 for i = #buffer, 2, -1 do
                     for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
-                        place_sign(math.floor(j + 0.5), string.format("smoothcursor_body%d", i - 1))
+                        place_sign(j, string.format("smoothcursor_body%d", i - 1))
                     end
                 end
                 if config.default_args.fancy.tail ~= nil and config.default_args.fancy.tail.cursor ~= nil then
