@@ -68,7 +68,7 @@ function sc_timer:abort()
 end
 
 local function unplace_signs()
-    vim.fn.sign_unplace('*', { buffer = vim.fn.bufname(), id = config.default_args.cursorID})
+    vim.fn.sign_unplace('*', { buffer = vim.fn.bufname(), id = config.default_args.cursorID })
 end
 
 -- place 'name' sign to the 'position'
@@ -77,16 +77,16 @@ end
 local function place_sign(position, name)
     -- TODO: I would also cache vim.fn.line outside this call
     if position < vim.fn.line('w0') or position > vim.fn.line('w$') then
-      return
+        return
     end
     if name ~= nil then
-      vim.fn.sign_place(
-      config.default_args.cursorID,
-      "SmoothCursor",
-      name,
-      vim.fn.bufname(),
-      { lnum = position, priority = config.default_args.priority}
-    )
+        vim.fn.sign_place(
+            config.default_args.cursorID,
+            "SmoothCursor",
+            name,
+            vim.fn.bufname(),
+            { lnum = position, priority = config.default_args.priority }
+        )
     end
 end
 
@@ -146,7 +146,9 @@ local function sc_default()
         vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
         buffer:push_front(vim.b.smoothcursor_row_prev)
         unplace_signs()
-        place_sign(vim.b.smoothcursor_row_prev, "smoothcursor")
+        if fancy_head_exists() then
+            place_sign(vim.b.smoothcursor_row_prev, "smoothcursor")
+        end
     end
 end
 
@@ -179,7 +181,7 @@ local function sc_exp()
                 unplace_signs()
                 for i = #buffer, 2, -1 do
                     for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
-                        place_sign(j, string.format("smoothcursor_body%d", i - 1))
+                        place_sign(math.floor(j + 0.5), string.format("smoothcursor_body%d", i - 1))
                     end
                 end
                 if config.default_args.fancy.tail ~= nil and config.default_args.fancy.tail.cursor ~= nil then
@@ -201,7 +203,9 @@ local function sc_exp()
         vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
         buffer:push_front(vim.b.smoothcursor_row_prev)
         unplace_signs()
-        place_sign(vim.b.smoothcursor_row_prev, "smoothcursor")
+        if fancy_head_exists() then
+            place_sign(vim.b.smoothcursor_row_prev, "smoothcursor")
+        end
     end
 end
 
