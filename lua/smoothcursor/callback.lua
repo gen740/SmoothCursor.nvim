@@ -100,8 +100,8 @@ end
 ---@param position number
 ---@param name string
 local function place_sign(position, name)
-    -- TODO: I would also cache vim.fn.line outside this call
-    if position < vim.fn.line('w0') or position > vim.fn.line('w$') then
+    position = math.floor(position + 0.5)
+    if position < buffer['w0'] or position > buffer['w$'] then
         return
     end
     if name ~= nil then
@@ -110,7 +110,7 @@ local function place_sign(position, name)
             "SmoothCursor",
             name,
             vim.fn.bufname(),
-            { lnum = math.floor(position + 0.5), priority = config.default_args.priority }
+            { lnum = position, priority = config.default_args.priority }
         )
     end
 end
@@ -123,15 +123,16 @@ local function fancy_head_exists()
     return config.default_args.fancy.head ~= nil and config.default_args.fancy.head.cursor ~= nil
 end
 
--- Default corsor callback. b:smoothcursor_row_prev is always integer
+-- Default corsor callback. buffer["prev"] is always integer
 local function sc_default()
-    -- 前のカーソルの位置が存在しないなら、現在の位置にする
     buffer["now"] = vim.fn.getcurpos(vim.fn.win_getid())[2]
     if buffer["prev"] == nil then
         buffer["prev"] = buffer["now"]
     end
     buffer["diff"] = buffer["prev"] - buffer["now"]
-    buffer["diff"] = math.min(buffer["diff"], vim.fn.winheight(0))
+    buffer["diff"] = math.min(buffer["diff"], vim.fn.winheight(0) * 2)
+    buffer["w0"] = vim.fn.line("w0")
+    buffer["w$"] = vim.fn.line("w$")
     if math.abs(buffer["diff"]) > config.default_args.threshold then
         local counter = 1
         sc_timer:post(
@@ -140,8 +141,11 @@ local function sc_default()
                 if buffer["prev"] == nil then
                     buffer["prev"] = buffer["now"]
                 end
-                buffer["prev"] = math.max(buffer["prev"], vim.fn.line('w0'))
-                buffer["prev"] = math.min(buffer["prev"], vim.fn.line('w$'))
+                -- For <c-f>/<c-b> movement. buffer["prev"] has room for half screen.
+                buffer["w0"] = vim.fn.line("w0")
+                buffer["w$"] = vim.fn.line("w$")
+                buffer["prev"] = math.max(buffer["prev"], buffer['w0'] - vim.fn.winheight(0) / 2)
+                buffer["prev"] = math.min(buffer["prev"], buffer['w$'] + vim.fn.winheight(0) / 2)
                 buffer["diff"] = buffer["prev"] - buffer["now"]
                 buffer["prev"] = buffer["prev"]
                     - (
@@ -150,11 +154,13 @@ local function sc_default()
                         or math.floor(buffer["diff"] / 100 * config.default_args.speed)
                     )
                 buffer:push_front(buffer["prev"])
+                -- Replace sign
                 unplace_signs()
                 for i = buffer:length(), 2, -1 do
-                    if math.max(buffer[i - 1], buffer[i]) < vim.fn.line('w0') or
-                        math.min(buffer[i - 1], buffer[i]) > vim.fn.line('w$') then
-                    else
+                    if not (
+                        (math.max(buffer[i - 1], buffer[i]) < buffer['w0'] - 1) or
+                            (math.min(buffer[i - 1], buffer[i]) > buffer['w$'] + 1)
+                        ) then
                         for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
                             place_sign(j, string.format("smoothcursor_body%d", i - 1))
                         end
@@ -167,6 +173,7 @@ local function sc_default()
                     place_sign(buffer[1], "smoothcursor")
                 end
                 counter = counter + 1
+                -- Timer management
                 if counter > (config.default_args.timeout / config.default_args.intervals) or
                     (buffer["diff"] == 0 and buffer[1] == buffer[buffer:length()]) then
                     if not fancy_head_exists() then
@@ -185,15 +192,16 @@ local function sc_default()
     end
 end
 
--- Exponential corsor callback. b:smoothcursor_row_prev is no longer integer.
+-- Exponential corsor callback. buffer["prev"] is no longer integer.
 local function sc_exp()
-    -- If previous cursor position is not exists, use now position.
     buffer["now"] = vim.fn.getcurpos(vim.fn.win_getid())[2]
     if buffer["prev"] == nil then
         buffer["prev"] = buffer["now"]
     end
     buffer["diff"] = buffer["prev"] - buffer["now"]
-    buffer["diff"] = math.min(buffer["diff"], vim.fn.winheight(0))
+    buffer["diff"] = math.min(buffer["diff"], vim.fn.winheight(0) * 2)
+    buffer["w0"] = vim.fn.line("w0")
+    buffer["w$"] = vim.fn.line("w$")
     if math.abs(buffer["diff"]) > config.default_args.threshold then
         local counter = 1
         sc_timer:post(
@@ -202,20 +210,24 @@ local function sc_exp()
                 if buffer["prev"] == nil then
                     buffer["prev"] = buffer["now"]
                 end
-                buffer["prev"] = math.max(buffer["prev"], vim.fn.line('w0'))
-                buffer["prev"] = math.min(buffer["prev"], vim.fn.line('w$'))
+                -- For <c-f>/<c-b> movement. buffer["prev"] has room for half screen.
+                buffer["w0"] = vim.fn.line("w0")
+                buffer["w$"] = vim.fn.line("w$")
+                buffer["prev"] = math.max(buffer["prev"], buffer['w0'] - vim.fn.winheight(0) / 2)
+                buffer["prev"] = math.min(buffer["prev"], buffer['w$'] + vim.fn.winheight(0) / 2)
                 buffer["diff"] = buffer["prev"] - buffer["now"]
-                buffer["prev"] = buffer["prev"]
-                    - buffer["diff"] / 100 * config.default_args.speed
+                buffer["prev"] = buffer["prev"] - buffer["diff"] / 100 * config.default_args.speed
                 if math.abs(buffer["diff"]) < 0.5 then
                     buffer["prev"] = buffer["now"]
                 end
                 buffer:push_front(buffer["prev"])
+                --- Replace Signs
                 unplace_signs()
                 for i = buffer:length(), 2, -1 do
-                    if math.max(buffer[i - 1], buffer[i]) < vim.fn.line('w0') or
-                        math.min(buffer[i - 1], buffer[i]) > vim.fn.line('w$') then
-                    else
+                    if not (
+                        (math.max(buffer[i - 1], buffer[i]) < buffer['w0'] - 1) or
+                            (math.min(buffer[i - 1], buffer[i]) > buffer['w$'] + 1)
+                        ) then
                         for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
                             place_sign(j, string.format("smoothcursor_body%d", i - 1))
                         end
@@ -227,6 +239,7 @@ local function sc_exp()
                 if fancy_head_exists() then
                     place_sign(buffer[1], "smoothcursor")
                 end
+                --- Timer management
                 counter = counter + 1
                 if counter > (config.default_args.timeout / config.default_args.intervals) or
                     (buffer["diff"] == 0 and buffer:is_stay_still()) then

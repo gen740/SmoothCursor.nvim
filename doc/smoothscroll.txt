@@ -1,19 +1,22 @@
-*smoothcursor.txt*  Smooth Cursor
+*smoothcursor.txt*                                                  SmoothCursor
 
 Author: Gen Fujimoto
 
-================================================================================
-INTRODUCTION                                                    *SmoothCursor.nvim*
+                                       Type |gO| to see the table of contents.
 
-    SmoothCursor.nvim is a plugin for show colorful sub-cursor in neovim.
+================================================================================
+INTRODUCTION                                                 *SmoothCursor.nvim*
+
+    SmoothCursor.nvim is a plugin to add a colorful sub-cursor in neovim.
 
     It is easy to lose current cursor position, when using commands like `%`
     or `<c-f>`,`<c-b>`. This plugin add sub-cursor to show scroll direction!!
 
 ===============================================================================
-FUNCTIONS                                                       *smoothcursor-functions*
+FUNCTIONS                                              *smoothcursor-functions*
 
-setup({opts})                                                   *smoothcursor-setup()*
+							*smoothcursor-setup()*
+setup({opts})
     Overwrites the default options with the options in the table `opts`,
 
     Example with all the default options:
@@ -45,8 +48,9 @@ setup({opts})                                                   *smoothcursor-se
             timeout = 3000,
         })
 
-utils.with_smoothcursor(func, args...)                      *smoothcursor-utils-with_smoothcursor*
-    Call func(args...) with smoothcursor. Func will be some move command. (like
+							*smoothcursor-utils-with_smoothcursor*
+utils.with_smoothcursor(func, args...)
+    Call func(args...) with SmoothCursor. Func will be some move command. (like
     `vim.cmd("nomrmal n")` )
 
     Example:
@@ -59,25 +63,47 @@ utils.with_smoothcursor(func, args...)                      *smoothcursor-utils-
             { noremap = true, silent = true }
         )
 
+							*smoothcursor-utils-smoothcursor_start*
+utils.smoothcursor_start()
+    Start SmoothCursor
+
+							*smoothcursor-utils-smoothcursor_start*
+utils.smoothcursor_stop()
+    Stop SmoothCursor
+
+							*smoothcursor-utils-smoothcursor_start*
+utils.smoothcursor_stop()
+    Toggle SmoothCursor
+
+							*smoothcursor-utils-smoothcursor_status*
 utils.smoothcursor_status()
-    Get SmoothCursor Status (boolean).
+    Get SmoothCursor Status.
+
+    Return: boolean
 
 ===============================================================================
-COMMANDS                                                    *smoothcursor-commands*
+COMMANDS                                                *smoothcursor-commands*
 
-|SmoothCursorStart|
-    Start Smooth Cursor
 
-|SmoothCursorStop|
-    Stop Smooth Cursor
+							*:SmoothCursorStart*
+:SmoothCursorStart
+    Start SmoothCursor
 
-|SmoothCursorStatus|
-    Show Smooth Cursor status
+							*:SmoothCursorStop*
+:SmoothCursorStop|
+    Stop SmoothCursor
 
-|SmoothCursorToggle|
-    Toggle Smooth Cursor
+							*:SmoothCursorStatus*
+:SmoothCursorStatus
+    Show SmoothCursor status
 
-|SmoothCursorDeleteSigns|
-    Delete all cursors placed by SmoothCursor.
+							*:SmoothCursorToggle*
+:SmoothCursorToggle
+    Toggle SmoothCursor
 
-vim:tw=78:ts=4:et:ft=help:norl:
+							*:SmoothCursorDeleteSigns*
+:SmoothCursorDeleteSigns
+    Delete all signs placed by SmoothCursor.
+
+
+vim:tw=78:ts=8:expandtab:noet:ft=help:norl:
