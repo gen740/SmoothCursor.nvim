@@ -57,9 +57,10 @@ https://user-images.githubusercontent.com/54583542/190581464-0b72c057-4644-406a-
 
 ## Commands
 
-| Command             | Description               |
-| ------------------- | ------------------------- |
-| :SmoothCursorStart  | start smooth cursor       |
-| :SmoothCursorStop   | stop smooth cursor        |
-| :SmoothCursorStatus | show smooth cursor status |
-| :SmoothCursorToggle | toggle smooth cursor      |
+| Command                  | Description               |
+| ------------------------ | ------------------------- |
+| :SmoothCursorStart       | Start smooth cursor       |
+| :SmoothCursorStop        | Stop smooth cursor        |
+| :SmoothCursorStatus      | Show smooth cursor status |
+| :SmoothCursorToggle      | Toggle smooth cursor      |
+| :SmoothCursorDeleteSigns | Delete all signs if exist |
