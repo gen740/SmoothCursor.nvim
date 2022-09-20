@@ -53,7 +53,7 @@ function BList.new(length)
         })
 end
 
-local buffer = nil
+local buffer = BList.new(1)
 
 local function init()
     if config.default_args.fancy.enable then
@@ -116,6 +116,10 @@ local function place_sign(position, name)
 end
 
 local function fancy_head_exists()
+    -- if it is not fancy mode Head is always set
+    if not config.default_args.fancy.enable then
+        return true
+    end
     return config.default_args.fancy.head ~= nil and config.default_args.fancy.head.cursor ~= nil
 end
 
