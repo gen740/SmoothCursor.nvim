@@ -152,8 +152,12 @@ local function sc_default()
                 buffer:push_front(buffer["prev"])
                 unplace_signs()
                 for i = buffer:length(), 2, -1 do
-                    for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
-                        place_sign(j, string.format("smoothcursor_body%d", i - 1))
+                    if math.max(buffer[i - 1], buffer[i]) < vim.fn.line('w0') or
+                        math.min(buffer[i - 1], buffer[i]) > vim.fn.line('w$') then
+                    else
+                        for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
+                            place_sign(j, string.format("smoothcursor_body%d", i - 1))
+                        end
                     end
                 end
                 if config.default_args.fancy.tail ~= nil and config.default_args.fancy.tail.cursor ~= nil then
@@ -209,8 +213,12 @@ local function sc_exp()
                 buffer:push_front(buffer["prev"])
                 unplace_signs()
                 for i = buffer:length(), 2, -1 do
-                    for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
-                        place_sign(j, string.format("smoothcursor_body%d", i - 1))
+                    if math.max(buffer[i - 1], buffer[i]) < vim.fn.line('w0') or
+                        math.min(buffer[i - 1], buffer[i]) > vim.fn.line('w$') then
+                    else
+                        for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
+                            place_sign(j, string.format("smoothcursor_body%d", i - 1))
+                        end
                     end
                 end
                 if config.default_args.fancy.tail ~= nil and config.default_args.fancy.tail.cursor ~= nil then
