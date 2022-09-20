@@ -1,44 +1,69 @@
 local config = require("smoothcursor.default")
 
--- List For cursor position bufferStart ----------------------------------------
--- This List hold buffer local list of cursor position hiostory.
-List = {}
+-- Buffer specific list
+--
+BList = {}
 
----@param length number
-List.new = function(length)
-    vim.b.smooth_cursor_buffer = {}
-    local obj = { buffer = vim.b.smooth_cursor_buffer }
-    for _ = 1, length, 1 do
-        table.insert(obj.buffer, 1, 0)
-    end
-    return setmetatable(obj.buffer, { __index = List })
-end
-
-function List:push_front(data)
-    table.insert(self, 1, data)
-    table.remove(self, #self)
-end
-
-function List:is_stay_still()
-    local first_val = self[1]
-    for _, value in ipairs(self) do
-        if first_val ~= value then
-            return false
+function BList.new(length)
+    local obj = {
+        buffer = {},
+        len = length,
+        push_front =
+        function(self, data)
+            table.insert(self, 1, data)
+            table.remove(self, self:length() + 1)
+        end,
+        length = function(self)
+            return self.len
+        end,
+        is_stay_still = function(self)
+            local first_val = self[1]
+            for i = 2, self:length() do
+                if first_val ~= self[i] then
+                    return false
+                end
+            end
+            return true
         end
-    end
-    return true
+    }
+    return setmetatable(obj,
+        {
+            __index = function(t, k)
+                local bufnr = vim.fn.bufnr()
+                if t.buffer[bufnr] == nil then
+                    local x = {}
+                    for _ = 1, t.len do
+                        table.insert(x, 1)
+                    end
+                    t.buffer[bufnr] = x
+                end
+                return t.buffer[bufnr][k]
+            end,
+            __newindex = function(t, k, v)
+                local bufnr = vim.fn.bufnr()
+                if t.buffer[bufnr] == nil then
+                    local x = {}
+                    for _ = 1, t.len do
+                        table.insert(x, 1)
+                    end
+                    t.buffer[bufnr] = x
+                end
+                t.buffer[bufnr][k] = v
+            end,
+        })
 end
 
-local buffer = List.new(1)
+local buffer = nil
 
 local function init()
     if config.default_args.fancy.enable then
-        buffer = List.new(#config.default_args.fancy.body + 1)
+        buffer = BList.new(#config.default_args.fancy.body + 1)
     end
 end
 
 local function reset_buffer(value)
-    for _ = 1, #buffer, 1 do
+    buffer["prev"] = value
+    for _ = 1, buffer:length(), 1 do
         buffer:push_front(value)
     end
 end
@@ -97,45 +122,45 @@ end
 -- Default corsor callback. b:smoothcursor_row_prev is always integer
 local function sc_default()
     -- 前のカーソルの位置が存在しないなら、現在の位置にする
-    vim.b.smoothcurosr_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
-    if vim.b.smoothcursor_row_prev == nil then
-        vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
+    buffer["now"] = vim.fn.getcurpos(vim.fn.win_getid())[2]
+    if buffer["prev"] == nil then
+        buffer["prev"] = buffer["now"]
     end
-    vim.b.smoothcursor_diff = vim.b.smoothcursor_row_prev - vim.b.smoothcurosr_row_now
-    vim.b.smoothcursor_diff = math.min(vim.b.smoothcursor_diff, vim.fn.winheight(0))
-    if math.abs(vim.b.smoothcursor_diff) > config.default_args.threshold then
+    buffer["diff"] = buffer["prev"] - buffer["now"]
+    buffer["diff"] = math.min(buffer["diff"], vim.fn.winheight(0))
+    if math.abs(buffer["diff"]) > config.default_args.threshold then
         local counter = 1
         sc_timer:post(
             function()
-                vim.b.smoothcurosr_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
-                if vim.b.smoothcursor_row_prev == nil then
-                    vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
+                buffer["now"] = vim.fn.getcurpos(vim.fn.win_getid())[2]
+                if buffer["prev"] == nil then
+                    buffer["prev"] = buffer["now"]
                 end
-                vim.b.smoothcursor_row_prev = math.max(vim.b.smoothcursor_row_prev, vim.fn.line('w0'))
-                vim.b.smoothcursor_row_prev = math.min(vim.b.smoothcursor_row_prev, vim.fn.line('w$'))
-                vim.b.smoothcursor_diff = vim.b.smoothcursor_row_prev - vim.b.smoothcurosr_row_now
-                vim.b.smoothcursor_row_prev = vim.b.smoothcursor_row_prev
+                buffer["prev"] = math.max(buffer["prev"], vim.fn.line('w0'))
+                buffer["prev"] = math.min(buffer["prev"], vim.fn.line('w$'))
+                buffer["diff"] = buffer["prev"] - buffer["now"]
+                buffer["prev"] = buffer["prev"]
                     - (
-                    (vim.b.smoothcursor_diff > 0)
-                        and math.ceil(vim.b.smoothcursor_diff / 100 * config.default_args.speed)
-                        or math.floor(vim.b.smoothcursor_diff / 100 * config.default_args.speed)
+                    (buffer["diff"] > 0)
+                        and math.ceil(buffer["diff"] / 100 * config.default_args.speed)
+                        or math.floor(buffer["diff"] / 100 * config.default_args.speed)
                     )
-                buffer:push_front(vim.b.smoothcursor_row_prev)
+                buffer:push_front(buffer["prev"])
                 unplace_signs()
-                for i = #buffer, 2, -1 do
+                for i = buffer:length(), 2, -1 do
                     for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
                         place_sign(j, string.format("smoothcursor_body%d", i - 1))
                     end
                 end
                 if config.default_args.fancy.tail ~= nil and config.default_args.fancy.tail.cursor ~= nil then
-                    place_sign(buffer[#buffer], "smoothcursor_tail")
+                    place_sign(buffer[buffer:length()], "smoothcursor_tail")
                 end
                 if fancy_head_exists() then
                     place_sign(buffer[1], "smoothcursor")
                 end
                 counter = counter + 1
                 if counter > (config.default_args.timeout / config.default_args.intervals) or
-                    (vim.b.smoothcursor_diff == 0 and buffer[1] == buffer[#buffer]) then
+                    (buffer["diff"] == 0 and buffer[1] == buffer[buffer:length()]) then
                     if not fancy_head_exists() then
                         unplace_signs()
                     end
@@ -143,11 +168,11 @@ local function sc_default()
                 end
             end)
     else
-        vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
-        buffer:push_front(vim.b.smoothcursor_row_prev)
+        buffer["prev"] = buffer["now"]
+        buffer:push_front(buffer["prev"])
         unplace_signs()
         if fancy_head_exists() then
-            place_sign(vim.b.smoothcursor_row_prev, "smoothcursor")
+            place_sign(buffer["prev"], "smoothcursor")
         end
     end
 end
@@ -155,44 +180,44 @@ end
 -- Exponential corsor callback. b:smoothcursor_row_prev is no longer integer.
 local function sc_exp()
     -- If previous cursor position is not exists, use now position.
-    vim.b.smoothcurosr_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
-    if vim.b.smoothcursor_row_prev == nil then
-        vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
+    buffer["now"] = vim.fn.getcurpos(vim.fn.win_getid())[2]
+    if buffer["prev"] == nil then
+        buffer["prev"] = buffer["now"]
     end
-    vim.b.smoothcursor_diff = vim.b.smoothcursor_row_prev - vim.b.smoothcurosr_row_now
-    vim.b.smoothcursor_diff = math.min(vim.b.smoothcursor_diff, vim.fn.winheight(0))
-    if math.abs(vim.b.smoothcursor_diff) > config.default_args.threshold then
+    buffer["diff"] = buffer["prev"] - buffer["now"]
+    buffer["diff"] = math.min(buffer["diff"], vim.fn.winheight(0))
+    if math.abs(buffer["diff"]) > config.default_args.threshold then
         local counter = 1
         sc_timer:post(
             function()
-                vim.b.smoothcurosr_row_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
-                if vim.b.smoothcursor_row_prev == nil then
-                    vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
+                buffer["now"] = vim.fn.getcurpos(vim.fn.win_getid())[2]
+                if buffer["prev"] == nil then
+                    buffer["prev"] = buffer["now"]
                 end
-                vim.b.smoothcursor_row_prev = math.max(vim.b.smoothcursor_row_prev, vim.fn.line('w0'))
-                vim.b.smoothcursor_row_prev = math.min(vim.b.smoothcursor_row_prev, vim.fn.line('w$'))
-                vim.b.smoothcursor_diff = vim.b.smoothcursor_row_prev - vim.b.smoothcurosr_row_now
-                vim.b.smoothcursor_row_prev = vim.b.smoothcursor_row_prev
-                    - vim.b.smoothcursor_diff / 100 * config.default_args.speed
-                if math.abs(vim.b.smoothcursor_diff) < 0.5 then
-                    vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
+                buffer["prev"] = math.max(buffer["prev"], vim.fn.line('w0'))
+                buffer["prev"] = math.min(buffer["prev"], vim.fn.line('w$'))
+                buffer["diff"] = buffer["prev"] - buffer["now"]
+                buffer["prev"] = buffer["prev"]
+                    - buffer["diff"] / 100 * config.default_args.speed
+                if math.abs(buffer["diff"]) < 0.5 then
+                    buffer["prev"] = buffer["now"]
                 end
-                buffer:push_front(vim.b.smoothcursor_row_prev)
+                buffer:push_front(buffer["prev"])
                 unplace_signs()
-                for i = #buffer, 2, -1 do
+                for i = buffer:length(), 2, -1 do
                     for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
                         place_sign(j, string.format("smoothcursor_body%d", i - 1))
                     end
                 end
                 if config.default_args.fancy.tail ~= nil and config.default_args.fancy.tail.cursor ~= nil then
-                    place_sign(buffer[#buffer], "smoothcursor_tail")
+                    place_sign(buffer[buffer:length()], "smoothcursor_tail")
                 end
                 if fancy_head_exists() then
                     place_sign(buffer[1], "smoothcursor")
                 end
                 counter = counter + 1
                 if counter > (config.default_args.timeout / config.default_args.intervals) or
-                    (vim.b.smoothcursor_diff == 0 and buffer:is_stay_still()) then
+                    (buffer["diff"] == 0 and buffer:is_stay_still()) then
                     if not fancy_head_exists() then
                         unplace_signs()
                     end
@@ -200,11 +225,11 @@ local function sc_exp()
                 end
             end)
     else
-        vim.b.smoothcursor_row_prev = vim.b.smoothcurosr_row_now
-        buffer:push_front(vim.b.smoothcursor_row_prev)
+        buffer["prev"] = buffer["now"]
+        buffer:push_front(buffer["prev"])
         unplace_signs()
         if fancy_head_exists() then
-            place_sign(vim.b.smoothcursor_row_prev, "smoothcursor")
+            place_sign(buffer["prev"], "smoothcursor")
         end
     end
 end

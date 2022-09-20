@@ -48,7 +48,7 @@ end
 local function setup(args)
     args = args == nil and {} or args
     for key, value in pairs(args) do
-        if type(value) == "table" then
+        if key == "fancy" then
             for key2, value2 in pairs(value) do
                 default_args[key][key2] = value2
             end
@@ -56,6 +56,7 @@ local function setup(args)
             default_args[key] = value
         end
     end
+
 
     define_signs(default_args)
 
