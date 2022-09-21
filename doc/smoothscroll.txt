@@ -67,12 +67,12 @@ utils.with_smoothcursor(func, args...)
 utils.smoothcursor_start()
     Start SmoothCursor
 
-							*smoothcursor-utils-smoothcursor_start*
+							*smoothcursor-utils-smoothcursor_stop*
 utils.smoothcursor_stop()
     Stop SmoothCursor
 
-							*smoothcursor-utils-smoothcursor_start*
-utils.smoothcursor_stop()
+							*smoothcursor-utils-smoothcursor_toggle*
+utils.smoothcursor_toggle()
     Toggle SmoothCursor
 
 							*smoothcursor-utils-smoothcursor_status*
