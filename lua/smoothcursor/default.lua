@@ -26,5 +26,7 @@ return {
         texthl = "SmoothCursor",
         linehl = nil,
         priority = 10,
+        disabled_filetypes = nil,
+        enabled_filetypes = nil,
     }
 }

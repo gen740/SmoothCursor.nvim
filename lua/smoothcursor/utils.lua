@@ -7,7 +7,7 @@ sc.smoothcursor_start = function()
     end
     require("smoothcursor.callback").sc_callback()
     vim.api.nvim_create_augroup("SmoothCursor", { clear = true })
-    vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+    vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI', 'BufEnter' }, {
         group = "SmoothCursor",
         callback = require("smoothcursor.callback").sc_callback
     })
