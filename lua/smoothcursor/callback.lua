@@ -1,7 +1,6 @@
 local config = require("smoothcursor.default")
 
 -- Buffer specific list
---
 BList = {}
 
 function BList.new(length)
@@ -124,8 +123,38 @@ local function fancy_head_exists()
     return config.default_args.fancy.head ~= nil and config.default_args.fancy.head.cursor ~= nil
 end
 
+-- This function cache "enabled" value for each buffer.
+-- Return if buffer is enabled SmoothCursor or not
+---@return boolean
+local function is_enabled()
+    if buffer["enabled"] == true then return true
+    elseif buffer["enabled"] == false then return false end
+    local now_ft = vim.opt_local.ft._value
+    if now_ft == "" or now_ft == nil then
+        return false
+    end
+    if config.default_args.enabled_filetypes == nil then
+        config.default_args.disabled_filetypes = config.default_args.disabled_filetypes or {}
+        buffer["enabled"] = true
+        for _, value in ipairs(config.default_args.disabled_filetypes) do
+            if now_ft == value then buffer["enabled"] = false end
+        end
+    else
+        buffer["enabled"] = false
+        for _, value in ipairs(config.default_args.enabled_filetypes) do
+            if now_ft == value then buffer["enabled"] = true end
+        end
+    end
+    return is_enabled()
+end
+
+local function enable_smoothcursor()
+    buffer["enabled"] = true
+end
+
 -- Default corsor callback. buffer["prev"] is always integer
 local function sc_default()
+    if not is_enabled() then return end
     buffer["now"] = vim.fn.getcurpos(vim.fn.win_getid())[2]
     if buffer["prev"] == nil then
         buffer["prev"] = buffer["now"]
@@ -185,7 +214,7 @@ local function sc_default()
             end)
     else
         buffer["prev"] = buffer["now"]
-        buffer:push_front(buffer["prev"])
+        reset_buffer(buffer["prev"])
         unplace_signs()
         if fancy_head_exists() then
             place_sign(buffer["prev"], "smoothcursor")
@@ -195,6 +224,7 @@ end
 
 -- Exponential corsor callback. buffer["prev"] is no longer integer.
 local function sc_exp()
+    if not is_enabled() then return end
     buffer["now"] = vim.fn.getcurpos(vim.fn.win_getid())[2]
     if buffer["prev"] == nil then
         buffer["prev"] = buffer["now"]
@@ -252,7 +282,7 @@ local function sc_exp()
             end)
     else
         buffer["prev"] = buffer["now"]
-        buffer:push_front(buffer["prev"])
+        reset_buffer(buffer["prev"])
         unplace_signs()
         if fancy_head_exists() then
             place_sign(buffer["prev"], "smoothcursor")
@@ -267,4 +297,5 @@ return {
     sc_callback = nil,
     unplace_signs = unplace_signs,
     reset_buffer = reset_buffer,
+    enable_smoothcursor = enable_smoothcursor
 }
