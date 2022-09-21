@@ -145,8 +145,8 @@ local function sc_default()
                 -- For <c-f>/<c-b> movement. buffer["prev"] has room for half screen.
                 buffer["w0"] = vim.fn.line("w0")
                 buffer["w$"] = vim.fn.line("w$")
-                buffer["prev"] = math.max(buffer["prev"], buffer['w0'] - math.floor(vim.fn.winheight(0) / 2 + 0.5))
-                buffer["prev"] = math.min(buffer["prev"], buffer['w$'] + math.floor(vim.fn.winheight(0) / 2 + 0.5))
+                buffer["prev"] = math.max(buffer["prev"], buffer['w0'] - math.floor(vim.fn.winheight(0) / 2))
+                buffer["prev"] = math.min(buffer["prev"], buffer['w$'] + math.floor(vim.fn.winheight(0) / 2))
                 buffer["diff"] = buffer["prev"] - buffer["now"]
                 buffer["prev"] = buffer["prev"]
                     - (
@@ -214,8 +214,8 @@ local function sc_exp()
                 -- For <c-f>/<c-b> movement. buffer["prev"] has room for half screen.
                 buffer["w0"] = vim.fn.line("w0")
                 buffer["w$"] = vim.fn.line("w$")
-                buffer["prev"] = math.max(buffer["prev"], buffer['w0'] - math.floor(vim.fn.winheight(0) / 2 + 0.5))
-                buffer["prev"] = math.min(buffer["prev"], buffer['w$'] + math.floor(vim.fn.winheight(0) / 2 + 0.5))
+                buffer["prev"] = math.max(buffer["prev"], buffer['w0'] - math.floor(vim.fn.winheight(0) / 2))
+                buffer["prev"] = math.min(buffer["prev"], buffer['w$'] + math.floor(vim.fn.winheight(0) / 2))
                 buffer["diff"] = buffer["prev"] - buffer["now"]
                 buffer["prev"] = buffer["prev"] - buffer["diff"] / 100 * config.default_args.speed
                 if math.abs(buffer["diff"]) < 0.5 then
