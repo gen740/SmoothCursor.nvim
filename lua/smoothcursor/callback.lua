@@ -1,7 +1,6 @@
 local config = require("smoothcursor.default")
 
 -- Buffer specific list
---
 BList = {}
 
 function BList.new(length)
@@ -127,7 +126,6 @@ end
 -- Return if buffer is enabled SmoothCursor or not
 ---@return boolean
 local function is_enabled()
-    print(buffer["enabled"])
     if buffer["enabled"] == true then return true
     elseif buffer["enabled"] == false then return false end
     local now_ft = vim.opt_local.ft._value
@@ -147,6 +145,10 @@ local function is_enabled()
         end
     end
     return is_enabled()
+end
+
+local function enable_smoothcursor()
+    buffer["enabled"] = true
 end
 
 -- Default corsor callback. buffer["prev"] is always integer
@@ -211,7 +213,6 @@ local function sc_default()
             end)
     else
         buffer["prev"] = buffer["now"]
-        -- buffer:push_front(buffer["prev"])
         reset_buffer(buffer["prev"])
         unplace_signs()
         if fancy_head_exists() then
@@ -280,7 +281,6 @@ local function sc_exp()
             end)
     else
         buffer["prev"] = buffer["now"]
-        -- buffer:push_front(buffer["prev"])
         reset_buffer(buffer["prev"])
         unplace_signs()
         if fancy_head_exists() then
@@ -296,4 +296,5 @@ return {
     sc_callback = nil,
     unplace_signs = unplace_signs,
     reset_buffer = reset_buffer,
+    enable_smoothcursor = enable_smoothcursor
 }
