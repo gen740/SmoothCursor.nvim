@@ -15,6 +15,7 @@ sc.smoothcursor_start = function()
     callback = function()
       require('smoothcursor.callback').switch_buf()
       require('smoothcursor.callback').set_buffer_to_prev_pos()
+      require('smoothcursor.callback').sc_callback()
     end,
   })
 
