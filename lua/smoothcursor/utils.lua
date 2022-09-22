@@ -9,23 +9,29 @@ sc.smoothcursor_start = function()
   require('smoothcursor.callback').enable_smoothcursor()
   require('smoothcursor.callback').sc_callback()
   vim.api.nvim_create_augroup('SmoothCursor', { clear = true })
-  vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI', 'BufEnter' }, {
-    group = 'SmoothCursor',
-    callback = require('smoothcursor.callback').sc_callback,
-  })
-  vim.api.nvim_create_autocmd({ 'BufLeave' }, {
-    group = 'SmoothCursor',
-    callback = function()
-      require('smoothcursor.callback').reset_buffer()
-      unplace_signs()
-    end,
-  })
+
   vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     group = 'SmoothCursor',
     callback = function()
       require('smoothcursor.callback').switch_buf()
+      require('smoothcursor.callback').set_buffer_to_prev_pos()
     end,
   })
+
+  vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+    group = 'SmoothCursor',
+    callback = function()
+      require('smoothcursor.callback').sc_callback()
+    end,
+  })
+
+  vim.api.nvim_create_autocmd({ 'BufLeave' }, {
+    group = 'SmoothCursor',
+    callback = function()
+      unplace_signs()
+    end,
+  })
+
   smoothcursor_started = true
 end
 
@@ -55,7 +61,7 @@ sc.smoothcursor_delete_signs = function()
 end
 
 sc.with_smoothcursor = function(func, ...)
-  require('smoothcursor.callback').reset_buffer(vim.fn.getcurpos(vim.fn.win_getid())[2])
+  require('smoothcursor.callback').buffer_set_all()
   func(...)
   require('smoothcursor.callback').sc_callback()
 end

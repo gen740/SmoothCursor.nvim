@@ -18,6 +18,11 @@ function BList.new(length)
       require('smoothcursor.debug').buf_switch_counter = require('smoothcursor.debug').buf_switch_counter
         + 1
     end,
+    all = function(self, value)
+      for i = 1, self.length, 1 do
+        self[i] = value
+      end
+    end,
     is_stay_still = function(self)
       local first_val = self[1]
       for i = 2, self.length do
@@ -58,18 +63,24 @@ local function init()
   end
 end
 
-local function reset_buffer(value)
+---@param value integer | nil
+local function buffer_set_all(value)
   if value == nil then
     value = vim.fn.getcurpos(vim.fn.win_getid())[2]
   end
+  print(value)
+  buffer['now'] = value
   buffer['prev'] = value
-  for _ = 1, buffer.length, 1 do
-    buffer:push_front(value)
-  end
+  buffer:all(value)
   debug_callback(buffer, { 'Buffer Reset' }, function()
     require('smoothcursor.debug').reset_counter = require('smoothcursor.debug').reset_counter + 1
   end)
 end
+
+-- local function delete_prev_pos()
+--   buffer['now'] = vim.fn.getcurpos(vim.fn.win_getid())[2]
+--   buffer['prev'] = vim.fn.getcurpos(vim.fn.win_getid())[2]
+-- end
 
 -- sc_timer --------------------------------------------------------------------
 -- Hold unique uv timer.
@@ -233,6 +244,7 @@ local function sc_default()
     end)
   else
     buffer['prev'] = buffer['now']
+    buffer:all(buffer['now'])
     unplace_signs()
     if fancy_head_exists() then
       place_sign(buffer['prev'], 'smoothcursor')
@@ -288,6 +300,7 @@ local function sc_exp()
     end)
   else
     buffer['prev'] = buffer['now']
+    buffer:all(buffer['now'])
     unplace_signs()
     if fancy_head_exists() then
       place_sign(buffer['prev'], 'smoothcursor')
@@ -302,7 +315,10 @@ return {
   sc_callback_exp = sc_exp,
   sc_callback = nil,
   unplace_signs = unplace_signs,
-  reset_buffer = reset_buffer,
+  buffer_set_all = buffer_set_all,
+  set_buffer_to_prev_pos = function()
+    buffer:all(buffer['prev'])
+  end,
   enable_smoothcursor = enable_smoothcursor,
   switch_buf = function()
     buffer:switch_buf()
