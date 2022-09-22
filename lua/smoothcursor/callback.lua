@@ -68,7 +68,6 @@ local function buffer_set_all(value)
   if value == nil then
     value = vim.fn.getcurpos(vim.fn.win_getid())[2]
   end
-  print(value)
   buffer['now'] = value
   buffer['prev'] = value
   buffer:all(value)
