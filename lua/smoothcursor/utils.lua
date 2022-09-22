@@ -63,6 +63,10 @@ end
 sc.with_smoothcursor = function(func, ...)
   require('smoothcursor.callback').buffer_set_all()
   func(...)
+  if require('smoothcursor.callback').sc_callback == nil then
+    vim.notify('Smoothcursor.setup has not been called, Please configure in your config file')
+    return
+  end
   require('smoothcursor.callback').sc_callback()
 end
 
