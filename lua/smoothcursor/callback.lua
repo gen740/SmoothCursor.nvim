@@ -1,4 +1,5 @@
 local config = require("smoothcursor.default")
+local debug_callback = require("smoothcursor.debug").debug_callback
 
 -- Buffer specific list
 BList = {}
@@ -162,6 +163,7 @@ local function sc_default()
     buffer["diff"] = math.min(buffer["diff"], vim.fn.winheight(0) * 2)
     buffer["w0"] = vim.fn.line("w0")
     buffer["w$"] = vim.fn.line("w$")
+    debug_callback(buffer)
     if math.abs(buffer["diff"]) > config.default_args.threshold then
         local counter = 1
         sc_timer:post(
@@ -202,6 +204,7 @@ local function sc_default()
                     place_sign(buffer[1], "smoothcursor")
                 end
                 counter = counter + 1
+                debug_callback(buffer)
                 -- Timer management
                 if counter > (config.default_args.timeout / config.default_args.intervals) or
                     (buffer["diff"] == 0 and buffer[1] == buffer[buffer:length()]) then
@@ -232,6 +235,7 @@ local function sc_exp()
     buffer["diff"] = math.min(buffer["diff"], vim.fn.winheight(0) * 2)
     buffer["w0"] = vim.fn.line("w0")
     buffer["w$"] = vim.fn.line("w$")
+    debug_callback(buffer)
     if math.abs(buffer["diff"]) > config.default_args.threshold then
         local counter = 1
         sc_timer:post(
@@ -271,6 +275,7 @@ local function sc_exp()
                 end
                 --- Timer management
                 counter = counter + 1
+                debug_callback(buffer)
                 if counter > (config.default_args.timeout / config.default_args.intervals) or
                     (buffer["diff"] == 0 and buffer:is_stay_still()) then
                     if not fancy_head_exists() then
@@ -296,5 +301,5 @@ return {
     sc_callback = nil,
     unplace_signs = unplace_signs,
     reset_buffer = reset_buffer,
-    enable_smoothcursor = enable_smoothcursor
+    enable_smoothcursor = enable_smoothcursor,
 }
