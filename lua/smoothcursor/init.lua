@@ -1,4 +1,4 @@
-local config = require('smoothcursor.default')
+local config = require("smoothcursor.default")
 local default_args = config.default_args
 
 local function define_signs(args)
@@ -8,25 +8,25 @@ local function define_signs(args)
                 vim.fn.sign_define("smoothcursor", {
                     text = args.fancy.head.cursor,
                     texthl = args.fancy.head.texthl,
-                    linehl = args.fancy.head.linehl
+                    linehl = args.fancy.head.linehl,
                 })
             else
                 vim.fn.sign_define("smoothcursor", {
                     text = args.fancy.head.cursor,
-                    texthl = args.fancy.head.texthl
+                    texthl = args.fancy.head.texthl,
                 })
             end
         end
         for idx, value in ipairs(args.fancy.body) do
             vim.fn.sign_define(string.format("smoothcursor_body%s", idx), {
                 text = value.cursor,
-                texthl = value.texthl
+                texthl = value.texthl,
             })
         end
         if args.fancy.tail ~= nil and args.fancy.tail.cursor ~= nil then
             vim.fn.sign_define("smoothcursor_tail", {
                 text = args.fancy.tail.cursor,
-                texthl = args.fancy.tail.texthl
+                texthl = args.fancy.tail.texthl,
             })
         end
     else
@@ -34,12 +34,12 @@ local function define_signs(args)
             vim.fn.sign_define("smoothcursor", {
                 text = args.cursor,
                 texthl = args.texthl,
-                linehl = args.linehl
+                linehl = args.linehl,
             })
         else
             vim.fn.sign_define("smoothcursor", {
                 text = args.cursor,
-                texthl = args.texthl
+                texthl = args.texthl,
             })
         end
     end
@@ -57,7 +57,6 @@ local function setup(args)
         end
     end
 
-
     define_signs(default_args)
 
     require("smoothcursor.callback").init()
@@ -67,25 +66,27 @@ local function setup(args)
     elseif default_args.type == "exp" then
         require("smoothcursor.callback").sc_callback = require("smoothcursor.callback").sc_callback_exp
     else
-        vim.notify(string.format([=[[SmoothCursor.nvim] type %s does not exists, use "default"]=], default_args.type),
-            vim.log.levels.WARN)
+        vim.notify(
+            string.format([=[[SmoothCursor.nvim] type %s does not exists, use "default"]=], default_args.type),
+            vim.log.levels.WARN
+        )
         require("smoothcursor.callback").sc_callback = require("smoothcursor.callback").sc_callback_default
     end
 
     local set_sc_hl = require("smoothcursor.utils").set_smoothcursor_highlight
     set_sc_hl()
 
-    vim.api.nvim_create_augroup('SmoothCursorHightlight', { clear = true })
-    vim.api.nvim_create_autocmd({ 'ColorScheme' }, {
-        group = 'SmoothCursorHightlight',
-        callback = set_sc_hl
+    vim.api.nvim_create_augroup("SmoothCursorHightlight", { clear = true })
+    vim.api.nvim_create_autocmd({ "ColorScheme" }, {
+        group = "SmoothCursorHightlight",
+        callback = set_sc_hl,
     })
 
     if default_args.autostart then
-        require('smoothcursor.utils').smoothcursor_start()
+        require("smoothcursor.utils").smoothcursor_start()
     end
 end
 
 return {
-    setup = setup
+    setup = setup,
 }

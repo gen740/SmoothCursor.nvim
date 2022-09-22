@@ -16,6 +16,7 @@ function BList.new(length)
         end,
         switch_buf = function(self)
             self.bufnr = vim.fn.bufnr()
+            require("smoothcursor.debug").buf_switch_counter = require("smoothcursor.debug").buf_switch_counter + 1
         end,
         is_stay_still = function(self)
             local first_val = self[1]
@@ -27,6 +28,9 @@ function BList.new(length)
             return true
         end
     }
+    for _ = 1, obj.length, 1 do
+        table.insert(obj, 1, 0)
+    end
     return setmetatable(obj,
         {
             __index = function(t, k)
@@ -56,7 +60,7 @@ local function init()
 end
 
 local function reset_buffer(value)
-    if value == nil then value = buffer["now"] end
+    if value == nil then value = vim.fn.getcurpos(vim.fn.win_getid())[2] end
     buffer["prev"] = value
     for _ = 1, buffer.length, 1 do
         buffer:push_front(value)
@@ -121,6 +125,26 @@ local function fancy_head_exists()
     return config.default_args.fancy.head ~= nil and config.default_args.fancy.head.cursor ~= nil
 end
 
+local function replace_signs()
+    unplace_signs()
+    for i = buffer.length, 2, -1 do
+        if not (
+            (math.max(buffer[i - 1], buffer[i]) < buffer['w0'] - 1) or
+                (math.min(buffer[i - 1], buffer[i]) > buffer['w$'] + 1)
+            ) then
+            for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
+                place_sign(j, string.format("smoothcursor_body%d", i - 1))
+            end
+        end
+    end
+    if config.default_args.fancy.tail ~= nil and config.default_args.fancy.tail.cursor ~= nil then
+        place_sign(buffer[buffer.length], "smoothcursor_tail")
+    end
+    if fancy_head_exists() then
+        place_sign(buffer[1], "smoothcursor")
+    end
+end
+
 -- This function cache "enabled" value for each buffer.
 -- Return if buffer is enabled SmoothCursor or not
 ---@return boolean
@@ -152,7 +176,6 @@ end
 
 -- Default corsor callback. buffer["prev"] is always integer
 local function sc_default()
-    buffer:switch_buf()
     if not is_enabled() then return end
     buffer["now"] = vim.fn.getcurpos(vim.fn.win_getid())[2]
     if buffer["prev"] == nil then
@@ -176,36 +199,19 @@ local function sc_default()
                 buffer["prev"] = math.max(buffer["prev"], buffer['w0'] - vim.fn.winheight(0) / 2)
                 buffer["prev"] = math.min(buffer["prev"], buffer['w$'] + vim.fn.winheight(0) / 2)
                 buffer["diff"] = buffer["prev"] - buffer["now"]
-                buffer["prev"] = buffer["prev"]
-                    - (
+                buffer["prev"] = buffer["prev"] - (
                     (buffer["diff"] > 0)
                         and math.ceil(buffer["diff"] / 100 * config.default_args.speed)
                         or math.floor(buffer["diff"] / 100 * config.default_args.speed)
                     )
                 buffer:push_front(buffer["prev"])
-                -- Replace sign
-                unplace_signs()
-                for i = buffer.length, 2, -1 do
-                    if not (
-                        (math.max(buffer[i - 1], buffer[i]) < buffer['w0'] - 1) or
-                            (math.min(buffer[i - 1], buffer[i]) > buffer['w$'] + 1)
-                        ) then
-                        for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
-                            place_sign(j, string.format("smoothcursor_body%d", i - 1))
-                        end
-                    end
-                end
-                if config.default_args.fancy.tail ~= nil and config.default_args.fancy.tail.cursor ~= nil then
-                    place_sign(buffer[buffer.length], "smoothcursor_tail")
-                end
-                if fancy_head_exists() then
-                    place_sign(buffer[1], "smoothcursor")
-                end
+                -- Replace Signs
+                replace_signs()
                 counter = counter + 1
                 debug_callback(buffer, { "Jump: True" })
                 -- Timer management
                 if counter > (config.default_args.timeout / config.default_args.intervals) or
-                    (buffer["diff"] == 0 and buffer[1] == buffer[buffer.length]) then
+                    (buffer["diff"] == 0 and buffer:is_stay_still()) then
                     if not fancy_head_exists() then
                         unplace_signs()
                     end
@@ -214,7 +220,6 @@ local function sc_default()
             end)
     else
         buffer["prev"] = buffer["now"]
-        reset_buffer()
         unplace_signs()
         if fancy_head_exists() then
             place_sign(buffer["prev"], "smoothcursor")
@@ -225,7 +230,6 @@ end
 
 -- Exponential corsor callback. buffer["prev"] is no longer integer.
 local function sc_exp()
-    buffer:switch_buf()
     if not is_enabled() then return end
     buffer["now"] = vim.fn.getcurpos(vim.fn.win_getid())[2]
     if buffer["prev"] == nil then
@@ -254,27 +258,10 @@ local function sc_exp()
                     buffer["prev"] = buffer["now"]
                 end
                 buffer:push_front(buffer["prev"])
-                --- Replace Signs
-                unplace_signs()
-                for i = buffer.length, 2, -1 do
-                    if not (
-                        (math.max(buffer[i - 1], buffer[i]) < buffer['w0'] - 1) or
-                            (math.min(buffer[i - 1], buffer[i]) > buffer['w$'] + 1)
-                        ) then
-                        for j = buffer[i - 1], buffer[i], ((buffer[i - 1] - buffer[i] < 0) and 1 or -1) do
-                            place_sign(j, string.format("smoothcursor_body%d", i - 1))
-                        end
-                    end
-                end
-                if config.default_args.fancy.tail ~= nil and config.default_args.fancy.tail.cursor ~= nil then
-                    place_sign(buffer[buffer.length], "smoothcursor_tail")
-                end
-                if fancy_head_exists() then
-                    place_sign(buffer[1], "smoothcursor")
-                end
-                --- Timer management
+                replace_signs()
                 counter = counter + 1
                 debug_callback(buffer, { "Jump: True" })
+                -- Timer management
                 if counter > (config.default_args.timeout / config.default_args.intervals) or
                     (buffer["diff"] == 0 and buffer:is_stay_still()) then
                     if not fancy_head_exists() then
@@ -285,7 +272,6 @@ local function sc_exp()
             end)
     else
         buffer["prev"] = buffer["now"]
-        reset_buffer()
         unplace_signs()
         if fancy_head_exists() then
             place_sign(buffer["prev"], "smoothcursor")
@@ -302,4 +288,5 @@ return {
     unplace_signs = unplace_signs,
     reset_buffer = reset_buffer,
     enable_smoothcursor = enable_smoothcursor,
+    switch_buf = function() buffer:switch_buf() end
 }

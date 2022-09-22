@@ -20,6 +20,12 @@ sc.smoothcursor_start = function()
             unplace_signs()
         end
     })
+    vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+        group = "SmoothCursor",
+        callback = function()
+            require("smoothcursor.callback").switch_buf()
+        end
+    })
     smoothcursor_started = true
 end
 

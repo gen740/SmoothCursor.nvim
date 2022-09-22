@@ -39,6 +39,7 @@ end
 
 local counter = 0
 sc.reset_counter = 0
+sc.buf_switch_counter = 0
 
 function sc.debug_callback(obj, extrainfo, extrafunc)
     if not is_debug_mode then
@@ -51,6 +52,8 @@ function sc.debug_callback(obj, extrainfo, extrafunc)
     vim.api.nvim_buf_set_lines(debug_bufid, 0, 0, false, extrainfo)
     vim.api.nvim_buf_set_lines(debug_bufid, 0, 0, false,
         { string.format("Buffer Reset called %d Times", sc.reset_counter) })
+    vim.api.nvim_buf_set_lines(debug_bufid, 0, 0, false,
+        { string.format("Buffer Switch called %d Times", sc.buf_switch_counter) })
     vim.api.nvim_buf_set_lines(debug_bufid, 0, 0, false, { string.format("Callback called %d Times", counter) })
     extrafunc()
 end
