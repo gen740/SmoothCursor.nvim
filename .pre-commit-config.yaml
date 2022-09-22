@@ -1,3 +1,4 @@
+repos:
 - repo: https://github.com/JohnnyMorganz/StyLua
   rev: v0.15.0
   hooks:
