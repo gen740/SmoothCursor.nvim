@@ -37,11 +37,22 @@ local function dump(o, level)
     end
 end
 
-function sc.debug_callback(obj)
+local counter = 0
+sc.reset_counter = 0
+
+function sc.debug_callback(obj, extrainfo, extrafunc)
     if not is_debug_mode then
         return
     end
+    extrainfo = extrainfo or {}
+    extrafunc = extrafunc or function() end
+    counter = counter + 1
     vim.api.nvim_buf_set_lines(debug_bufid, 0, 1000, false, vim.split(dump(obj), "\n"))
+    vim.api.nvim_buf_set_lines(debug_bufid, 0, 0, false, extrainfo)
+    vim.api.nvim_buf_set_lines(debug_bufid, 0, 0, false,
+        { string.format("Buffer Reset called %d Times", sc.reset_counter) })
+    vim.api.nvim_buf_set_lines(debug_bufid, 0, 0, false, { string.format("Callback called %d Times", counter) })
+    extrafunc()
 end
 
 return sc

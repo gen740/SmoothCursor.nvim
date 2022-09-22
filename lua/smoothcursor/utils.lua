@@ -1,5 +1,6 @@
 local sc = {}
 local smoothcursor_started = false
+local unplace_signs = require("smoothcursor.callback").unplace_signs
 
 sc.smoothcursor_start = function()
     if smoothcursor_started then
@@ -11,6 +12,13 @@ sc.smoothcursor_start = function()
     vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI', 'BufEnter' }, {
         group = "SmoothCursor",
         callback = require("smoothcursor.callback").sc_callback
+    })
+    vim.api.nvim_create_autocmd({ 'BufLeave' }, {
+        group = "SmoothCursor",
+        callback = function()
+            require("smoothcursor.callback").reset_buffer()
+            unplace_signs()
+        end
     })
     smoothcursor_started = true
 end
@@ -37,7 +45,7 @@ sc.smoothcursor_status = function()
 end
 
 sc.smoothcursor_delete_signs = function()
-    require("smoothcursor.callback").unplace_signs()
+    unplace_signs()
 end
 
 sc.with_smoothcursor = function(func, ...)
