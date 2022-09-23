@@ -47,9 +47,6 @@ function BList.new(length)
       if t.buffer[t.bufnr] == nil then
         t.buffer[t.bufnr] = {}
       end
-      if v == '' then
-        t.buffer[t.bufnr][k] = nil
-      end
       t.buffer[t.bufnr][k] = v
     end,
   })
@@ -122,6 +119,8 @@ local function place_sign(position, name)
   end
 end
 
+local function set_buffer_to_prev_pos() end
+
 local function fancy_head_exists()
   -- if it is not fancy mode Head is always set
   if not config.default_args.fancy.enable then
@@ -156,11 +155,15 @@ end
 -- Return if buffer is enabled SmoothCursor or not
 ---@return boolean
 local function is_enabled()
-  -- if buffer['enabled'] == true then
-  --   return true
-  -- elseif buffer['enabled'] == false then
-  --   return false
-  -- end
+  if buffer['enabled'] == true then
+    return true
+  elseif buffer['enabled'] == false then
+    return false
+  end
+  return false
+end
+
+local function detect_filetype()
   local now_ft = vim.opt_local.ft['_value']
   if now_ft == '' or now_ft == nil then
     return false
@@ -181,7 +184,6 @@ local function is_enabled()
       end
     end
   end
-  return buffer['enabled']
 end
 
 local function enable_smoothcursor()
@@ -309,8 +311,11 @@ return {
   sc_callback = nil,
   unplace_signs = unplace_signs,
   buffer_set_all = buffer_set_all,
+  detect_filetype = detect_filetype,
   set_buffer_to_prev_pos = function()
-    buffer:all(buffer['prev'])
+    if buffer['enabled'] and buffer['prev'] ~= nil then
+      buffer:all(buffer['prev'])
+    end
   end,
   enable_smoothcursor = enable_smoothcursor,
   switch_buf = function()

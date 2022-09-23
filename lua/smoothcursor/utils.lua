@@ -14,6 +14,7 @@ sc.smoothcursor_start = function()
     group = 'SmoothCursor',
     callback = function()
       require('smoothcursor.callback').switch_buf()
+      require('smoothcursor.callback').detect_filetype()
       require('smoothcursor.callback').set_buffer_to_prev_pos()
       require('smoothcursor.callback').sc_callback()
     end,
