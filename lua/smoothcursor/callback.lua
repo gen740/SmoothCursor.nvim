@@ -213,8 +213,8 @@ local function sc_default()
       -- For <c-f>/<c-b> movement. buffer["prev"] has room for half screen.
       buffer['w0'] = vim.fn.line('w0')
       buffer['w$'] = vim.fn.line('w$')
-      buffer['prev'] = math.max(buffer['prev'], buffer['w0'] - vim.fn.winheight(0) / 2)
-      buffer['prev'] = math.min(buffer['prev'], buffer['w$'] + vim.fn.winheight(0) / 2)
+      buffer['prev'] = math.max(buffer['prev'], buffer['w0'] - math.floor(vim.fn.winheight(0) / 2))
+      buffer['prev'] = math.min(buffer['prev'], buffer['w$'] + math.floor(vim.fn.winheight(0) / 2))
       buffer['diff'] = buffer['prev'] - cursor_now
       buffer['prev'] = buffer['prev']
         - (
