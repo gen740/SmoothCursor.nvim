@@ -1,29 +1,30 @@
 local sc = {}
 local smoothcursor_started = false
-local unplace_signs = require('smoothcursor.callback').unplace_signs
+local callback = require('smoothcursor.callback')
+local unplace_signs = callback.unplace_signs
 
 sc.smoothcursor_start = function()
   if smoothcursor_started then
     return
   end
-  require('smoothcursor.callback').enable_smoothcursor()
-  require('smoothcursor.callback').sc_callback()
+  callback.enable_smoothcursor()
+  callback.sc_callback()
   vim.api.nvim_create_augroup('SmoothCursor', { clear = true })
 
   vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     group = 'SmoothCursor',
     callback = function()
-      require('smoothcursor.callback').switch_buf()
-      require('smoothcursor.callback').detect_filetype()
-      require('smoothcursor.callback').set_buffer_to_prev_pos()
-      require('smoothcursor.callback').sc_callback()
+      callback.switch_buf()
+      callback.detect_filetype()
+      callback.set_buffer_to_prev_pos()
+      callback.sc_callback()
     end,
   })
 
   vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
     group = 'SmoothCursor',
     callback = function()
-      require('smoothcursor.callback').sc_callback()
+      callback.sc_callback()
     end,
   })
 
@@ -41,7 +42,7 @@ sc.smoothcursor_stop = function()
   if not smoothcursor_started then
     return
   end
-  require('smoothcursor.callback').unplace_signs()
+  callback.unplace_signs()
   vim.api.nvim_del_augroup_by_name('SmoothCursor')
   smoothcursor_started = false
 end
@@ -63,13 +64,13 @@ sc.smoothcursor_delete_signs = function()
 end
 
 sc.with_smoothcursor = function(func, ...)
-  require('smoothcursor.callback').buffer_set_all()
+  callback.buffer_set_all()
   func(...)
-  if require('smoothcursor.callback').sc_callback == nil then
+  if callback.sc_callback == nil then
     vim.notify('Smoothcursor.setup has not been called, Please configure in your config file')
     return
   end
-  require('smoothcursor.callback').sc_callback()
+  callback.sc_callback()
 end
 
 sc.set_smoothcursor_highlight = function()
