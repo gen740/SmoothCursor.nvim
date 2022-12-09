@@ -45,18 +45,7 @@ local function define_signs(args)
   end
 end
 
-local function setup(args)
-  args = args == nil and {} or args
-  for key, value in pairs(args) do
-    if key == 'fancy' then
-      for key2, value2 in pairs(value) do
-        default_args[key][key2] = value2
-      end
-    else
-      default_args[key] = value
-    end
-  end
-
+local function init_and_start()
   define_signs(default_args)
 
   require('smoothcursor.callback').init()
@@ -92,6 +81,22 @@ local function setup(args)
   end
 end
 
+local function setup(args)
+  args = args == nil and {} or args
+  for key, value in pairs(args) do
+    if key == 'fancy' then
+      for key2, value2 in pairs(value) do
+        default_args[key][key2] = value2
+      end
+    else
+      default_args[key] = value
+    end
+  end
+  init_and_start()
+end
+
 return {
   setup = setup,
+  init_and_start = init_and_start,
+  define_signs = define_signs,
 }
