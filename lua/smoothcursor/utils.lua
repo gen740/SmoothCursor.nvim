@@ -73,6 +73,32 @@ sc.with_smoothcursor = function(func, ...)
   callback.sc_callback()
 end
 
+local default_args = require('smoothcursor.default').default_args
+local init = require('smoothcursor.init')
+
+---@param arg boolean
+sc.smoothcursor_fancy_set = function(arg)
+  if arg == nil then
+    arg = false
+  end
+  sc.smoothcursor_stop()
+  default_args.fancy.enable = arg
+  init.init_and_start()
+  callback.buffer_set_all()
+end
+
+sc.smoothcursor_fancy_toggle = function()
+  sc.smoothcursor_fancy_set(not default_args.fancy.enable)
+end
+
+sc.smoothcursor_fancy_on = function()
+  sc.smoothcursor_fancy_set(true)
+end
+
+sc.smoothcursor_fancy_off = function()
+  sc.smoothcursor_fancy_set(false)
+end
+
 sc.set_smoothcursor_highlight = function()
   if vim.api.nvim_get_namespaces().SmoothCursor == nil then
     vim.api.nvim_create_namespace('SmoothCursor')

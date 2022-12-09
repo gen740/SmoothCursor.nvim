@@ -81,6 +81,25 @@ utils.smoothcursor_status()
 
     Return: boolean
 
+							*smoothcursor-utils-smoothcursor_fancy_set*
+utils.smoothcursor_fancy_set({arg})
+    Set the fancy mode.
+
+    Parameters:  
+      • {arg}: boolean
+
+							*smoothcursor-utils-smoothcursor_fancy_toggle*
+utils.smoothcursor_fancy_toggle()
+    Tooggle the fancy mode.
+
+							*smoothcursor-utils-smoothcursor_fancy_on*
+utils.smoothcursor_fancy_on()
+    Turn on the fancy mode.
+
+							*smoothcursor-utils-smoothcursor_fancy_off*
+utils.smoothcursor_fancy_off()
+    Turn off the fancy mode.
+
 ===============================================================================
 COMMANDS                                                *smoothcursor-commands*
 
@@ -100,6 +119,18 @@ COMMANDS                                                *smoothcursor-commands*
 							*:SmoothCursorToggle*
 :SmoothCursorToggle
     Toggle SmoothCursor
+
+							*:SmoothCursorFancyToggle*
+:SmoothCursorFancyToggle
+    Toggle fancy mode
+
+							*:SmoothCursorFancyOn*
+:SmoothCursorFancyOn
+    Turn on fancy mode
+
+							*:SmoothCursorFancyOff*
+:SmoothCursorFancyOff
+    Turn off fancy mode
 
 							*:SmoothCursorDeleteSigns*
 :SmoothCursorDeleteSigns

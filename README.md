@@ -65,4 +65,7 @@ https://user-images.githubusercontent.com/54583542/190581464-0b72c057-4644-406a-
 | :SmoothCursorStop        | Stop smooth cursor        |
 | :SmoothCursorStatus      | Show smooth cursor status |
 | :SmoothCursorToggle      | Toggle smooth cursor      |
+| :SmoothCursorFancyToggle | Toggle fancy mode         |
+| :SmoothCursorFancyOn     | Turn on fancy mode        |
+| :SmoothCursorFancyOff    | Turn off fancy mode       |
 | :SmoothCursorDeleteSigns | Delete all signs if exist |
