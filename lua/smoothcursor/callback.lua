@@ -57,6 +57,8 @@ local buffer = BList.new(1)
 local function init()
   if config.default_args.fancy.enable then
     buffer = BList.new(#config.default_args.fancy.body + 1)
+  else
+    buffer = BList.new(1)
   end
 end
 
