@@ -121,8 +121,6 @@ local function place_sign(position, name)
   end
 end
 
-local function set_buffer_to_prev_pos() end
-
 local function fancy_head_exists()
   -- if it is not fancy mode Head is always set
   if not config.default_args.fancy.enable then
@@ -167,7 +165,7 @@ end
 
 local function detect_filetype()
   local now_ft = vim.opt_local.ft['_value']
-  if now_ft == '' or now_ft == nil then
+  if now_ft == nil then
     return false
   end
   if config.default_args.enabled_filetypes == nil then

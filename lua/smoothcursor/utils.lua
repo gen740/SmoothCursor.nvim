@@ -7,8 +7,7 @@ sc.smoothcursor_start = function()
   if smoothcursor_started then
     return
   end
-  callback.enable_smoothcursor()
-  callback.sc_callback()
+
   vim.api.nvim_create_augroup('SmoothCursor', { clear = true })
 
   vim.api.nvim_create_autocmd({ 'BufEnter' }, {
