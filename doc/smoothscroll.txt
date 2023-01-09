@@ -88,6 +88,18 @@ utils.smoothcursor_fancy_set({arg})
     Parameters:  
       • {arg}: boolean
 
+							*smoothcursor-utils-smoothcursor_freeze_toggle*
+utils.smoothcursor_freeze_toggle()
+    Tooggle the freeze mode.
+
+							*smoothcursor-utils-smoothcursor_freeze_on*
+utils.smoothcursor_freeze_on()
+    Turn on the freeze mode.
+
+							*smoothcursor-utils-smoothcursor_freeze_off*
+utils.smoothcursor_freeze_off()
+    Turn off the freeze mode.
+
 							*smoothcursor-utils-smoothcursor_fancy_toggle*
 utils.smoothcursor_fancy_toggle()
     Tooggle the fancy mode.
@@ -119,6 +131,18 @@ COMMANDS                                                *smoothcursor-commands*
 							*:SmoothCursorToggle*
 :SmoothCursorToggle
     Toggle SmoothCursor
+
+							*:SmoothCursorFreezeToggle*
+:SmoothCursorFreezeToggle
+    Toggle fancy mode
+
+							*:SmoothCursorFreezeOn*
+:SmoothCursorFreezeOn
+    Turn on fancy mode
+
+							*:SmoothCursorFreezeOff*
+:SmoothCursorFreezeOff
+    Turn off fancy mode
 
 							*:SmoothCursorFancyToggle*
 :SmoothCursorFancyToggle
