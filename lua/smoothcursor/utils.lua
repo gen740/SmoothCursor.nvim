@@ -1,5 +1,6 @@
 local sc = {}
 local smoothcursor_started = false
+local smoothcursor_freezing = false
 local callback = require('smoothcursor.callback')
 local unplace_signs = callback.unplace_signs
 
@@ -13,6 +14,7 @@ sc.smoothcursor_start = function()
   vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     group = 'SmoothCursor',
     callback = function()
+      if smoothcursor_freezing then return end
       callback.switch_buf()
       callback.detect_filetype()
       callback.set_buffer_to_prev_pos()
@@ -23,6 +25,7 @@ sc.smoothcursor_start = function()
   vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
     group = 'SmoothCursor',
     callback = function()
+      if smoothcursor_freezing then return end
       callback.sc_callback()
     end,
   })
@@ -30,6 +33,7 @@ sc.smoothcursor_start = function()
   vim.api.nvim_create_autocmd({ 'BufLeave' }, {
     group = 'SmoothCursor',
     callback = function()
+      if smoothcursor_freezing then return end
       unplace_signs()
     end,
   })
@@ -38,6 +42,7 @@ sc.smoothcursor_start = function()
 end
 
 sc.smoothcursor_stop = function()
+  if smoothcursor_freezing then return end
   if not smoothcursor_started then
     return
   end
@@ -56,6 +61,22 @@ end
 
 sc.smoothcursor_status = function()
   return smoothcursor_started
+end
+
+sc.smoothcursor_freeze_on = function ()
+  smoothcursor_freezing = true
+end
+
+sc.smoothcursor_freeze_off = function ()
+  smoothcursor_freezing = false
+end
+
+sc.smoothcursor_freeze_toggle = function ()
+  if smoothcursor_freezing then
+    sc.smoothcursor_freeze_off()
+  else
+    sc.smoothcursor_freeze_on()
+  end
 end
 
 sc.smoothcursor_delete_signs = function()
