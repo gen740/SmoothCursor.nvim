@@ -15,6 +15,7 @@ return {
         { cursor = '∙', texthl = 'SmoothCursorPurple' },
       },
       tail = { cursor = nil, texthl = 'SmoothCursor' },
+      flyin_effect = nil, -- "bottom" or "top"
     },
     cursorID = 23874823,
     intervals = 35,

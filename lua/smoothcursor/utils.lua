@@ -1,7 +1,8 @@
 local sc = {}
 local smoothcursor_started = false
 local callback = require('smoothcursor.callback')
-local unplace_signs = callback.unplace_signs
+local configs = require('smoothcursor.default').default_args
+local init = require('smoothcursor.init')
 
 sc.smoothcursor_start = function()
   if smoothcursor_started then
@@ -30,7 +31,14 @@ sc.smoothcursor_start = function()
   vim.api.nvim_create_autocmd({ 'BufLeave' }, {
     group = 'SmoothCursor',
     callback = function()
-      unplace_signs()
+      callback.unplace_signs()
+      if configs.fancy.flyin_effect == nil then
+        return
+      elseif configs.fancy.flyin_effect == 'bottom' then
+        callback.buffer_set_all(vim.fn.line('$'))
+      elseif configs.fancy.flyin_effect == 'top' then
+        callback.buffer_set_all(0)
+      end
     end,
   })
 
@@ -59,7 +67,7 @@ sc.smoothcursor_status = function()
 end
 
 sc.smoothcursor_delete_signs = function()
-  unplace_signs()
+  callback.unplace_signs()
 end
 
 sc.with_smoothcursor = function(func, ...)
@@ -72,22 +80,19 @@ sc.with_smoothcursor = function(func, ...)
   callback.sc_callback()
 end
 
-local default_args = require('smoothcursor.default').default_args
-local init = require('smoothcursor.init')
-
 ---@param arg boolean
 sc.smoothcursor_fancy_set = function(arg)
   if arg == nil then
     arg = false
   end
   sc.smoothcursor_stop()
-  default_args.fancy.enable = arg
+  configs.fancy.enable = arg
   init.init_and_start()
   callback.buffer_set_all()
 end
 
 sc.smoothcursor_fancy_toggle = function()
-  sc.smoothcursor_fancy_set(not default_args.fancy.enable)
+  sc.smoothcursor_fancy_set(not configs.fancy.enable)
 end
 
 sc.smoothcursor_fancy_on = function()
