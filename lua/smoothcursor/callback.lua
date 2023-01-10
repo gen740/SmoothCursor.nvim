@@ -163,6 +163,7 @@ local function is_enabled()
   return false
 end
 
+-- Detect filetype and set the value to buffer['enabled']
 local function detect_filetype()
   local now_ft = vim.opt_local.ft['_value']
   if now_ft == nil then
