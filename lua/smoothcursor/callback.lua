@@ -163,10 +163,18 @@ local function is_enabled()
   return false
 end
 
+-- Detect filetype and set the value to buffer['enabled']
 local function detect_filetype()
   local now_ft = vim.opt_local.ft['_value']
   if now_ft == nil then
     return false
+  end
+  if
+    config.default_args.disable_float_win == true
+    and vim.api.nvim_win_get_config(vim.fn.win_getid()).relative ~= ''
+  then
+    buffer['enabled'] = false
+    return
   end
   if config.default_args.enabled_filetypes == nil then
     config.default_args.disabled_filetypes = config.default_args.disabled_filetypes or {}

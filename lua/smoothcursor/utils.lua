@@ -3,6 +3,7 @@ local smoothcursor_started = false
 local callback = require('smoothcursor.callback')
 local configs = require('smoothcursor.default').default_args
 local init = require('smoothcursor.init')
+local buffer_leaved = false
 
 sc.smoothcursor_start = function()
   if smoothcursor_started then
@@ -24,6 +25,12 @@ sc.smoothcursor_start = function()
   vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
     group = 'SmoothCursor',
     callback = function()
+      -- leaving floating window does not fire BufEnter
+      -- the first call after buffer leave should switch_buffer
+      if buffer_leaved then
+        callback.switch_buf()
+        buffer_leaved = false
+      end
       callback.sc_callback()
     end,
   })
@@ -32,6 +39,7 @@ sc.smoothcursor_start = function()
     group = 'SmoothCursor',
     callback = function()
       callback.unplace_signs()
+      buffer_leaved = true
       if configs.fancy.flyin_effect == nil then
         return
       elseif configs.fancy.flyin_effect == 'bottom' then
