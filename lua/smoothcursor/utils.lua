@@ -45,11 +45,15 @@ sc.smoothcursor_start = function()
   smoothcursor_started = true
 end
 
-sc.smoothcursor_stop = function()
+--@param erase_signs bool|nil
+sc.smoothcursor_stop = function(erase_signs)
+  erase_signs = (erase_signs == nil) and true
   if not smoothcursor_started then
     return
   end
-  callback.unplace_signs()
+  if erase_signs then
+    callback.unplace_signs()
+  end
   vim.api.nvim_del_augroup_by_name('SmoothCursor')
   smoothcursor_started = false
 end
