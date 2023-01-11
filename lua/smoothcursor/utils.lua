@@ -2,6 +2,7 @@ local sc = {}
 local smoothcursor_started = false
 local callback = require('smoothcursor.callback')
 local unplace_signs = callback.unplace_signs
+local buffer_leaved = false
 
 sc.smoothcursor_start = function()
   if smoothcursor_started then
@@ -23,6 +24,12 @@ sc.smoothcursor_start = function()
   vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
     group = 'SmoothCursor',
     callback = function()
+      -- leaving floating window does not fire BufEnter
+      -- the first call after buffer leave should switch_buffer
+      if buffer_leaved then
+        callback.switch_buf()
+        buffer_leaved = false
+      end
       callback.sc_callback()
     end,
   })
@@ -31,6 +38,7 @@ sc.smoothcursor_start = function()
     group = 'SmoothCursor',
     callback = function()
       unplace_signs()
+      buffer_leaved = true
     end,
   })
 
