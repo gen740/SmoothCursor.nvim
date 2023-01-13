@@ -4,7 +4,11 @@ local callback = require('smoothcursor.callback')
 local unplace_signs = callback.unplace_signs
 local buffer_leaved = false
 
-sc.smoothcursor_start = function()
+--@param init_fire boolean
+sc.smoothcursor_start = function(init_fire)
+  if init_fire == nil then
+    init_fire = true
+  end
   if smoothcursor_started then
     return
   end
@@ -43,6 +47,9 @@ sc.smoothcursor_start = function()
   })
 
   smoothcursor_started = true
+  if init_fire then
+    callback.sc_callback()
+  end
 end
 
 --@param erase_signs bool|nil
