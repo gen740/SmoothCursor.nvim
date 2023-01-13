@@ -5,10 +5,10 @@ vim.api.nvim_create_user_command('SmoothCursorStart', utils.smoothcursor_start, 
 vim.api.nvim_create_user_command('SmoothCursorStop', function(args)
   if args.fargs[1] == nil then
     utils.smoothcursor_stop()
-  elseif args.fargs[1] == '--remain' then
+  elseif args.fargs[1] == '--keep-signs' then
     utils.smoothcursor_stop(false)
   else
-    vim.notify([[bad argument, "--remain" or empty]], vim.log.levels.ERROR)
+    vim.notify([[bad argument, "--keep-signs" or empty]], vim.log.levels.ERROR)
   end
 end, { nargs = '*' })
 vim.api.nvim_create_user_command('SmoothCursorToggle', utils.smoothcursor_toggle, {})
