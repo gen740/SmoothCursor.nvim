@@ -113,8 +113,11 @@ COMMANDS                                                *smoothcursor-commands*
     Start SmoothCursor
 
 							*:SmoothCursorStop*
-:SmoothCursorStop|
+:SmoothCursorStop
     Stop SmoothCursor
+
+    Options:
+        --keep-signs		Stop SmoothCursor without deleting signs.
 
 							*:SmoothCursorStatus*
 :SmoothCursorStatus

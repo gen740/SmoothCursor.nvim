@@ -2,7 +2,15 @@
 local utils = require('smoothcursor.utils')
 
 vim.api.nvim_create_user_command('SmoothCursorStart', utils.smoothcursor_start, {})
-vim.api.nvim_create_user_command('SmoothCursorStop', utils.smoothcursor_stop, {})
+vim.api.nvim_create_user_command('SmoothCursorStop', function(args)
+  if args.fargs[1] == nil then
+    utils.smoothcursor_stop()
+  elseif args.fargs[1] == '--keep-signs' then
+    utils.smoothcursor_stop(false)
+  else
+    vim.notify([[bad argument, "--keep-signs" or empty]], vim.log.levels.ERROR)
+  end
+end, { nargs = '*' })
 vim.api.nvim_create_user_command('SmoothCursorToggle', utils.smoothcursor_toggle, {})
 
 vim.api.nvim_create_user_command('SmoothCursorFancyOn', utils.smoothcursor_fancy_on, {})

@@ -5,7 +5,11 @@ local configs = require('smoothcursor.default').default_args
 local init = require('smoothcursor.init')
 local buffer_leaved = false
 
-sc.smoothcursor_start = function()
+--@param init_fire boolean
+sc.smoothcursor_start = function(init_fire)
+  if init_fire == nil then
+    init_fire = true
+  end
   if smoothcursor_started then
     return
   end
@@ -51,13 +55,20 @@ sc.smoothcursor_start = function()
   })
 
   smoothcursor_started = true
+  if init_fire then
+    callback.sc_callback()
+  end
 end
 
-sc.smoothcursor_stop = function()
+--@param erase_signs bool|nil
+sc.smoothcursor_stop = function(erase_signs)
+  erase_signs = (erase_signs == nil) and true
   if not smoothcursor_started then
     return
   end
-  callback.unplace_signs()
+  if erase_signs then
+    callback.unplace_signs()
+  end
   vim.api.nvim_del_augroup_by_name('SmoothCursor')
   smoothcursor_started = false
 end

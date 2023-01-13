@@ -77,7 +77,7 @@ local function init_and_start()
   })
 
   if default_args.autostart then
-    require('smoothcursor.utils').smoothcursor_start()
+    require('smoothcursor.utils').smoothcursor_start(false)
   end
 end
 
