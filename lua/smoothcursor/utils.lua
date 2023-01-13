@@ -40,11 +40,11 @@ sc.smoothcursor_start = function()
     callback = function()
       callback.unplace_signs()
       buffer_leaved = true
-      if configs.fancy.flyin_effect == nil then
+      if configs.flyin_effect == nil then
         return
-      elseif configs.fancy.flyin_effect == 'bottom' then
+      elseif configs.flyin_effect == 'bottom' then
         callback.buffer_set_all(vim.fn.line('$'))
-      elseif configs.fancy.flyin_effect == 'top' then
+      elseif configs.flyin_effect == 'top' then
         callback.buffer_set_all(0)
       end
     end,
