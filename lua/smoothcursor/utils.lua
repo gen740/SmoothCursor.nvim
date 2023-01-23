@@ -20,9 +20,12 @@ sc.smoothcursor_start = function(init_fire)
     group = 'SmoothCursor',
     callback = function()
       callback.switch_buf()
-      callback.detect_filetype()
       callback.set_buffer_to_prev_pos()
-      callback.sc_callback()
+      vim.defer_fn(function()
+        callback.detect_filetype()
+        callback.unplace_signs()
+        callback.sc_callback()
+      end, 0)
     end,
   })
 
@@ -44,13 +47,15 @@ sc.smoothcursor_start = function(init_fire)
     callback = function()
       callback.unplace_signs()
       buffer_leaved = true
-      if configs.flyin_effect == nil then
-        return
-      elseif configs.flyin_effect == 'bottom' then
-        callback.buffer_set_all(vim.fn.line('$'))
-      elseif configs.flyin_effect == 'top' then
-        callback.buffer_set_all(0)
-      end
+      vim.defer_fn(function()
+        callback.unplace_signs()
+        callback.detect_filetype()
+        if configs.flyin_effect == 'bottom' then
+          callback.buffer_set_all(vim.fn.line('$'))
+        elseif configs.flyin_effect == 'top' then
+          callback.buffer_set_all(0)
+        end
+      end, 0)
     end,
   })
 
