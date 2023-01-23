@@ -164,7 +164,8 @@ local function detect_filetype()
     buffer['enabled'] = false
     return false
   end
-  if config.default_args.disable_terminal == true and vim.bo.bt == 'terminal' then
+  -- disable on terminal by default
+  if vim.bo.bt == 'terminal' then
     buffer['enabled'] = false
     return false
   end
