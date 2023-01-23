@@ -28,6 +28,7 @@ return {
     linehl = nil,
     priority = 10,
     disable_float_win = false,
+    disable_terminal = false,
     disabled_filetypes = nil,
     enabled_filetypes = nil,
   },

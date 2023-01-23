@@ -176,6 +176,10 @@ local function detect_filetype()
     buffer['enabled'] = false
     return
   end
+  if config.default_args.disable_terminal == true and vim.bo.bt == 'terminal' then
+    buffer['enabled'] = false
+    return
+  end
   if config.default_args.enabled_filetypes == nil then
     config.default_args.disabled_filetypes = config.default_args.disabled_filetypes or {}
     buffer['enabled'] = true
