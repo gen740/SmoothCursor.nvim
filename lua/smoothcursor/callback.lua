@@ -1,5 +1,6 @@
 local config = require('smoothcursor.default')
 local debug_callback = require('smoothcursor.debug').debug_callback
+local lazy_redetect_filetype = false
 
 -- Buffer specific list
 BList = {}
@@ -162,13 +163,11 @@ local function detect_filetype()
     and vim.api.nvim_win_get_config(vim.fn.win_getid()).relative ~= ''
   then
     buffer['enabled'] = false
-    sc_timer:abort()
     return false
   end
   -- disable on terminal by default
   if vim.bo.bt == 'terminal' then
     buffer['enabled'] = false
-    sc_timer:abort()
     return false
   end
   if config.default_args.enabled_filetypes == nil then
@@ -194,15 +193,26 @@ end
 -- Return if buffer is enabled SmoothCursor or not
 ---@return boolean
 local function is_enabled()
+  if lazy_redetect_filetype then
+    if not detect_filetype() then
+      sc_timer:abort()
+      unplace_signs()
+    end
+    lazy_redetect_filetype = false
+  end
   if buffer['enabled'] == true then
     return true
   elseif buffer['enabled'] == false then
     return false
   end
-  return false
+  return detect_filetype()
 end
 
 local function enable_smoothcursor()
+  buffer['enabled'] = true
+end
+
+local function disable_smoothcursor()
   buffer['enabled'] = true
 end
 
@@ -334,6 +344,10 @@ return {
     end
   end,
   enable_smoothcursor = enable_smoothcursor,
+  disable_smoothcursor = disable_smoothcursor,
+  lazy_detect = function()
+    lazy_redetect_filetype = true
+  end,
   switch_buf = function()
     buffer:switch_buf()
   end,
