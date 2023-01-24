@@ -1,5 +1,6 @@
 local config = require('smoothcursor.default')
 local debug_callback = require('smoothcursor.debug').debug_callback
+local lazy_redetect_filetype = false
 
 -- Buffer specific list
 BList = {}
@@ -151,18 +152,6 @@ local function replace_signs()
   end
 end
 
--- This function cache "enabled" value for each buffer.
--- Return if buffer is enabled SmoothCursor or not
----@return boolean
-local function is_enabled()
-  if buffer['enabled'] == true then
-    return true
-  elseif buffer['enabled'] == false then
-    return false
-  end
-  return false
-end
-
 -- Detect filetype and set the value to buffer['enabled']
 local function detect_filetype()
   local now_ft = vim.opt_local.ft['_value']
@@ -174,12 +163,12 @@ local function detect_filetype()
     and vim.api.nvim_win_get_config(vim.fn.win_getid()).relative ~= ''
   then
     buffer['enabled'] = false
-    return
+    return false
   end
   -- disable on terminal by default
   if vim.bo.bt == 'terminal' then
     buffer['enabled'] = false
-    return
+    return false
   end
   if config.default_args.enabled_filetypes == nil then
     config.default_args.disabled_filetypes = config.default_args.disabled_filetypes or {}
@@ -197,9 +186,33 @@ local function detect_filetype()
       end
     end
   end
+  return buffer['enabled']
+end
+
+-- This function cache "enabled" value for each buffer.
+-- Return if buffer is enabled SmoothCursor or not
+---@return boolean
+local function is_enabled()
+  if lazy_redetect_filetype then
+    if not detect_filetype() then
+      sc_timer:abort()
+      unplace_signs()
+    end
+    lazy_redetect_filetype = false
+  end
+  if buffer['enabled'] == true then
+    return true
+  elseif buffer['enabled'] == false then
+    return false
+  end
+  return detect_filetype()
 end
 
 local function enable_smoothcursor()
+  buffer['enabled'] = true
+end
+
+local function disable_smoothcursor()
   buffer['enabled'] = true
 end
 
@@ -331,6 +344,10 @@ return {
     end
   end,
   enable_smoothcursor = enable_smoothcursor,
+  disable_smoothcursor = disable_smoothcursor,
+  lazy_detect = function()
+    lazy_redetect_filetype = true
+  end,
   switch_buf = function()
     buffer:switch_buf()
   end,
