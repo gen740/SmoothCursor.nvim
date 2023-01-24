@@ -39,10 +39,9 @@ sc.smoothcursor_start = function(init_fire)
     end,
   })
 
-  vim.api.nvim_create_autocmd({ 'BufLeave' }, {
+  vim.api.nvim_create_autocmd({ 'BufLeave', 'WinLeave' }, {
     group = 'SmoothCursor',
     callback = function()
-      callback.unplace_signs()
       buffer_leaved = true
       callback.unplace_signs()
       callback.lazy_detect()
