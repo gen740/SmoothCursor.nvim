@@ -162,11 +162,13 @@ local function detect_filetype()
     and vim.api.nvim_win_get_config(vim.fn.win_getid()).relative ~= ''
   then
     buffer['enabled'] = false
+    sc_timer:abort()
     return false
   end
   -- disable on terminal by default
   if vim.bo.bt == 'terminal' then
     buffer['enabled'] = false
+    sc_timer:abort()
     return false
   end
   if config.default_args.enabled_filetypes == nil then
