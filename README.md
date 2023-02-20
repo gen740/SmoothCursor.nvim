@@ -72,3 +72,41 @@ https://user-images.githubusercontent.com/54583542/190581464-0b72c057-4644-406a-
 | :SmoothCursorFancyOn           | Turn on fancy mode                               |
 | :SmoothCursorFancyOff          | Turn off fancy mode                              |
 | :SmoothCursorDeleteSigns       | Delete all signs if exist                        |
+
+## FAQs
+
+### How do I change the sub-cursor highlight to match the current mode?
+
+You can use autocmd to Change highlight
+
+**example**
+```lua
+local autocmd = vim.api.nvim_create_autocmd
+local augroup = vim.api.nvim_create_augroup
+
+autocmd({ 'ModeChanged' }, {
+  group = 'CustomAutocommand',
+  callback = function()
+    local current_mode = vim.fn.mode()
+    if current_mode == 'n' then
+      vim.api.nvim_set_hl(0, 'SmoothCursor', { fg = '#8aa872' })
+      vim.fn.sign_define('smoothcursor', { text = '' })
+    elseif current_mode == 'v' then
+      vim.api.nvim_set_hl(0, 'SmoothCursor', { fg = '#bf616a' })
+      vim.fn.sign_define('smoothcursor', { text = '' })
+    elseif current_mode == 'V' then
+      vim.api.nvim_set_hl(0, 'SmoothCursor', { fg = '#bf616a' })
+      vim.fn.sign_define('smoothcursor', { text = '' })
+    elseif current_mode == '' then
+      vim.api.nvim_set_hl(0, 'SmoothCursor', { fg = '#bf616a' })
+      vim.fn.sign_define('smoothcursor', { text = '' })
+    elseif current_mode == 'i' then
+      vim.api.nvim_set_hl(0, 'SmoothCursor', { fg = '#668aab' })
+      vim.fn.sign_define('smoothcursor', { text = '' })
+    end
+  end,
+})
+```
+
+https://user-images.githubusercontent.com/54583542/220056425-a7698013-7173-4247-9d40-d468b24df47a.mov
+

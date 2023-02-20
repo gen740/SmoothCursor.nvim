@@ -40,6 +40,7 @@ end
 local counter = 0
 sc.reset_counter = 0
 sc.buf_switch_counter = 0
+sc.unplace_signs_conuter = 0
 
 function sc.debug_callback(obj, extrainfo, extrafunc)
   if not is_debug_mode then
@@ -70,6 +71,13 @@ function sc.debug_callback(obj, extrainfo, extrafunc)
     0,
     false,
     { string.format('Buffer Switch called %d Times', sc.buf_switch_counter) }
+  )
+  vim.api.nvim_buf_set_lines(
+    debug_bufid,
+    0,
+    0,
+    false,
+    { string.format('Unplace Signs Called %d Times', sc.unplace_signs_conuter) }
   )
   vim.api.nvim_buf_set_lines(
     debug_bufid,

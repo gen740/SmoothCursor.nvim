@@ -43,7 +43,7 @@ sc.smoothcursor_start = function(init_fire)
     group = 'SmoothCursor',
     callback = function()
       buffer_leaved = true
-      callback.unplace_signs()
+      callback.unplace_signs(true)
       callback.lazy_detect()
       if configs.flyin_effect == 'bottom' then
         callback.buffer_set_all(vim.fn.line('$'))

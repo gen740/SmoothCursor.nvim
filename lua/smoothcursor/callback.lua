@@ -1,5 +1,6 @@
 local config = require('smoothcursor.default')
-local debug_callback = require('smoothcursor.debug').debug_callback
+local sc_debug = require('smoothcursor.debug')
+local debug_callback = sc_debug.debug_callback
 local lazy_redetect_filetype = false
 
 -- Buffer specific list
@@ -16,8 +17,7 @@ function BList.new(length)
     end,
     switch_buf = function(self)
       self.bufnr = vim.fn.bufnr()
-      require('smoothcursor.debug').buf_switch_counter = require('smoothcursor.debug').buf_switch_counter
-        + 1
+      sc_debug.buf_switch_counter = sc_debug.buf_switch_counter + 1
     end,
     all = function(self, value)
       for i = 1, self.length, 1 do
@@ -71,7 +71,7 @@ local function buffer_set_all(value)
   buffer['prev'] = value
   buffer:all(value)
   debug_callback(buffer, { 'Buffer Reset' }, function()
-    require('smoothcursor.debug').reset_counter = require('smoothcursor.debug').reset_counter + 1
+    sc_debug.reset_counter = sc_debug.reset_counter + 1
   end)
 end
 
@@ -99,8 +99,13 @@ function sc_timer:abort()
   self.is_running = false
 end
 
-local function unplace_signs()
+--- @param with_timer_stop? boolean
+local function unplace_signs(with_timer_stop)
+  if with_timer_stop == true then
+    sc_timer:abort()
+  end
   vim.fn.sign_unplace('*', { buffer = vim.fn.bufname(), id = config.default_args.cursorID })
+  sc_debug.unplace_signs_conuter = sc_debug.unplace_signs_conuter + 1
 end
 
 -- place 'name' sign to the 'position'
