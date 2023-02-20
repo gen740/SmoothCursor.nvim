@@ -82,10 +82,8 @@ You can use autocmd to Change highlight
 **example**
 ```lua
 local autocmd = vim.api.nvim_create_autocmd
-local augroup = vim.api.nvim_create_augroup
 
 autocmd({ 'ModeChanged' }, {
-  group = 'CustomAutocommand',
   callback = function()
     local current_mode = vim.fn.mode()
     if current_mode == 'n' then
