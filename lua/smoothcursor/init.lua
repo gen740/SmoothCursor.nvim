@@ -1,5 +1,5 @@
-local config = require('smoothcursor.default')
-local default_args = config.default_args
+local config = require('smoothcursor.config')
+local default_args = config.config
 
 local function define_signs(args)
   if args.fancy.enable then
