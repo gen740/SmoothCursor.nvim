@@ -52,7 +52,7 @@ local function init_and_start()
 
   if default_args.type == 'default' then
     require('smoothcursor.callback').sc_callback =
-      require('smoothcursor.callback').sc_callback_default
+      require('smoothcursor.callbacks.default').sc_default
   elseif default_args.type == 'exp' then
     require('smoothcursor.callback').sc_callback = require('smoothcursor.callback').sc_callback_exp
   else
