@@ -1,6 +1,6 @@
 local sc = {}
 local smoothcursor_started = false
-local callback = require('smoothcursor.callback')
+local callback = require('smoothcursor.callbacks')
 local configs = require('smoothcursor.default').default_args
 local init = require('smoothcursor.init')
 local buffer_leaved = false
