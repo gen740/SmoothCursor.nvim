@@ -55,7 +55,7 @@ function sc.debug_callback(obj, extrainfo, extrafunc)
   --   0,
   --   1000,
   --   false,
-  --   vim.split(dump(require('smoothcursor.default').default_args), '\n')
+  --   vim.split(dump(require('smoothcursor.config').default_args), '\n')
   -- )
   vim.api.nvim_buf_set_lines(debug_bufid, 0, 0, false, extrainfo)
   vim.api.nvim_buf_set_lines(
