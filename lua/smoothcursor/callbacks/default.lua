@@ -1,10 +1,10 @@
-local buffer = require('smoothcursor.callback').buffer
-local is_enabled = require('smoothcursor.callback').is_enabled
-local sc_timer = require('smoothcursor.callback').sc_timer
-local replace_signs = require('smoothcursor.callback').replace_signs
-local place_sign = require('smoothcursor.callback').place_sign
-local unplace_signs = require('smoothcursor.callback').unplace_signs
-local fancy_head_exists = require('smoothcursor.callback').fancy_head_exists
+local buffer = require('smoothcursor.callbacks').buffer
+local is_enabled = require('smoothcursor.callbacks').is_enabled
+local sc_timer = require('smoothcursor.callbacks').sc_timer
+local replace_signs = require('smoothcursor.callbacks').replace_signs
+local place_sign = require('smoothcursor.callbacks').place_sign
+local unplace_signs = require('smoothcursor.callbacks').unplace_signs
+local fancy_head_exists = require('smoothcursor.callbacks').fancy_head_exists
 local config = require('smoothcursor.default')
 local debug_callback = require('smoothcursor.debug').debug_callback
 

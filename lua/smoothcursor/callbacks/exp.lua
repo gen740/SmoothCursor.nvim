@@ -1,12 +1,12 @@
-local buffer = require('smoothcursor.callback').buffer
+local buffer = require('smoothcursor.callbacks').buffer
 local config = require('smoothcursor.default')
 local debug_callback = require('smoothcursor.debug').debug_callback
-local fancy_head_exists = require('smoothcursor.callback').fancy_head_exists
-local is_enabled = require('smoothcursor.callback').is_enabled
-local place_sign = require('smoothcursor.callback').place_sign
-local replace_signs = require('smoothcursor.callback').replace_signs
-local sc_timer = require('smoothcursor.callback').sc_timer
-local unplace_signs = require('smoothcursor.callback').unplace_signs
+local fancy_head_exists = require('smoothcursor.callbacks').fancy_head_exists
+local is_enabled = require('smoothcursor.callbacks').is_enabled
+local place_sign = require('smoothcursor.callbacks').place_sign
+local replace_signs = require('smoothcursor.callbacks').replace_signs
+local sc_timer = require('smoothcursor.callbacks').sc_timer
+local unplace_signs = require('smoothcursor.callbacks').unplace_signs
 
 -- Exponential corsor callback. buffer["prev"] is no longer integer.
 local function sc_exp()

@@ -48,13 +48,13 @@ end
 local function init_and_start()
   define_signs(default_args)
 
-  require('smoothcursor.callback').init()
+  require('smoothcursor.callbacks').init()
 
   if default_args.type == 'default' then
-    require('smoothcursor.callback').sc_callback =
+    require('smoothcursor.callbacks').sc_callback =
       require('smoothcursor.callbacks.default').sc_default
   elseif default_args.type == 'exp' then
-    require('smoothcursor.callback').sc_callback = require('smoothcursor.callbacks.exp').sc_exp
+    require('smoothcursor.callbacks').sc_callback = require('smoothcursor.callbacks.exp').sc_exp
   else
     vim.notify(
       string.format(
@@ -63,8 +63,8 @@ local function init_and_start()
       ),
       vim.log.levels.WARN
     )
-    require('smoothcursor.callback').sc_callback =
-      require('smoothcursor.callback.default').sc_default
+    require('smoothcursor.callbacks').sc_callback =
+      require('smoothcursor.callbacks.default').sc_default
   end
 
   local set_sc_hl = require('smoothcursor.utils').set_smoothcursor_highlight
