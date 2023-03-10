@@ -3,17 +3,30 @@ local sc_debug = require('smoothcursor.debug')
 local debug_callback = sc_debug.debug_callback
 local lazy_redetect_filetype = false
 
--- Buffer specific list
-BList = {}
-
-function BList.new(length)
+local buffer = (function()
   local obj = {
     buffer = {},
-    length = length,
+    length = 1,
     bufnr = 1, -- chach bufnr
     push_front = function(self, data)
       table.insert(self, 1, data)
       table.remove(self, self.length + 1)
+    end,
+    resize_buffer = function(self, size)
+      if self.length == size then
+        return
+      end
+      local diff = size - self.length
+      if diff < 0 then
+        for _ = 1, -diff, 1 do
+          table.remove(self, self.length + 1)
+        end
+      else
+        for _ = 1, diff, 1 do
+          table.insert(self, 1, 0)
+        end
+      end
+      self.length = size
     end,
     switch_buf = function(self)
       self.bufnr = vim.fn.bufnr()
@@ -34,9 +47,6 @@ function BList.new(length)
       return true
     end,
   }
-  for _ = 1, obj.length, 1 do
-    table.insert(obj, 1, 0)
-  end
   return setmetatable(obj, {
     __index = function(t, k)
       if t.buffer[t.bufnr] == nil then
@@ -51,15 +61,13 @@ function BList.new(length)
       t.buffer[t.bufnr][k] = v
     end,
   })
-end
-
-local buffer = BList.new(1)
+end)()
 
 local function init()
   if config.default_args.fancy.enable then
-    buffer = BList.new(#config.default_args.fancy.body + 1)
+    buffer:resize_buffer(#config.default_args.fancy.body + 1)
   else
-    buffer = BList.new(1)
+    buffer:resize_buffer(1)
   end
 end
 
