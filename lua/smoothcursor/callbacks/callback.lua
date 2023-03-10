@@ -1,0 +1,1 @@
+-- Define callback global variable

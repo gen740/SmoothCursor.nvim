@@ -221,64 +221,6 @@ local function disable_smoothcursor()
   buffer['enabled'] = true
 end
 
--- Default corsor callback. buffer["prev"] is always integer
-local function sc_default()
-  if not is_enabled() then
-    return
-  end
-  local cursor_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
-  if buffer['prev'] == nil then
-    buffer['prev'] = cursor_now
-  end
-  buffer['diff'] = buffer['prev'] - cursor_now
-  buffer['diff'] = math.min(buffer['diff'], vim.fn.winheight(0) * 2)
-  buffer['w0'] = vim.fn.line('w0')
-  buffer['w$'] = vim.fn.line('w$')
-  if math.abs(buffer['diff']) > config.default_args.threshold then
-    local counter = 1
-    sc_timer:post(function()
-      cursor_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
-      if buffer['prev'] == nil then
-        buffer['prev'] = cursor_now
-      end
-      -- For <c-f>/<c-b> movement. buffer["prev"] has room for half screen.
-      buffer['w0'] = vim.fn.line('w0')
-      buffer['w$'] = vim.fn.line('w$')
-      buffer['prev'] = math.max(buffer['prev'], buffer['w0'] - math.floor(vim.fn.winheight(0) / 2))
-      buffer['prev'] = math.min(buffer['prev'], buffer['w$'] + math.floor(vim.fn.winheight(0) / 2))
-      buffer['diff'] = buffer['prev'] - cursor_now
-      buffer['prev'] = buffer['prev']
-        - (
-          (buffer['diff'] > 0) and math.ceil(buffer['diff'] / 100 * config.default_args.speed)
-          or math.floor(buffer['diff'] / 100 * config.default_args.speed)
-        )
-      buffer:push_front(buffer['prev'])
-      -- Replace Signs
-      replace_signs()
-      counter = counter + 1
-      debug_callback(buffer, { 'Jump: True' })
-      -- Timer management
-      if
-        counter > (config.default_args.timeout / config.default_args.intervals)
-        or (buffer['diff'] == 0 and buffer:is_stay_still())
-      then
-        if not fancy_head_exists() then
-          unplace_signs()
-        end
-        sc_timer:abort()
-      end
-    end)
-  else
-    buffer['prev'] = cursor_now
-    buffer:all(cursor_now)
-    unplace_signs()
-    if fancy_head_exists() then
-      place_sign(buffer['prev'], 'smoothcursor')
-    end
-    debug_callback(buffer, { 'Jump: False' })
-  end
-end
-
 -- Exponential corsor callback. buffer["prev"] is no longer integer.
 local function sc_exp()
   if not is_enabled() then
@@ -336,11 +278,16 @@ local function sc_exp()
 end
 
 return {
+  buffer = buffer,
   init = init,
-  sc_callback_default = sc_default,
+  is_enabled = is_enabled,
+  fancy_head_exists = fancy_head_exists,
+  sc_timer = sc_timer,
   sc_callback_exp = sc_exp,
   sc_callback = nil,
   unplace_signs = unplace_signs,
+  replace_signs = replace_signs,
+  place_sign = place_sign,
   buffer_set_all = buffer_set_all,
   detect_filetype = detect_filetype,
   set_buffer_to_prev_pos = function()
