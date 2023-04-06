@@ -10,6 +10,8 @@ return {
         table.insert(self, 1, data)
         table.remove(self, self.length + 1)
       end,
+      --- Resize the buffer size
+      --- @param size number
       resize_buffer = function(self, size)
         if self.length == size then
           return
@@ -30,11 +32,13 @@ return {
         self.bufnr = vim.fn.bufnr()
         sc_debug.buf_switch_counter = sc_debug.buf_switch_counter + 1
       end,
+      ---@param value number
       all = function(self, value)
         for i = 1, self.length, 1 do
           self[i] = value
         end
       end,
+      --- check if
       is_stay_still = function(self)
         local first_val = self[1]
         for i = 2, self.length do
