@@ -1,6 +1,6 @@
-local config = require('smoothcursor.config')
-local default_args = config.config
+local config = require('smoothcursor.config').config
 
+---@param args table config variable
 local function define_signs(args)
   if args.fancy.enable then
     if args.fancy.head ~= nil and args.fancy.head.cursor ~= nil then
@@ -46,21 +46,21 @@ local function define_signs(args)
 end
 
 local function init_and_start()
-  define_signs(default_args)
+  define_signs(config)
 
   require('smoothcursor.callbacks').init()
 
-  if default_args.type == 'default' then
+  if config.type == 'default' then
     require('smoothcursor.callbacks').sc_callback =
       require('smoothcursor.callbacks.default').sc_default
-  elseif default_args.type == 'exp' then
+  elseif config.type == 'exp' then
     require('smoothcursor.callbacks').sc_callback = require('smoothcursor.callbacks.exp').sc_exp
+  elseif config.type == 'matrix' then
+    require('smoothcursor.callbacks').sc_callback =
+      require('smoothcursor.callbacks.matrix').sc_matrix
   else
     vim.notify(
-      string.format(
-        [=[[SmoothCursor.nvim] type %s does not exists, use "default"]=],
-        default_args.type
-      ),
+      string.format([=[[SmoothCursor.nvim] type %s does not exists, use "default"]=], config.type),
       vim.log.levels.WARN
     )
     require('smoothcursor.callbacks').sc_callback =
@@ -76,7 +76,7 @@ local function init_and_start()
     callback = set_sc_hl,
   })
 
-  if default_args.autostart then
+  if config.autostart then
     require('smoothcursor.utils').smoothcursor_start(false)
   end
 end
@@ -86,10 +86,10 @@ local function setup(args)
   for key, value in pairs(args) do
     if key == 'fancy' then
       for key2, value2 in pairs(value) do
-        default_args[key][key2] = value2
+        config[key][key2] = value2
       end
     else
-      default_args[key] = value
+      config[key] = value
     end
   end
   init_and_start()
