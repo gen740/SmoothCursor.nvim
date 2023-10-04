@@ -10,8 +10,7 @@ This plugin add sub-cursor to show scroll direction!!
 ## Install
 
 - Require `neovim >= 0.7.0`
-- Packer
-
+- [packer.nvim](https://github.com/wbthomason/packer.nvim)
 ```lua
 use { 'gen740/SmoothCursor.nvim',
   config = function()
@@ -19,9 +18,11 @@ use { 'gen740/SmoothCursor.nvim',
   end
 }
 ```
+- [lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ## Config
 
+- default value
 ```lua
 require('smoothcursor').setup({
     autostart = true,
