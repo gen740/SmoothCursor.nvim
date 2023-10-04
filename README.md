@@ -20,6 +20,14 @@ use { 'gen740/SmoothCursor.nvim',
 ```
 - [lazy.nvim](https://github.com/folke/lazy.nvim)
 
+```lua
+{ 'gen740/SmoothCursor.nvim',
+  config = function()
+    require('smoothcursor').setup()
+  end
+}
+```
+
 ## Config
 
 - default value
