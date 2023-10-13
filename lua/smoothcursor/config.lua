@@ -1,5 +1,6 @@
--- Default Config Values
+-- config table
 return {
+  ---@type SmoothCursorConfig
   value = {
     cursor = '',
     fancy = {
