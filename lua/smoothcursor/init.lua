@@ -1,4 +1,4 @@
-local config = require('smoothcursor.config').config
+local config = require('smoothcursor.config').value
 
 ---@param args table config variable
 local function define_signs(args)

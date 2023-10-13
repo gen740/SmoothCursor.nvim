@@ -1,13 +1,11 @@
 local config = require('smoothcursor.config')
 local sc_debug = require('smoothcursor.debug')
-local debug_callback = sc_debug.debug_callback
-local lazy_redetect_filetype = false
-local sc_timer = require('smoothcursor.callbacks.timer').sc_timer
+local sc_timer = require('smoothcursor.callbacks.timer')
 local buffer = require('smoothcursor.callbacks.buffer').buffer
 
 local function init()
-  if config.config.fancy.enable then
-    buffer:resize_buffer(#config.config.fancy.body + 1)
+  if config.value.fancy.enable then
+    buffer:resize_buffer(#config.value.fancy.body + 1)
   else
     buffer:resize_buffer(1)
   end
@@ -22,7 +20,7 @@ local function buffer_set_all(value)
   buffer:all(value)
 
   -- Debug
-  debug_callback(buffer, { 'Buffer Reset' }, function()
+  sc_debug.debug_callback(buffer, { 'Buffer Reset' }, function()
     sc_debug.reset_counter = sc_debug.reset_counter + 1
   end)
 end
@@ -32,7 +30,7 @@ local function unplace_signs(with_timer_stop)
   if with_timer_stop == true then
     sc_timer:abort()
   end
-  vim.fn.sign_unplace('*', { buffer = vim.fn.bufname(), id = config.config.cursorID })
+  vim.fn.sign_unplace('*', { buffer = vim.fn.bufname(), id = config.value.cursorID })
   sc_debug.unplace_signs_conuter = sc_debug.unplace_signs_conuter + 1
 end
 
@@ -46,21 +44,21 @@ local function place_sign(position, name)
   end
   if name ~= nil then
     vim.fn.sign_place(
-      config.config.cursorID,
+      config.value.cursorID,
       'SmoothCursor',
       name,
       vim.fn.bufname(),
-      { lnum = position, priority = config.config.priority }
+      { lnum = position, priority = config.value.priority }
     )
   end
 end
 
 local function fancy_head_exists()
   -- if it is not fancy mode Head is always set
-  if not config.config.fancy.enable then
+  if not config.value.fancy.enable then
     return true
   end
-  return config.config.fancy.head ~= nil and config.config.fancy.head.cursor ~= nil
+  return config.value.fancy.head ~= nil and config.value.fancy.head.cursor ~= nil
 end
 
 local function replace_signs()
@@ -77,7 +75,7 @@ local function replace_signs()
       end
     end
   end
-  if config.config.fancy.tail ~= nil and config.config.fancy.tail.cursor ~= nil then
+  if config.value.fancy.tail ~= nil and config.value.fancy.tail.cursor ~= nil then
     place_sign(buffer[buffer.length], 'smoothcursor_tail')
   end
   if fancy_head_exists() then
@@ -92,7 +90,7 @@ local function detect_filetype()
     return false
   end
   if
-    config.config.disable_float_win == true
+    config.value.disable_float_win == true
     and vim.api.nvim_win_get_config(vim.fn.win_getid()).relative ~= ''
   then
     buffer['enabled'] = false
@@ -103,17 +101,17 @@ local function detect_filetype()
     buffer['enabled'] = false
     return false
   end
-  if config.config.enabled_filetypes == nil then
-    config.config.disabled_filetypes = config.config.disabled_filetypes or {}
+  if config.value.enabled_filetypes == nil then
+    config.value.disabled_filetypes = config.value.disabled_filetypes or {}
     buffer['enabled'] = true
-    for _, value in ipairs(config.config.disabled_filetypes) do
+    for _, value in ipairs(config.value.disabled_filetypes) do
       if now_ft == value then
         buffer['enabled'] = false
       end
     end
   else
     buffer['enabled'] = false
-    for _, value in ipairs(config.config.enabled_filetypes) do
+    for _, value in ipairs(config.value.enabled_filetypes) do
       if now_ft == value then
         buffer['enabled'] = true
       end
@@ -121,6 +119,9 @@ local function detect_filetype()
   end
   return buffer['enabled']
 end
+
+---@type boolean
+local lazy_redetect_filetype = false
 
 -- This function cache "enabled" value for each buffer.
 -- Return if buffer is enabled SmoothCursor or not

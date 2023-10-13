@@ -1,6 +1,6 @@
 -- Default Config Values
 return {
-  config = {
+  value = {
     cursor = '',
     fancy = {
       enable = false,
