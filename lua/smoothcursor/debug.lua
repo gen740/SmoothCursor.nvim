@@ -1,4 +1,4 @@
-local is_debug_mode = false
+---@type integer | nil
 local debug_bufid = nil
 
 local sc = {}
@@ -17,24 +17,6 @@ function sc.debug()
     vim.opt_local.buflisted = false
   end)
   vim.cmd([[wincmd p]])
-  is_debug_mode = true
-end
-
-local function dump(o, level)
-  local tab = '    '
-  level = level or 0
-  if type(o) == 'table' then
-    local s = '{\n'
-    for k, v in pairs(o) do
-      s = s .. string.rep(tab, level + 1) .. tostring(k) .. ' = ' .. dump(v, level + 1) .. ',\n'
-    end
-    return s .. string.rep(tab, level) .. '}'
-  else
-    if type(o) == 'string' then
-      return string.format('"%s"', o)
-    end
-    return tostring(o)
-  end
 end
 
 local counter = 0
@@ -43,20 +25,13 @@ sc.buf_switch_counter = 0
 sc.unplace_signs_conuter = 0
 
 function sc.debug_callback(obj, extrainfo, extrafunc)
-  if not is_debug_mode then
+  if not debug_bufid then
     return
   end
   extrainfo = extrainfo or {}
   extrafunc = extrafunc or function() end
   counter = counter + 1
-  vim.api.nvim_buf_set_lines(debug_bufid, 0, 1000, false, vim.split(dump(obj), '\n'))
-  -- vim.api.nvim_buf_set_lines(
-  --   debug_bufid,
-  --   0,
-  --   1000,
-  --   false,
-  --   vim.split(dump(require('smoothcursor.config').default_args), '\n')
-  -- )
+  vim.api.nvim_buf_set_lines(debug_bufid, 0, 1000, false, vim.split(vim.inspect(obj), '\n'))
   vim.api.nvim_buf_set_lines(debug_bufid, 0, 0, false, extrainfo)
   vim.api.nvim_buf_set_lines(
     debug_bufid,
