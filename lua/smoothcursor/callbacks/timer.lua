@@ -13,7 +13,7 @@ function ScTimer:post(func)
   if self.is_running then
     return
   end
-  vim.uv.timer_start(self.timer, 0, config.config.intervals, vim.schedule_wrap(func))
+  vim.uv.timer_start(self.timer, 0, config.value.intervals, vim.schedule_wrap(func))
   self.is_running = true
 end
 
@@ -33,8 +33,4 @@ local function newScTimer()
 end
 
 ---@type ScTimer
-local sc_timer = newScTimer()
-
-return {
-  sc_timer = sc_timer,
-}
+return newScTimer()

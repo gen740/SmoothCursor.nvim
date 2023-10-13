@@ -1,7 +1,7 @@
 local callback = require('smoothcursor.callbacks')
 local buffer = callback.buffer
 
-local config = require('smoothcursor.config').config
+local config = require('smoothcursor.config').value
 local debug_callback = require('smoothcursor.debug').debug_callback
 
 -- stylua: ignore

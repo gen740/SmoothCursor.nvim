@@ -1,9 +1,8 @@
 local callback = require('smoothcursor.callbacks')
 local buffer = callback.buffer
 
-local config = require('smoothcursor.config').config
+local config = require('smoothcursor.config').value
 local debug_callback = require('smoothcursor.debug').debug_callback
-local sc_timer = require('smoothcursor.timer').sc_timer
 
 -- Exponential corsor callback. buffer["prev"] is no longer integer.
 local function sc_exp()
@@ -20,7 +19,7 @@ local function sc_exp()
   buffer['w$'] = vim.fn.line('w$')
   if math.abs(buffer['diff']) > config.threshold then
     local counter = 1
-    sc_timer:post(function()
+    callback.sc_timer:post(function()
       cursor_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
       if buffer['prev'] == nil then
         buffer['prev'] = cursor_now
@@ -47,7 +46,7 @@ local function sc_exp()
         if not callback.fancy_head_exists() then
           callback.unplace_signs()
         end
-        sc_timer:abort()
+        callback.sc_timer:abort()
       end
     end)
   else
