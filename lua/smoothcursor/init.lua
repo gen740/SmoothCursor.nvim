@@ -1,6 +1,39 @@
 local config = require('smoothcursor.config').value
 
----@param args table config variable
+---@class FancyBodyElement
+---@field cursor string
+---@field texthl string
+
+---@class FancyHeadTailElement
+---@field cursor string|nil
+---@field texthl string|nil
+---@field linehl string|nil
+
+---@class FancyConfig
+---@field enable boolean
+---@field head FancyHeadTailElement
+---@field body FancyBodyElement[]
+---@field tail FancyHeadTailElement
+---@field flyin_effect string|nil
+
+---@class SmoothCursorConfig
+---@field cursor string
+---@field fancy FancyConfig
+---@field cursorID integer
+---@field intervals integer
+---@field timeout integer
+---@field type string
+---@field threshold integer
+---@field speed integer
+---@field autostart boolean
+---@field texthl string
+---@field linehl string|nil
+---@field priority integer
+---@field disable_float_win boolean
+---@field disabled_filetypes string[]|nil
+---@field enabled_filetypes string[]|nil
+
+---@param args SmoothCursorConfig
 local function define_signs(args)
   if args.fancy.enable then
     if args.fancy.head ~= nil and args.fancy.head.cursor ~= nil then
@@ -60,7 +93,10 @@ local function init_and_start()
       require('smoothcursor.callbacks.matrix').sc_matrix
   else
     vim.notify(
-      string.format([=[[SmoothCursor.nvim] type %s does not exists, use "default"]=], config.type),
+      string.format(
+        [=[[SmoothCursor.nvim] type %s does not exists, use "default", "exp" or "matrix"]=],
+        config.type
+      ),
       vim.log.levels.WARN
     )
     require('smoothcursor.callbacks').sc_callback =
@@ -81,6 +117,7 @@ local function init_and_start()
   end
 end
 
+---@param args SmoothCursorConfig
 local function setup(args)
   args = args == nil and {} or args
   for key, value in pairs(args) do
