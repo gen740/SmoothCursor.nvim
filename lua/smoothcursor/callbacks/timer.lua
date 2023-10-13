@@ -1,28 +1,39 @@
+-- import 'config' module
 local config = require('smoothcursor.config')
 
--- sc_timer --------------------------------------------------------------------
--- Hold unique uv timer.
-local uv = vim.loop
+---@class ScTimer
+---@field public is_running boolean
+---@field public timer unknown
+local ScTimer = {}
+ScTimer.__index = ScTimer
 
-local sc_timer = {
-  is_running = false,
-  timer = uv.new_timer(),
-}
-
--- post if timer is stop
+--- Post if timer is stopped.
 ---@param func function
-function sc_timer:post(func)
-  if self.is_runnig then
+function ScTimer:post(func)
+  if self.is_running then
     return
   end
-  uv.timer_start(self.timer, 0, config.config.intervals, vim.schedule_wrap(func))
+  vim.loop.timer_start(self.timer, 0, config.config.intervals, vim.schedule_wrap(func))
   self.is_running = true
 end
 
-function sc_timer:abort()
+--- Abort the timer.
+function ScTimer:abort()
   self.timer:stop()
   self.is_running = false
 end
+
+-- Initialize ScTimer object.
+---@return ScTimer
+local function newScTimer()
+  local self = setmetatable({}, ScTimer)
+  self.is_running = false
+  self.timer = vim.uv.new_timer()
+  return self
+end
+
+---@type ScTimer
+local sc_timer = newScTimer()
 
 return {
   sc_timer = sc_timer,
