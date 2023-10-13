@@ -35,3 +35,5 @@ vim.api.nvim_create_user_command('SmoothCursorStatus', function()
 end, {})
 
 vim.api.nvim_create_user_command('SmoothCursorDeleteSigns', utils.smoothcursor_delete_signs, {})
+
+vim.api.nvim_create_user_command('SmoothCursorDebug', require('smoothcursor.debug').debug, {})

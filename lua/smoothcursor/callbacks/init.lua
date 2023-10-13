@@ -13,19 +13,21 @@ local function init()
   end
 end
 
----@param value integer | nil
+---@param value? integer
 local function buffer_set_all(value)
   if value == nil then
     value = vim.fn.getcurpos(vim.fn.win_getid())[2]
   end
   buffer['prev'] = value
   buffer:all(value)
+
+  -- Debug
   debug_callback(buffer, { 'Buffer Reset' }, function()
     sc_debug.reset_counter = sc_debug.reset_counter + 1
   end)
 end
 
---- @param with_timer_stop? boolean
+---@param with_timer_stop? boolean
 local function unplace_signs(with_timer_stop)
   if with_timer_stop == true then
     sc_timer:abort()
@@ -36,7 +38,7 @@ end
 
 -- place 'name' sign to the 'position'
 ---@param position number
----@param name string
+---@param name? string
 local function place_sign(position, name)
   position = math.floor(position + 0.5)
   if position < buffer['w0'] or position > buffer['w$'] then
