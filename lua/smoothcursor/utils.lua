@@ -1,7 +1,7 @@
 local sc = {}
 local smoothcursor_started = false
 local callback = require('smoothcursor.callbacks')
-local configs = require('smoothcursor.config')
+local config = require('smoothcursor.config')
 local init = require('smoothcursor.init')
 local buffer_leaved = false
 
@@ -45,9 +45,10 @@ sc.smoothcursor_start = function(init_fire)
       buffer_leaved = true
       callback.unplace_signs(true)
       callback.lazy_detect()
-      if configs.flyin_effect == 'bottom' then
+      if config.value.flyin_effect == 'bottom' then
+        callback.buffer['prev'] = vim.fn.line('$')
         callback.buffer_set_all(vim.fn.line('$'))
-      elseif configs.flyin_effect == 'top' then
+      elseif config.value.flyin_effect == 'top' then
         callback.buffer_set_all(0)
       end
     end,
@@ -104,13 +105,14 @@ sc.smoothcursor_fancy_set = function(arg)
     arg = false
   end
   sc.smoothcursor_stop()
-  configs.fancy.enable = arg
+  config.value.fancy.enable = arg
   init.init_and_start()
   callback.buffer_set_all()
+  callback.sc_callback()
 end
 
 sc.smoothcursor_fancy_toggle = function()
-  sc.smoothcursor_fancy_set(not configs.fancy.enable)
+  sc.smoothcursor_fancy_set(not config.value.fancy.enable)
 end
 
 sc.smoothcursor_fancy_on = function()

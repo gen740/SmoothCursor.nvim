@@ -14,10 +14,12 @@ local config = require('smoothcursor.config')
 ---@field head FancyHeadTailElement
 ---@field body FancyBodyElement[]
 ---@field tail FancyHeadTailElement
----@field flyin_effect string|nil
 
 ---@class SmoothCursorConfig
 ---@field cursor string
+---@field texthl string
+---@field linehl string|nil
+---@field flyin_effect string|nil
 ---@field fancy FancyConfig
 ---@field cursorID integer
 ---@field intervals integer
@@ -26,8 +28,6 @@ local config = require('smoothcursor.config')
 ---@field threshold integer
 ---@field speed integer
 ---@field autostart boolean
----@field texthl string
----@field linehl string|nil
 ---@field priority integer
 ---@field disable_float_win boolean
 ---@field disabled_filetypes string[]|nil
