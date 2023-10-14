@@ -9,7 +9,6 @@ local function sc_default()
   if not callback.is_enabled() then
     return
   end
-  local cursor_now = vim.fn.getcurpos(vim.fn.win_getid())[2]
   buffer['.'] = vim.fn.line('.')
   if buffer['prev'] == nil then
     buffer['prev'] = buffer['.']
