@@ -37,7 +37,8 @@ end
 -- place 'name' sign to the 'position'
 ---@param position number
 ---@param name? string
-local function place_sign(position, name)
+---@param priority? number
+local function place_sign(position, name, priority)
   position = math.floor(position + 0.5)
   if position < buffer['w0'] or position > buffer['w$'] then
     return
@@ -48,7 +49,7 @@ local function place_sign(position, name)
       'SmoothCursor',
       name,
       vim.fn.bufname(),
-      { lnum = position, priority = config.value.priority }
+      { lnum = position, priority = priority ~= nil and priority or config.value.priority }
     )
   end
 end
@@ -63,6 +64,7 @@ end
 
 local function replace_signs()
   unplace_signs()
+  place_sign(buffer['.'], 'smoothcursor_dummy', -999)
   for i = buffer.length, 2, -1 do
     if
       not (
