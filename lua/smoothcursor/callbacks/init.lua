@@ -64,6 +64,7 @@ end
 
 local function replace_signs()
   unplace_signs()
+  place_sign(buffer['.'], 'smoothcursor_dummy', -999)
   for i = buffer.length, 2, -1 do
     if
       not (
@@ -82,7 +83,6 @@ local function replace_signs()
   if fancy_head_exists() then
     place_sign(buffer[1], 'smoothcursor')
   end
-  place_sign(buffer['.'], 'smoothcursor_dummy', -999)
 end
 
 -- Detect filetype and set the value to buffer['enabled']
