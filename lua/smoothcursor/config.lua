@@ -3,6 +3,9 @@ return {
   ---@type SmoothCursorConfig
   value = {
     cursor = '',
+    texthl = 'SmoothCursor',
+    linehl = nil,
+
     fancy = {
       enable = false,
       head = { cursor = '▷', texthl = 'SmoothCursor', linehl = nil },
@@ -18,6 +21,7 @@ return {
       tail = { cursor = nil, texthl = 'SmoothCursor' },
       flyin_effect = nil, -- "bottom" or "top"
     },
+
     cursorID = 23874823,
     intervals = 35,
     timeout = 3000,
@@ -25,8 +29,6 @@ return {
     threshold = 3,
     speed = 25,
     autostart = true,
-    texthl = 'SmoothCursor',
-    linehl = nil,
     priority = 10,
     disable_float_win = false,
     disabled_filetypes = nil,

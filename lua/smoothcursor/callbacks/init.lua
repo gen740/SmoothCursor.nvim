@@ -58,7 +58,7 @@ local function fancy_head_exists()
   if not config.value.fancy.enable then
     return true
   end
-  return config.value.fancy.head ~= nil and config.value.fancy.head.cursor ~= nil
+  return config.value.fancy.head and config.value.fancy.head.cursor
 end
 
 local function replace_signs()
@@ -75,7 +75,7 @@ local function replace_signs()
       end
     end
   end
-  if config.value.fancy.tail ~= nil and config.value.fancy.tail.cursor ~= nil then
+  if config.value.fancy.tail and config.value.fancy.tail.cursor then
     place_sign(buffer[buffer.length], 'smoothcursor_tail')
   end
   if fancy_head_exists() then

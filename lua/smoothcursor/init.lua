@@ -1,4 +1,4 @@
-local config = require('smoothcursor.config').value
+local config = require('smoothcursor.config')
 
 ---@class FancyBodyElement
 ---@field cursor string
@@ -36,8 +36,8 @@ local config = require('smoothcursor.config').value
 ---@param args SmoothCursorConfig
 local function define_signs(args)
   if args.fancy.enable then
-    if args.fancy.head ~= nil and args.fancy.head.cursor ~= nil then
-      if args.fancy.head.linehl ~= nil then
+    if args.fancy.head and args.fancy.head.cursor then
+      if args.fancy.head.linehl then
         vim.fn.sign_define('smoothcursor', {
           text = args.fancy.head.cursor,
           texthl = args.fancy.head.texthl,
@@ -50,20 +50,22 @@ local function define_signs(args)
         })
       end
     end
-    for idx, value in ipairs(args.fancy.body) do
-      vim.fn.sign_define(string.format('smoothcursor_body%s', idx), {
-        text = value.cursor,
-        texthl = value.texthl,
-      })
+    if args.fancy.body then
+      for idx, value in ipairs(args.fancy.body) do
+        vim.fn.sign_define(string.format('smoothcursor_body%s', idx), {
+          text = value.cursor,
+          texthl = value.texthl,
+        })
+      end
     end
-    if args.fancy.tail ~= nil and args.fancy.tail.cursor ~= nil then
+    if args.fancy.tail and args.fancy.tail.cursor then
       vim.fn.sign_define('smoothcursor_tail', {
         text = args.fancy.tail.cursor,
         texthl = args.fancy.tail.texthl,
       })
     end
   else
-    if args.linehl ~= nil then
+    if args.linehl then
       vim.fn.sign_define('smoothcursor', {
         text = args.cursor,
         texthl = args.texthl,
@@ -79,23 +81,23 @@ local function define_signs(args)
 end
 
 local function init_and_start()
-  define_signs(config)
+  define_signs(config.value)
 
   require('smoothcursor.callbacks').init()
 
-  if config.type == 'default' then
+  if config.value.type == 'default' then
     require('smoothcursor.callbacks').sc_callback =
       require('smoothcursor.callbacks.default').sc_default
-  elseif config.type == 'exp' then
+  elseif config.value.type == 'exp' then
     require('smoothcursor.callbacks').sc_callback = require('smoothcursor.callbacks.exp').sc_exp
-  elseif config.type == 'matrix' then
+  elseif config.value.type == 'matrix' then
     require('smoothcursor.callbacks').sc_callback =
       require('smoothcursor.callbacks.matrix').sc_matrix
   else
     vim.notify(
       string.format(
         [=[[SmoothCursor.nvim] type %s does not exists, use "default", "exp" or "matrix"]=],
-        config.type
+        config.value.type
       ),
       vim.log.levels.WARN
     )
@@ -112,7 +114,7 @@ local function init_and_start()
     callback = set_sc_hl,
   })
 
-  if config.autostart then
+  if config.value.autostart then
     require('smoothcursor.utils').smoothcursor_start(false)
   end
 end
@@ -120,15 +122,7 @@ end
 ---@param args SmoothCursorConfig
 local function setup(args)
   args = args == nil and {} or args
-  for key, value in pairs(args) do
-    if key == 'fancy' then
-      for key2, value2 in pairs(value) do
-        config[key][key2] = value2
-      end
-    else
-      config[key] = value
-    end
-  end
+  config.value = vim.tbl_deep_extend('force', config.value, args)
   init_and_start()
 end
 
