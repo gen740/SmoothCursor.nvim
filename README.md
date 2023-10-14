@@ -33,14 +33,12 @@ use { 'gen740/SmoothCursor.nvim',
 - default value
 ```lua
 require('smoothcursor').setup({
-    autostart = true,
-    cursor = "",              -- cursor shape (need nerd font)
-    texthl = "SmoothCursor",   -- highlight group, default is { bg = nil, fg = "#FFD400" }
-    linehl = nil,              -- highlight sub-cursor line like 'cursorline', "CursorLine" recommended
-    type = "default",          -- define cursor movement calculate function, "default" or "exp" (exponential).
+    cursor = "",              -- Cursor shape (requires Nerd Font). Disabled in fancy mode.
+    texthl = "SmoothCursor",   -- Highlight group. Default is { bg = nil, fg = "#FFD400" }. Disabled in fancy mode.
+    linehl = nil,              -- Highlights the line under the cursor, similar to 'cursorline'. "CursorLine" is recommended. Disabled in fancy mode.
     fancy = {
         enable = false,        -- enable fancy mode
-        head = { cursor = "▷", texthl = "SmoothCursor", linehl = nil },
+        head = { cursor = "▷", texthl = "SmoothCursor", linehl = nil }, -- false to disable fancy head
         body = {
             { cursor = "", texthl = "SmoothCursorRed" },
             { cursor = "", texthl = "SmoothCursorOrange" },
@@ -50,8 +48,10 @@ require('smoothcursor').setup({
             { cursor = ".", texthl = "SmoothCursorBlue" },
             { cursor = ".", texthl = "SmoothCursorPurple" },
         },
-        tail = { cursor = nil, texthl = "SmoothCursor" }
+        tail = { cursor = nil, texthl = "SmoothCursor" } -- false to disable fancy tail
     },
+    autostart = true,
+    type = "default",          -- define cursor movement calculate function, "default" or "exp" (exponential).
     flyin_effect = nil,        -- "bottom" or "top"
     speed = 25,                -- max is 100 to stick to your current position
     intervals = 35,            -- tick interval
