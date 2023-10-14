@@ -35,6 +35,13 @@ local config = require('smoothcursor.config')
 
 ---@param args SmoothCursorConfig
 local function define_signs(args)
+  -- dummy cursor to always on the current cursor, prevent the cursor
+  -- from disappearing
+  vim.fn.sign_define('smoothcursor_dummy', {
+    text = ' ',
+    texthl = 'Normal',
+  })
+
   if args.fancy.enable then
     if args.fancy.head and args.fancy.head.cursor then
       if args.fancy.head.linehl then
