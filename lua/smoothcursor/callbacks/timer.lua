@@ -13,7 +13,7 @@ function ScTimer:post(func)
   if self.is_running then
     return
   end
-  vim.uv.timer_start(self.timer, 0, config.value.intervals, vim.schedule_wrap(func))
+  vim.loop.timer_start(self.timer, 0, config.value.intervals, vim.schedule_wrap(func))
   self.is_running = true
 end
 
@@ -28,7 +28,7 @@ end
 local function newScTimer()
   local self = setmetatable({}, ScTimer)
   self.is_running = false
-  self.timer = vim.uv.new_timer()
+  self.timer = vim.loop.new_timer()
   return self
 end
 
