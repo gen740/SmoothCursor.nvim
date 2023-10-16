@@ -43,7 +43,13 @@ require('smoothcursor').setup({
         enable = false,        -- enable fancy mode
         head = { cursor = "▷", texthl = "SmoothCursor", linehl = nil }, -- false to disable fancy head
         body = {
+            { cursor = "", texthl = "SmoothCursorRed" },
+            { cursor = "", texthl = "SmoothCursorOrange" },
+            { cursor = "●", texthl = "SmoothCursorYellow" },
             { cursor = "●", texthl = "SmoothCursorGreen" },
+            { cursor = "•", texthl = "SmoothCursorAqua" },
+            { cursor = ".", texthl = "SmoothCursorBlue" },
+            { cursor = ".", texthl = "SmoothCursorPurple" },
         },
         tail = { cursor = nil, texthl = "SmoothCursor" } -- false to disable fancy tail
     },
@@ -64,13 +70,7 @@ require('smoothcursor').setup({
             cursor = require('smoothcursor.matrix_chars'),
             -- Picks a random highlight from this list for each segment of the cursor body
             texthl = {
-                'SmoothCursorRed',
-                'SmoothCursorOrange',
-                'SmoothCursorYellow',
                 'SmoothCursorGreen',
-                'SmoothCursorAqua',
-                'SmoothCursorBlue',
-                'SmoothCursorPurple',
             },
         },
         tail = {
