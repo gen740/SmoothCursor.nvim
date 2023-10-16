@@ -1,19 +1,43 @@
 local config = require('smoothcursor.config')
 
----@class FancyBodyElement
----@field cursor string
----@field texthl string
+---@class MatrixHeadElement
+---@field cursor string[]|nil
+---@field texthl string[]
+---@field linehl string|nil
 
----@class FancyHeadTailElement
+---@class MatrixBodyElement
+---@field length integer
+---@field cursor string[]
+---@field texthl string[]
+
+---@class MatrixTailElement
+---@field cursor string[]|nil
+---@field texthl string[]
+
+---@class MatrixConfig
+---@field head MatrixHeadElement
+---@field body MatrixBodyElement
+---@field tail MatrixTailElement
+---@field unstop boolean
+
+---@class FancyHeadElement
 ---@field cursor string|nil
 ---@field texthl string|nil
 ---@field linehl string|nil
 
+---@class FancyBodyElement
+---@field cursor string
+---@field texthl string
+
+---@class FancyTailElement
+---@field cursor string|nil
+---@field texthl string|nil
+
 ---@class FancyConfig
 ---@field enable boolean
----@field head FancyHeadTailElement
+---@field head FancyHeadElement
 ---@field body FancyBodyElement[]
----@field tail FancyHeadTailElement
+---@field tail FancyTailElement
 
 ---@class SmoothCursorConfig
 ---@field cursor string
@@ -21,6 +45,7 @@ local config = require('smoothcursor.config')
 ---@field linehl string|nil
 ---@field flyin_effect string|nil
 ---@field fancy FancyConfig
+---@field matrix MatrixConfig
 ---@field cursorID integer
 ---@field intervals integer
 ---@field timeout integer
@@ -42,7 +67,12 @@ local function define_signs(args)
     texthl = 'Normal',
   })
 
-  if args.fancy.enable then
+  if args.type == 'matrix' then
+    -- Do not define signs on matrix mode
+    -- define signs when place
+    return
+  elseif args.fancy.enable then
+    -- Fancy Mode
     if args.fancy.head and args.fancy.head.cursor then
       if args.fancy.head.linehl then
         vim.fn.sign_define('smoothcursor', {
@@ -72,6 +102,7 @@ local function define_signs(args)
       })
     end
   else
+    -- Normal mode
     if args.linehl then
       vim.fn.sign_define('smoothcursor', {
         text = args.cursor,
