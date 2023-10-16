@@ -35,11 +35,11 @@ local function sc_matrix()
   buffer['diff'] = math.min(buffer['diff'], vim.fn.winheight(0) * 2)
   buffer['w0'] = vim.fn.line('w0')
   buffer['w$'] = vim.fn.line('w$')
-  if math.abs(buffer['diff']) > config.value.threshold then
+  if math.abs(buffer['diff']) > config.value.threshold or config.value.matrix.unstop then
     local counter = 1
     callback.sc_timer:post(function()
       buffer['.'] = vim.fn.line('.')
-      randomize_signs()
+      -- randomize_signs()
       if buffer['prev'] == nil then
         buffer['prev'] = buffer['.']
       end
@@ -56,10 +56,14 @@ local function sc_matrix()
         )
       buffer:push_front(buffer['prev'])
       -- Replace Signs
-      callback.replace_signs()
+      callback.replace_signs_matrix()
       counter = counter + 1
       debug_callback(buffer, { 'Jump: True' })
       -- Timer management
+      if config.value.matrix.unstop then
+        return
+      end
+
       if
         counter > (config.value.timeout / config.value.intervals)
         or (buffer['diff'] == 0 and buffer:is_stay_still())
@@ -74,8 +78,16 @@ local function sc_matrix()
     buffer['prev'] = buffer['.']
     buffer:all(buffer['.'])
     callback.unplace_signs()
-    if callback.fancy_head_exists() then
-      callback.place_sign(buffer['prev'], 'smoothcursor')
+    if callback.matrix_head_exists() then
+      local head_cursors = config.value.matrix.head.cursor
+      local head_texthls = config.value.matrix.head.texthl
+      if head_cursors and head_texthls then
+        vim.fn.sign_define('smoothcursor_head', {
+          text = head_cursors[math.random(1, #head_cursors)],
+          text_hl = head_texthls[math.random(1, #head_texthls)],
+        })
+      end
+      callback.place_sign(buffer['prev'], 'smoothcursor_head')
     end
     debug_callback(buffer, { 'Jump: False' })
   end

@@ -8,7 +8,11 @@ return {
 
     fancy = {
       enable = false,
-      head = { cursor = '▷', texthl = 'SmoothCursor', linehl = nil },
+      head = {
+        cursor = '▷',
+        texthl = 'SmoothCursor',
+        linehl = nil,
+      },
       body = {
         { cursor = '', texthl = 'SmoothCursorRed' },
         { cursor = '●', texthl = 'SmoothCursorOrange' },
@@ -20,6 +24,36 @@ return {
       },
       tail = { cursor = nil, texthl = 'SmoothCursor' },
     },
+    matrix = { -- for matrix mode
+      head = {
+        cursor = require('smoothcursor.matrix_chars'),
+        texthl = {
+          'SmoothCursor',
+        },
+        linehl = nil,
+      },
+      body = {
+        length = 6,
+        cursor = require('smoothcursor.matrix_chars'),
+        texthl = {
+          'SmoothCursorRed',
+          'SmoothCursorOrange',
+          'SmoothCursorYellow',
+          'SmoothCursorGreen',
+          'SmoothCursorAqua',
+          'SmoothCursorBlue',
+          'SmoothCursorPurple',
+        },
+      },
+      tail = {
+        cursor = nil,
+        texthl = {
+          'SmoothCursor',
+        },
+      },
+      unstop = false,
+    },
+
     flyin_effect = nil, -- "bottom" or "top"
     cursorID = 23874823,
     intervals = 35,

@@ -4,7 +4,9 @@ local sc_timer = require('smoothcursor.callbacks.timer')
 local buffer = require('smoothcursor.callbacks.buffer').buffer
 
 local function init()
-  if config.value.fancy.enable then
+  if config.value.type == 'matrix' then
+    buffer:resize_buffer(config.value.matrix.body.length + 1)
+  elseif config.value.fancy.enable then
     buffer:resize_buffer(#config.value.fancy.body + 1)
   else
     buffer:resize_buffer(1)
@@ -54,6 +56,11 @@ local function place_sign(position, name, priority)
   end
 end
 
+local function matrix_head_exists()
+  -- if it is not fancy mode Head is always set
+  return config.value.matrix.head and config.value.matrix.head.cursor
+end
+
 local function fancy_head_exists()
   -- if it is not fancy mode Head is always set
   if not config.value.fancy.enable then
@@ -82,6 +89,38 @@ local function replace_signs()
   end
   if fancy_head_exists() then
     place_sign(buffer[1], 'smoothcursor')
+  end
+end
+
+local function replace_signs_matrix()
+  unplace_signs()
+  place_sign(buffer['.'], 'smoothcursor_dummy', -999)
+  if config.value.fancy.tail and config.value.fancy.tail.cursor then
+    place_sign(buffer[buffer.length], 'smoothcursor_tail')
+  end
+
+  local body_cursors = config.value.matrix.body.cursor
+  local body_texthls = config.value.matrix.body.texthl
+  for i = buffer[1], buffer[buffer.length], (buffer[1] < buffer[buffer.length] and 1 or -1) do
+    local matrix_sign_name = string.format('smoothcursor_body%s', i)
+    vim.fn.sign_define(matrix_sign_name, {
+      text = body_cursors[math.random(1, #body_cursors)],
+      texthl = body_texthls[math.random(1, #body_texthls)],
+    })
+    place_sign(i, matrix_sign_name)
+  end
+
+  if matrix_head_exists() then
+    local head_cursors = config.value.matrix.head.cursor
+    local head_texthls = config.value.matrix.head.texthl
+    if head_cursors and head_texthls then
+      vim.fn.sign_define('smoothcursor_head', {
+        text = head_cursors[math.random(1, #head_cursors)],
+        texthl = head_texthls[math.random(1, #head_texthls)],
+        linehl = config.value.matrix.head.linehl,
+      })
+    end
+    place_sign(buffer[1], 'smoothcursor_head')
   end
 end
 
@@ -149,10 +188,12 @@ return {
   init = init,
   is_enabled = is_enabled,
   fancy_head_exists = fancy_head_exists,
+  matrix_head_exists = matrix_head_exists,
   sc_timer = sc_timer,
   sc_callback = nil,
   unplace_signs = unplace_signs,
   replace_signs = replace_signs,
+  replace_signs_matrix = replace_signs_matrix,
   place_sign = place_sign,
   buffer_set_all = buffer_set_all,
   detect_filetype = detect_filetype,
