@@ -43,13 +43,7 @@ require('smoothcursor').setup({
         enable = false,        -- enable fancy mode
         head = { cursor = "▷", texthl = "SmoothCursor", linehl = nil }, -- false to disable fancy head
         body = {
-            { cursor = "", texthl = "SmoothCursorRed" },
-            { cursor = "", texthl = "SmoothCursorOrange" },
-            { cursor = "●", texthl = "SmoothCursorYellow" },
             { cursor = "●", texthl = "SmoothCursorGreen" },
-            { cursor = "•", texthl = "SmoothCursorAqua" },
-            { cursor = ".", texthl = "SmoothCursorBlue" },
-            { cursor = ".", texthl = "SmoothCursorPurple" },
         },
         tail = { cursor = nil, texthl = "SmoothCursor" } -- false to disable fancy tail
     },
@@ -106,6 +100,10 @@ require('smoothcursor').setup({
 ### Fancy mode
 
 https://user-images.githubusercontent.com/54583542/190581464-0b72c057-4644-406a-89e9-424e29d73257.mp4
+
+### Matrix mode
+
+https://github.com/gen740/SmoothCursor.nvim/assets/54583542/ba3f90b1-e9ff-4729-b094-7eae7d2b1deb
 
 ## Commands
 

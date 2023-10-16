@@ -58,13 +58,7 @@ setup({opts})
                     cursor = require('smoothcursor.matrix_chars'),
                     -- Picks a random highlight from this list for each segment of the cursor body
                     texthl = {
-                        'SmoothCursorRed',
-                        'SmoothCursorOrange',
-                        'SmoothCursorYellow',
                         'SmoothCursorGreen',
-                        'SmoothCursorAqua',
-                        'SmoothCursorBlue',
-                        'SmoothCursorPurple',
                     },
                 },
                 tail = {

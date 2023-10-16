@@ -36,13 +36,7 @@ return {
         length = 6,
         cursor = require('smoothcursor.matrix_chars'),
         texthl = {
-          'SmoothCursorRed',
-          'SmoothCursorOrange',
-          'SmoothCursorYellow',
           'SmoothCursorGreen',
-          'SmoothCursorAqua',
-          'SmoothCursorBlue',
-          'SmoothCursorPurple',
         },
       },
       tail = {
