@@ -92,35 +92,58 @@ local function replace_signs()
   end
 end
 
+local cycle = 0
 local function replace_signs_matrix()
+  cycle = cycle + 1
   unplace_signs()
+  --- Place Dummy Sign
   place_sign(buffer['.'], 'smoothcursor_dummy', -999)
-  if config.value.fancy.tail and config.value.fancy.tail.cursor then
-    place_sign(buffer[buffer.length], 'smoothcursor_tail')
-  end
 
+  --- Body Signs
   local body_cursors = config.value.matrix.body.cursor
   local body_texthls = config.value.matrix.body.texthl
-  for i = buffer[1], buffer[buffer.length], (buffer[1] < buffer[buffer.length] and 1 or -1) do
-    local matrix_sign_name = string.format('smoothcursor_body%s', i)
-    vim.fn.sign_define(matrix_sign_name, {
-      text = body_cursors[math.random(1, #body_cursors)],
-      texthl = body_texthls[math.random(1, #body_texthls)],
+  for linenr = buffer[1], buffer[buffer.length], (buffer[1] < buffer[buffer.length] and 1 or -1) do
+    local matrix_body_sign_name = string.format('smoothcursor_body%s', linenr)
+    vim.fn.sign_define(matrix_body_sign_name, {
+      text = type(body_cursors) == 'function' and body_cursors(cycle, linenr)
+        or body_cursors[math.random(1, #body_cursors)],
+      texthl = type(body_texthls) == 'function' and body_texthls(cycle, linenr)
+        or body_texthls[math.random(1, #body_texthls)],
     })
-    place_sign(i, matrix_sign_name)
+    place_sign(linenr, matrix_body_sign_name)
   end
 
+  --- Tail Sign
+  if config.value.matrix.tail and config.value.matrix.tail.cursor then
+    local tail_cursors = config.value.matrix.tail.cursor
+    local tail_texthls = config.value.matrix.tail.texthl
+    local linenr = buffer[buffer.length]
+    if tail_cursors and tail_texthls then
+      vim.fn.sign_define('smoothcursor_tail', {
+        text = type(tail_cursors) == 'function' and tail_cursors(cycle, linenr)
+          or tail_cursors[math.random(1, #tail_cursors)],
+        texthl = type(tail_texthls) == 'function' and tail_texthls(cycle, linenr)
+          or tail_texthls[math.random(1, #tail_texthls)],
+      })
+      place_sign(linenr, 'smoothcursor_tail')
+    end
+  end
+
+  --- Head Sign
   if matrix_head_exists() then
+    ---@type string[]|function
     local head_cursors = config.value.matrix.head.cursor
     local head_texthls = config.value.matrix.head.texthl
-    if head_cursors and head_texthls then
-      vim.fn.sign_define('smoothcursor_head', {
-        text = head_cursors[math.random(1, #head_cursors)],
-        texthl = head_texthls[math.random(1, #head_texthls)],
-        linehl = config.value.matrix.head.linehl,
-      })
-    end
-    place_sign(buffer[1], 'smoothcursor_head')
+    local head_linehl = config.value.matrix.head.linehl
+    local linenr = buffer[1]
+    vim.fn.sign_define('smoothcursor_head', {
+      text = type(head_cursors) == 'function' and head_cursors(cycle, linenr)
+        or head_cursors[math.random(1, #head_cursors)],
+      texthl = type(head_texthls) == 'function' and head_texthls(cycle, linenr)
+        or head_texthls[math.random(1, #head_texthls)],
+      linehl = type(head_linehl) == 'function' and head_linehl(cycle, linenr) or head_linehl,
+    })
+    place_sign(linenr, 'smoothcursor_head')
   end
 end
 

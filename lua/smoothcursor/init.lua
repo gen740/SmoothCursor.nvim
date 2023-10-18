@@ -1,18 +1,18 @@
 local config = require('smoothcursor.config')
 
 ---@class MatrixHeadElement
----@field cursor string[]|nil
----@field texthl string[]
----@field linehl string|nil
+---@field cursor string[]|function|nil
+---@field texthl string[]|function
+---@field linehl string|function|nil
 
 ---@class MatrixBodyElement
 ---@field length integer
----@field cursor string[]
----@field texthl string[]
+---@field cursor string[]|function
+---@field texthl string[]|function
 
 ---@class MatrixTailElement
----@field cursor string[]|nil
----@field texthl string[]
+---@field cursor string[]|function|nil
+---@field texthl string[]|function
 
 ---@class MatrixConfig
 ---@field head MatrixHeadElement
