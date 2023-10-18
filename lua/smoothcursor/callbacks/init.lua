@@ -90,6 +90,7 @@ local function replace_signs()
   if fancy_head_exists() then
     place_sign(buffer[1], 'smoothcursor')
   end
+  vim.cmd('redraw')
 end
 
 local cycle = 0
@@ -145,6 +146,7 @@ local function replace_signs_matrix()
     })
     place_sign(linenr, 'smoothcursor_head')
   end
+  vim.cmd('redraw')
 end
 
 -- Detect filetype and set the value to buffer['enabled']
