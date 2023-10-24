@@ -59,8 +59,11 @@ local config = require('smoothcursor.config')
 ---@field disabled_filetypes string[]|nil
 ---@field enabled_filetypes string[]|nil
 
+
+-- local function define_signs(name, cursor, texthl,  )
+
 ---@param args SmoothCursorConfig
-local function define_signs(args)
+local function smoothcursor_define_signs(args)
   -- dummy cursor to always on the current cursor, prevent the cursor
   -- from disappearing
   vim.fn.sign_define('smoothcursor_dummy', {
@@ -120,7 +123,7 @@ local function define_signs(args)
 end
 
 local function init_and_start()
-  define_signs(config.value)
+  smoothcursor_define_signs(config.value)
 
   require('smoothcursor.callbacks').init()
 
@@ -168,5 +171,4 @@ end
 return {
   setup = setup,
   init_and_start = init_and_start,
-  define_signs = define_signs,
 }
