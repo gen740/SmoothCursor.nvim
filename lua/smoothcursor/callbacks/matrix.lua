@@ -4,24 +4,6 @@ local buffer = callback.buffer
 local config = require('smoothcursor.config')
 local debug_callback = require('smoothcursor.debug').debug_callback
 
--- stylua: ignore
-local matrix_char = {
-  'ﾊ', 'ﾐ', 'ﾋ', 'ｰ', 'ｳ', 'ｼ', 'ﾅ', 'ﾓ', 'ﾆ', 'ｻ',
-  'ﾜ', 'ﾂ', 'ｵ', 'ﾘ', 'ｱ', 'ﾎ', 'ﾃ', 'ﾏ', 'ｹ', 'ﾒ',
-  'ｴ', 'ｶ', 'ｷ', 'ﾑ', 'ﾕ', 'ﾗ', 'ｾ', 'ﾈ', 'ｽ', 'ﾀ',
-  'ﾇ', 'ﾍ', '𐌇', '0', '1', '2', '3', '4', '5', '7',
-  '8', '9', 'Z', ':', '.', '･', '=', '*', '+', '-',
-  '<', '>', '¦', '|', '╌', ' ', '"',
-}
-
-local function randomize_signs()
-  -- config.fancy.head = matrix_char[math.random(0, #matrix_char)]
-  for i = 1, #config.value.fancy.body, 1 do
-    config.value.fancy.body[i].cursor = matrix_char[math.random(0, #matrix_char)]
-  end
-  require('smoothcursor.init').define_signs(config.value)
-end
-
 -- Default corsor callback. buffer["prev"] is always integer
 local function sc_matrix()
   if not callback.is_enabled() then
