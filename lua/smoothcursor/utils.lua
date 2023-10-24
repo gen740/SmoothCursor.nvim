@@ -26,7 +26,7 @@ sc.smoothcursor_start = function(init_fire)
     end,
   })
 
-  vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+  vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI', 'CmdlineChanged' }, {
     group = 'SmoothCursor',
     callback = function()
       -- leaving floating window does not fire BufEnter
@@ -67,7 +67,7 @@ sc.smoothcursor_stop = function(erase_signs)
     return
   end
   if erase_signs then
-    callback.unplace_signs()
+    callback.unplace_signs(true)
   end
   vim.api.nvim_del_augroup_by_name('SmoothCursor')
   smoothcursor_started = false

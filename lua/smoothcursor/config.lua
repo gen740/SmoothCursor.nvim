@@ -48,7 +48,8 @@ return {
       unstop = false,
     },
 
-    flyin_effect = nil, -- "bottom" or "top"
+    always_redraw = true,
+    flyin_effect = nil,
     cursorID = 23874823,
     intervals = 35,
     timeout = 3000,
