@@ -85,6 +85,7 @@ require('smoothcursor').setup({
     },
 
     autostart = true,           -- Automatically start SmoothCursor
+    always_redraw = true,       -- Redraw the screen on each update
     flyin_effect = nil,         -- Choose "bottom" or "top" for flying effect
     speed = 25,                 -- Max speed is 100 to stick with your current position
     intervals = 35,             -- Update intervals in milliseconds

@@ -43,6 +43,7 @@ local config = require('smoothcursor.config')
 ---@field cursor string
 ---@field texthl string
 ---@field linehl string|nil
+---@field always_redraw boolean
 ---@field flyin_effect string|nil
 ---@field fancy FancyConfig
 ---@field matrix MatrixConfig
