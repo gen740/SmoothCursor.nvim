@@ -43,8 +43,8 @@ require('smoothcursor').setup({
         enable = false,        -- enable fancy mode
         head = { cursor = "▷", texthl = "SmoothCursor", linehl = nil }, -- false to disable fancy head
         body = {
-            { cursor = "", texthl = "SmoothCursorRed" },
-            { cursor = "", texthl = "SmoothCursorOrange" },
+            { cursor = "󰝥", texthl = "SmoothCursorRed" },
+            { cursor = "󰝥", texthl = "SmoothCursorOrange" },
             { cursor = "●", texthl = "SmoothCursorYellow" },
             { cursor = "●", texthl = "SmoothCursorGreen" },
             { cursor = "•", texthl = "SmoothCursorAqua" },
