@@ -21,7 +21,6 @@ local function buffer_set_all(value)
   buffer['prev'] = value
   buffer:all(value)
 
-  cc
   sc_debug.debug_callback(buffer, { 'Buffer Reset' }, function()
     sc_debug.reset_counter = sc_debug.reset_counter + 1
   end)
