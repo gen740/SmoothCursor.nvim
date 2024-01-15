@@ -58,6 +58,7 @@ local config = require('smoothcursor.config')
 ---@field disable_float_win boolean
 ---@field disabled_filetypes string[]|nil
 ---@field enabled_filetypes string[]|nil
+---@field show_last_positions boolean
 
 
 -- local function define_signs(name, cursor, texthl,  )
