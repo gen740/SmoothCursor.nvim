@@ -3,6 +3,7 @@ local smoothcursor_started = false
 local callback = require('smoothcursor.callbacks')
 local config = require('smoothcursor.config')
 local init = require('smoothcursor.init')
+local last_positions = require("smoothcursor.callbacks.default").last_positions
 local buffer_leaved = false
 
 --@param init_fire boolean
@@ -52,6 +53,22 @@ sc.smoothcursor_start = function(init_fire)
         callback.buffer_set_all(0)
       end
     end,
+  })
+
+  -- Store last positions
+  vim.api.nvim_create_autocmd({ 'InsertLeavePre' }, {
+    group = 'SmoothCursor',
+    callback = function()
+        local insertmode = vim.api.nvim_get_mode().mode
+
+        last_positions[insertmode] = vim.api.nvim_win_get_cursor(0)[1]
+    end
+  })
+  vim.api.nvim_create_autocmd({ 'InsertEnter' }, {
+    group = 'SmoothCursor',
+    callback = function()
+        last_positions.insert = nil
+    end
   })
 
   smoothcursor_started = true

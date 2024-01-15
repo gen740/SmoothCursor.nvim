@@ -4,11 +4,16 @@ local buffer = callback.buffer
 local config = require('smoothcursor.config')
 local debug_callback = require('smoothcursor.debug').debug_callback
 
--- Default corsor callback. buffer["prev"] is always integer
+local last_positions = {
+    insert = nil,
+}
+
+-- Default cursor callback. buffer["prev"] is always integer
 local function sc_default()
   if not callback.is_enabled() then
     return
   end
+
   buffer['.'] = vim.fn.line('.')
   if buffer['prev'] == nil then
     buffer['prev'] = buffer['.']
@@ -17,6 +22,7 @@ local function sc_default()
   buffer['diff'] = math.min(buffer['diff'], vim.fn.winheight(0) * 2)
   buffer['w0'] = vim.fn.line('w0')
   buffer['w$'] = vim.fn.line('w$')
+  
   if math.abs(buffer['diff']) > config.value.threshold then
     local counter = 1
     callback.sc_timer:post(function()
@@ -54,14 +60,24 @@ local function sc_default()
   else
     buffer['prev'] = buffer['.']
     buffer:all(buffer['.'])
+
     callback.unplace_signs()
+
     if callback.fancy_head_exists() then
       callback.place_sign(buffer['prev'], 'smoothcursor')
     end
+
+    for name, line in pairs(last_positions) do
+      if line ~= nil then
+        callback.place_sign(line, 'smoothcursor_' .. name)
+      end
+    end
+
     debug_callback(buffer, { 'Jump: False' })
   end
 end
 
 return {
   sc_default = sc_default,
+  last_positions = last_positions,
 }

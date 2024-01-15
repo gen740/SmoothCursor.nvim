@@ -21,7 +21,7 @@ local function buffer_set_all(value)
   buffer['prev'] = value
   buffer:all(value)
 
-  -- Debug
+  cc
   sc_debug.debug_callback(buffer, { 'Buffer Reset' }, function()
     sc_debug.reset_counter = sc_debug.reset_counter + 1
   end)
@@ -32,7 +32,15 @@ local function unplace_signs(with_timer_stop)
   if with_timer_stop == true then
     sc_timer:abort()
   end
-  vim.fn.sign_unplace('*', { buffer = vim.fn.bufname(), id = config.value.cursorID })
+
+  vim.fn.sign_unplace(
+      '*',
+      {
+          buffer = vim.fn.bufname(),
+          id = config.value.cursorID
+      }
+  )
+
   sc_debug.unplace_signs_conuter = sc_debug.unplace_signs_conuter + 1
 end
 
