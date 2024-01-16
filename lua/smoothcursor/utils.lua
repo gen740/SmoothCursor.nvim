@@ -57,7 +57,7 @@ sc.smoothcursor_start = function(init_fire)
 
   if config.value.show_last_positions then
       -- Store last positions
-      vim.api.nvim_create_autocmd({ 'InsertLeavePre' }, {
+      vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
         group = 'SmoothCursor',
         callback = function()
             local insertmode = vim.api.nvim_get_mode().mode

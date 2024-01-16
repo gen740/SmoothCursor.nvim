@@ -52,7 +52,11 @@ local function place_sign(position, name, priority)
   if position < buffer['w0'] or position > buffer['w$'] then
     return
   end
-  if name ~= nil then
+
+  -- if len == 0, then sign is undefined
+  local is_sign_defined = #vim.fn.sign_getdefined(name) > 0
+
+  if is_sign_defined and name ~= nil then
     vim.fn.sign_place(
       config.value.cursorID,
       'SmoothCursor',
