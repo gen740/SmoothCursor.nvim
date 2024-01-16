@@ -55,14 +55,14 @@ sc.smoothcursor_start = function(init_fire)
     end,
   })
 
-  if config.value.show_last_positions then
+  if config.value.show_last_positions == "enter" then
       -- Store last positions
       vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
         group = 'SmoothCursor',
         callback = function()
-            local insertmode = vim.api.nvim_get_mode().mode
+            local mode = vim.api.nvim_get_mode().mode
 
-            last_positions[insertmode] = vim.api.nvim_win_get_cursor(0)[1]
+            last_positions[mode] = vim.api.nvim_win_get_cursor(0)[1]
         end
       })
       vim.api.nvim_create_autocmd({ 'InsertEnter' }, {
@@ -71,6 +71,18 @@ sc.smoothcursor_start = function(init_fire)
             last_positions.insert = nil
         end
       })
+  elseif config.value.show_last_positions == "leave" then
+    -- Neovim always starts with normal mode, doesn't it?
+    local current_mode = "n"
+
+    vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
+      group = 'SmoothCursor',
+      callback = function()
+            last_positions[current_mode] = vim.api.nvim_win_get_cursor(0)[1]
+
+          current_mode = vim.api.nvim_get_mode().mode
+      end
+    })
   end
 
   smoothcursor_started = true
