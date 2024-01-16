@@ -63,11 +63,12 @@ local function sc_default()
 
     if callback.fancy_head_exists() then
       callback.place_sign(buffer['prev'], 'smoothcursor')
-    end
 
-    for name, line in pairs(last_positions) do
-      if line ~= nil then
-        callback.place_sign(line, 'smoothcursor_' .. name)
+      local current_buf = vim.api.nvim_get_current_buf()
+      for name, line in pairs(last_positions[tostring(current_buf)] or {}) do
+        if line ~= nil then
+          callback.place_sign(line, 'smoothcursor_' .. name)
+        end
       end
     end
 

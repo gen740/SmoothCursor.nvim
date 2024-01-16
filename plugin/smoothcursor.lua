@@ -40,13 +40,15 @@ vim.api.nvim_create_user_command('SmoothCursorDeleteSigns', utils.smoothcursor_d
 vim.api.nvim_create_user_command('SmoothCursorDebug', require('smoothcursor.debug').debug, {})
 
 -- Jump to last positions
+-- TODO: Add autocomplete
 vim.api.nvim_create_user_command(
     'SmoothCursorJump',
     function(opt)
         -- Get identifier from 
         local identifier = opt.fargs[1]
 
-        local last_position = last_positions[identifier]
+        local buffer = vim.api.nvim_get_current_buf()
+        local last_position = last_positions[buffer][identifier]
 
         if last_position == nil then
           vim.notify(string.format('No last position for identifier %s', identifier))

@@ -55,32 +55,56 @@ sc.smoothcursor_start = function(init_fire)
     end,
   })
 
-  if config.value.show_last_positions == "enter" then
-      -- Store last positions
-      vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
-        group = 'SmoothCursor',
-        callback = function()
-            local mode = vim.api.nvim_get_mode().mode
+  local last_pos_config = config.value.show_last_positions
 
-            last_positions[mode] = vim.api.nvim_win_get_cursor(0)[1]
-        end
-      })
-      vim.api.nvim_create_autocmd({ 'InsertEnter' }, {
-        group = 'SmoothCursor',
-        callback = function()
-            last_positions.insert = nil
-        end
-      })
-  elseif config.value.show_last_positions == "leave" then
+  if last_pos_config ~= nil then
+    -- Please note that casting the buffer numbers to strings is necessary, otherwise
+    -- lua will interpret the buffer numbers as array indices
+    -- Add / Remove buffers to `last_positions` table
+    vim.api.nvim_create_autocmd({ "BufAdd" }, {
+      group = 'SmoothCursor',
+      callback = function()
+          local buffer = vim.fn.bufnr("$")
+          last_positions[tostring(buffer)] = {}
+      end
+    })
+    vim.api.nvim_create_autocmd({ "BufDelete" }, {
+      group = 'SmoothCursor',
+      callback = function()
+          local buffer = vim.api.nvim_get_current_buf()
+          last_positions[tostring(buffer)] = nil
+      end
+    })
+    -- If starting into a buffer, the BufEnter event is not fired, but `VimEnter` is.
+    vim.api.nvim_create_autocmd({ 'VimEnter' }, {
+      group = 'SmoothCursor',
+      callback = function()
+          local buffer = vim.api.nvim_get_current_buf()
+          last_positions[tostring(buffer)] = {}
+      end
+    })
+
     -- Neovim always starts with normal mode, doesn't it?
     local current_mode = "n"
 
     vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
       group = 'SmoothCursor',
       callback = function()
-            last_positions[current_mode] = vim.api.nvim_win_get_cursor(0)[1]
+        local buffer = vim.api.nvim_get_current_buf()
+        local mode = vim.api.nvim_get_mode().mode
 
-          current_mode = vim.api.nvim_get_mode().mode
+          if last_positions[tostring(buffer)] == nil then
+            -- if is nil, the current buffer is not a text file (could be floating window for example)
+            -- we don't want to set the last position in this case
+            local x = 1
+          else
+            if last_pos_config == "enter" then
+              last_positions[tostring(buffer)][mode] = vim.api.nvim_win_get_cursor(0)[1]
+            else
+              last_positions[tostring(buffer)][current_mode] = vim.api.nvim_win_get_cursor(0)[1]
+              current_mode = vim.api.nvim_get_mode().mode
+            end
+          end
       end
     })
   end
