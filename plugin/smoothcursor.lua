@@ -1,6 +1,6 @@
 -- Define Commands
 local utils = require('smoothcursor.utils')
-local last_positions = require"smoothcursor.callbacks.default".last_positions
+local last_positions = require('smoothcursor.last_positions')
 
 vim.api.nvim_create_user_command('SmoothCursorStart', utils.smoothcursor_start, {})
 
@@ -44,11 +44,11 @@ vim.api.nvim_create_user_command('SmoothCursorDebug', require('smoothcursor.debu
 vim.api.nvim_create_user_command(
   'SmoothCursorJump',
   function(opt)
-    -- Get identifier from 
+    -- Get identifier from args
     local identifier = opt.fargs[1]
 
     local buffer = vim.api.nvim_get_current_buf()
-    local last_position = last_positions[buffer][identifier]
+    local last_position = last_positions.get_positions(buffer)[identifier]
 
     if last_position == nil then
       vim.notify(string.format('No last position for identifier %s', identifier))
@@ -56,9 +56,7 @@ vim.api.nvim_create_user_command(
     end
 
     -- Jump to last position
-    local current_char = vim.api.nvim_win_get_cursor(0)[2]
-
-    vim.api.nvim_win_set_cursor(0, { last_position, current_char })
+    vim.api.nvim_win_set_cursor(0, last_position)
   end,
   {
     nargs = 1,

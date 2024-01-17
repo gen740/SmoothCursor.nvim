@@ -61,6 +61,6 @@ return {
     disable_float_win = false,
     disabled_filetypes = nil,
     enabled_filetypes = nil,
-    show_last_positions = "leave",
+    show_last_positions = 'leave',
   },
 }
