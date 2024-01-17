@@ -2,9 +2,8 @@ local callback = require('smoothcursor.callbacks')
 local buffer = callback.buffer
 
 local config = require('smoothcursor.config')
+local last_positions = require'smoothcursor.last_positions'
 local debug_callback = require('smoothcursor.debug').debug_callback
-
-local last_positions = {}
 
 -- Default cursor callback. buffer["prev"] is always integer
 local function sc_default()
@@ -65,10 +64,11 @@ local function sc_default()
       callback.place_sign(buffer['prev'], 'smoothcursor')
 
       local current_buf = vim.api.nvim_get_current_buf()
-      for name, line in pairs(last_positions[tostring(current_buf)] or {}) do
-        if line ~= nil then
-          callback.place_sign(line, 'smoothcursor_' .. name)
-        end
+
+      for name, pos in pairs(last_positions.get_positions(current_buf)) do
+        local line = pos[1]
+
+        callback.place_sign(line, 'smoothcursor_' .. name)
       end
     end
 

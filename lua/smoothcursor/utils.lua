@@ -3,7 +3,7 @@ local smoothcursor_started = false
 local callback = require('smoothcursor.callbacks')
 local config = require('smoothcursor.config')
 local init = require('smoothcursor.init')
-local last_positions = require("smoothcursor.callbacks.default").last_positions
+local last_positions = require'smoothcursor.last_positions'
 local buffer_leaved = false
 
 --@param init_fire boolean
@@ -65,14 +65,15 @@ sc.smoothcursor_start = function(init_fire)
       group = 'SmoothCursor',
       callback = function()
           local buffer = vim.fn.bufnr("$")
-          last_positions[tostring(buffer)] = {}
+
+          last_positions.register_buffer(buffer)
       end
     })
     vim.api.nvim_create_autocmd({ "BufDelete" }, {
       group = 'SmoothCursor',
       callback = function()
           local buffer = vim.api.nvim_get_current_buf()
-          last_positions[tostring(buffer)] = nil
+          last_positions.unregister_buffer(buffer)
       end
     })
     -- If starting into a buffer, the BufEnter event is not fired, but `VimEnter` is.
@@ -80,7 +81,7 @@ sc.smoothcursor_start = function(init_fire)
       group = 'SmoothCursor',
       callback = function()
           local buffer = vim.api.nvim_get_current_buf()
-          last_positions[tostring(buffer)] = {}
+          last_positions.register_buffer(buffer)
       end
     })
 
@@ -93,18 +94,27 @@ sc.smoothcursor_start = function(init_fire)
         local buffer = vim.api.nvim_get_current_buf()
         local mode = vim.api.nvim_get_mode().mode
 
-          if last_positions[tostring(buffer)] == nil then
-            -- if is nil, the current buffer is not a text file (could be floating window for example)
-            -- we don't want to set the last position in this case
-            local x = 1
+        local last_pos = last_positions.get_positions(buffer)
+
+        -- if is nil, the current buffer is not a text file (could be floating window for example)
+        -- we don't want to set the last position in this case
+        if last_pos ~= nil then
+          if last_pos_config == "enter" then
+            last_positions.set_position(
+              buffer,
+              mode,
+              vim.api.nvim_win_get_cursor(0)
+            )
           else
-            if last_pos_config == "enter" then
-              last_positions[tostring(buffer)][mode] = vim.api.nvim_win_get_cursor(0)[1]
-            else
-              last_positions[tostring(buffer)][current_mode] = vim.api.nvim_win_get_cursor(0)[1]
-              current_mode = vim.api.nvim_get_mode().mode
-            end
+            last_positions.set_position(
+              buffer,
+              current_mode,
+              vim.api.nvim_win_get_cursor(0)
+            )
+
+            current_mode = vim.api.nvim_get_mode().mode
           end
+        end
       end
     })
   end
