@@ -179,7 +179,4 @@ end
 return {
   setup = setup,
   init_and_start = init_and_start,
-  get_last_positions = function()
-    return require'smoothcursor.callbacks.default'.last_positions
-  end,
 }

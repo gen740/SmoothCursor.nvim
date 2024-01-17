@@ -2,7 +2,7 @@ local callback = require('smoothcursor.callbacks')
 local buffer = callback.buffer
 
 local config = require('smoothcursor.config')
-local last_positions = require'smoothcursor.last_positions'
+local last_positions = require('smoothcursor.last_positions')
 local debug_callback = require('smoothcursor.debug').debug_callback
 
 -- Default cursor callback. buffer["prev"] is always integer
@@ -78,5 +78,4 @@ end
 
 return {
   sc_default = sc_default,
-  last_positions = last_positions,
 }

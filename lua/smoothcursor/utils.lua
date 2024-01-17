@@ -64,24 +64,26 @@ sc.smoothcursor_start = function(init_fire)
     vim.api.nvim_create_autocmd({ "BufAdd" }, {
       group = 'SmoothCursor',
       callback = function()
-          local buffer = vim.fn.bufnr("$")
+        local buffer = vim.fn.bufnr("$")
 
-          last_positions.register_buffer(buffer)
+        last_positions.register_buffer(buffer)
       end
     })
     vim.api.nvim_create_autocmd({ "BufDelete" }, {
       group = 'SmoothCursor',
       callback = function()
-          local buffer = vim.api.nvim_get_current_buf()
-          last_positions.unregister_buffer(buffer)
+        local buffer = vim.api.nvim_get_current_buf()
+
+        last_positions.unregister_buffer(buffer)
       end
     })
     -- If starting into a buffer, the BufEnter event is not fired, but `VimEnter` is.
     vim.api.nvim_create_autocmd({ 'VimEnter' }, {
       group = 'SmoothCursor',
       callback = function()
-          local buffer = vim.api.nvim_get_current_buf()
-          last_positions.register_buffer(buffer)
+        local buffer = vim.api.nvim_get_current_buf()
+
+        last_positions.register_buffer(buffer)
       end
     })
 

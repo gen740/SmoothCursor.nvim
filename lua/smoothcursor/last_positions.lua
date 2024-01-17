@@ -4,7 +4,7 @@ local last_positions = {}
 ---@param buffer number
 ---@return string
 local function format_buf(buffer)
-    return tostring(buffer)
+  return tostring(buffer)
 end
 
 ---Set the last position of the cursor for a buffer
@@ -12,11 +12,11 @@ end
 ---@param mode string
 ---@param pos number[]
 local function set_position(buffer, mode, pos)
-    if last_positions[format_buf(buffer)] == nil then
-        return
-    end
+  if last_positions[format_buf(buffer)] == nil then
+      return
+  end
 
-    last_positions[format_buf(buffer)][mode] = pos
+  last_positions[format_buf(buffer)][mode] = pos
 end
 
 ---Get the last positions for a buffer.
@@ -24,7 +24,7 @@ end
 ---@param buffer number
 ---@return LastPositionsInfo
 local function get_positions(buffer)
-    return last_positions[format_buf(buffer)] or {}
+  return last_positions[format_buf(buffer)] or {}
 end
 
 ---Register a buffer to be tracked
@@ -32,17 +32,17 @@ end
 ---last positions (such as floating windows for example).
 ---@param buffer any
 local function register_buffer(buffer)
-    last_positions[format_buf(buffer)] = {}
+  last_positions[format_buf(buffer)] = {}
 end
 
 local function unregister_buffer(buffer)
-    last_positions[format_buf(buffer)] = nil
+  last_positions[format_buf(buffer)] = nil
 end
 
 return {
-    last_positions = last_positions,
-    set_position = set_position,
-    get_positions = get_positions,
-    register_buffer = register_buffer,
-    unregister_buffer = unregister_buffer,
+  last_positions = last_positions,
+  set_position = set_position,
+  get_positions = get_positions,
+  register_buffer = register_buffer,
+  unregister_buffer = unregister_buffer,
 }
