@@ -72,7 +72,7 @@ sc.smoothcursor_start = function(init_fire)
     vim.api.nvim_create_autocmd({ 'BufDelete' }, {
       group = 'SmoothCursor',
       callback = function()
-        local buffer = vim.api.nvim_get_current_buf()
+        local buffer = vim.fn.bufnr('$')
 
         last_positions.unregister_buffer(buffer)
       end
