@@ -31,12 +31,7 @@ local function unplace_signs(with_timer_stop)
   if with_timer_stop == true then
     sc_timer:abort()
   end
-
-  vim.fn.sign_unplace('*', {
-    buffer = vim.fn.bufname(),
-    id = config.value.cursorID,
-  })
-
+  vim.fn.sign_unplace('SmoothCursor', { buffer = vim.fn.bufname() })
   sc_debug.unplace_signs_conuter = sc_debug.unplace_signs_conuter + 1
 end
 
@@ -55,7 +50,7 @@ local function place_sign(position, name, priority)
 
   if is_sign_defined and name ~= nil then
     vim.fn.sign_place(
-      config.value.cursorID,
+      0,
       'SmoothCursor',
       name,
       vim.fn.bufname(),

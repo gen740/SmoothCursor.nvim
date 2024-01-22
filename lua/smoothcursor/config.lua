@@ -50,7 +50,6 @@ return {
 
     always_redraw = true,
     flyin_effect = nil,
-    cursorID = 23874823,
     intervals = 35,
     timeout = 3000,
     type = 'default',
