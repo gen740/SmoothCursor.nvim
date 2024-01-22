@@ -47,7 +47,6 @@ local config = require('smoothcursor.config')
 ---@field flyin_effect string|nil
 ---@field fancy FancyConfig
 ---@field matrix MatrixConfig
----@field cursorID integer
 ---@field intervals integer
 ---@field timeout integer
 ---@field type string
@@ -58,7 +57,6 @@ local config = require('smoothcursor.config')
 ---@field disable_float_win boolean
 ---@field disabled_filetypes string[]|nil
 ---@field enabled_filetypes string[]|nil
-
 
 -- local function define_signs(name, cursor, texthl,  )
 
