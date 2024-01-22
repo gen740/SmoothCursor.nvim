@@ -13,7 +13,7 @@ end
 ---@param pos number[]
 local function set_position(buffer, mode, pos)
   if last_positions[format_buf(buffer)] == nil then
-      return
+    return
   end
 
   last_positions[format_buf(buffer)][mode] = pos

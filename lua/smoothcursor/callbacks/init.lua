@@ -32,13 +32,10 @@ local function unplace_signs(with_timer_stop)
     sc_timer:abort()
   end
 
-  vim.fn.sign_unplace(
-    '*',
-    {
-      buffer = vim.fn.bufname(),
-      id = config.value.cursorID
-    }
-  )
+  vim.fn.sign_unplace('*', {
+    buffer = vim.fn.bufname(),
+    id = config.value.cursorID,
+  })
 
   sc_debug.unplace_signs_conuter = sc_debug.unplace_signs_conuter + 1
 end

@@ -67,7 +67,7 @@ sc.smoothcursor_start = function(init_fire)
         local buffer = vim.fn.bufnr('$')
 
         last_positions.register_buffer(buffer)
-      end
+      end,
     })
     vim.api.nvim_create_autocmd({ 'BufDelete' }, {
       group = 'SmoothCursor',
@@ -75,7 +75,7 @@ sc.smoothcursor_start = function(init_fire)
         local buffer = vim.fn.bufnr('$')
 
         last_positions.unregister_buffer(buffer)
-      end
+      end,
     })
     -- If starting into a buffer, the BufEnter event is not fired, but `VimEnter` is.
     vim.api.nvim_create_autocmd({ 'VimEnter' }, {
@@ -84,7 +84,7 @@ sc.smoothcursor_start = function(init_fire)
         local buffer = vim.api.nvim_get_current_buf()
 
         last_positions.register_buffer(buffer)
-      end
+      end,
     })
 
     -- Neovim always starts with normal mode, doesn't it?
@@ -102,22 +102,14 @@ sc.smoothcursor_start = function(init_fire)
         -- we don't want to set the last position in this case
         if last_pos ~= nil then
           if last_pos_config == 'enter' then
-            last_positions.set_position(
-              buffer,
-              mode,
-              vim.api.nvim_win_get_cursor(0)
-            )
+            last_positions.set_position(buffer, mode, vim.api.nvim_win_get_cursor(0))
           else
-            last_positions.set_position(
-              buffer,
-              current_mode,
-              vim.api.nvim_win_get_cursor(0)
-            )
+            last_positions.set_position(buffer, current_mode, vim.api.nvim_win_get_cursor(0))
 
             current_mode = vim.api.nvim_get_mode().mode
           end
         end
-      end
+      end,
     })
   end
 
