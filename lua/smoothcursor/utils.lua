@@ -17,7 +17,7 @@ sc.smoothcursor_start = function(init_fire)
 
   vim.api.nvim_create_augroup('SmoothCursor', { clear = true })
 
-  vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter' }, {
+  vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter', 'TermLeave' }, {
     group = 'SmoothCursor',
     callback = function()
       callback.switch_buf()
