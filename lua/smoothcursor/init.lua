@@ -57,6 +57,15 @@ local config = require('smoothcursor.config')
 ---@field disable_float_win boolean
 ---@field disabled_filetypes string[]|nil
 ---@field enabled_filetypes string[]|nil
+---@field show_last_positions string|nil -- "enter" | "leave"
+
+-- Used for debugging, doesn't contain all the actual fields.
+-- More meant to be used as an example.
+---@class LastPositionsInfo
+---@field i number[]
+---@field n number[]
+---@field V number[]
+---@field v number[]
 
 -- local function define_signs(name, cursor, texthl,  )
 
