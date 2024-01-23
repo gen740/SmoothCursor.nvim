@@ -27,11 +27,13 @@ local function buffer_set_all(value)
 end
 
 ---@param with_timer_stop? boolean
-local function unplace_signs(with_timer_stop)
+---@param group? string
+local function unplace_signs(with_timer_stop, group)
+  group = group or 'SmoothCursor'
   if with_timer_stop == true then
     sc_timer:abort()
   end
-  vim.fn.sign_unplace('SmoothCursor', { buffer = vim.fn.bufname() })
+  vim.fn.sign_unplace(group, { buffer = vim.fn.bufname() })
   sc_debug.unplace_signs_conuter = sc_debug.unplace_signs_conuter + 1
 end
 
@@ -39,8 +41,12 @@ end
 ---@param position number
 ---@param name? string
 ---@param priority? number
-local function place_sign(position, name, priority)
+---@param group? string
+local function place_sign(position, name, priority, group)
+  group = group or 'SmoothCursor'
   position = math.floor(position + 0.5)
+  buffer['w0'] = vim.fn.line('w0')
+  buffer['w$'] = vim.fn.line('w$')
   if position < buffer['w0'] or position > buffer['w$'] then
     return
   end
@@ -51,7 +57,7 @@ local function place_sign(position, name, priority)
   if is_sign_defined and name ~= nil then
     vim.fn.sign_place(
       0,
-      'SmoothCursor',
+      group,
       name,
       vim.fn.bufname(),
       { lnum = position, priority = priority ~= nil and priority or config.value.priority }

@@ -1,5 +1,7 @@
 local last_positions = {}
 
+local callback = require('smoothcursor.callbacks')
+
 ---Format a buffer for saving it
 ---@param buffer number
 ---@return string
@@ -39,10 +41,19 @@ local function unregister_buffer(buffer)
   last_positions[format_buf(buffer)] = nil
 end
 
+local function replace_signs()
+  callback.unplace_signs(false, 'SmoothCursorLastPositions')
+  for name, pos in pairs(get_positions(vim.api.nvim_get_current_buf())) do
+    local line = pos[1]
+    callback.place_sign(line, 'smoothcursor_' .. name, nil, 'SmoothCursorLastPositions')
+  end
+end
+
 return {
   last_positions = last_positions,
   set_position = set_position,
   get_positions = get_positions,
+  replace_signs = replace_signs,
   register_buffer = register_buffer,
   unregister_buffer = unregister_buffer,
 }
