@@ -23,7 +23,10 @@ sc.smoothcursor_start = function(init_fire)
       callback.switch_buf()
       callback.set_buffer_to_prev_pos()
       callback.lazy_detect()
-      vim.defer_fn(callback.sc_callback, 0) -- for lazy filetype detect
+      vim.defer_fn(function()
+        callback.sc_callback()
+        last_positions.replace_signs()
+      end, 0) -- for lazy filetype detect
     end,
   })
 
@@ -44,7 +47,8 @@ sc.smoothcursor_start = function(init_fire)
     group = 'SmoothCursor',
     callback = function()
       buffer_leaved = true
-      callback.unplace_signs(true)
+      callback.unplace_signs(true, 'SmoothCursor')
+      callback.unplace_signs(true, 'SmoothCursorLastPositions')
       callback.lazy_detect()
       if config.value.flyin_effect == 'bottom' then
         callback.buffer['prev'] = vim.fn.line('$')
@@ -108,6 +112,7 @@ sc.smoothcursor_start = function(init_fire)
 
             current_mode = vim.api.nvim_get_mode().mode
           end
+          last_positions.replace_signs()
         end
       end,
     })
@@ -126,7 +131,8 @@ sc.smoothcursor_stop = function(erase_signs)
     return
   end
   if erase_signs then
-    callback.unplace_signs(true)
+    callback.unplace_signs(true, 'SmoothCursor')
+    callback.unplace_signs(true, 'SmoothCursorLastPositions')
   end
   vim.api.nvim_del_augroup_by_name('SmoothCursor')
   smoothcursor_started = false
@@ -145,7 +151,8 @@ sc.smoothcursor_status = function()
 end
 
 sc.smoothcursor_delete_signs = function()
-  callback.unplace_signs()
+  callback.unplace_signs(false, 'SmoothCursor')
+  callback.unplace_signs(false, 'SmoothCursorLastPositions')
 end
 
 sc.with_smoothcursor = function(func, ...)
