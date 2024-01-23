@@ -95,6 +95,11 @@ require('smoothcursor').setup({
     disable_float_win = false,  -- Disable in floating windows
     enabled_filetypes = nil,    -- Enable only for specific file types, e.g., { "lua", "vim" }
     disabled_filetypes = nil,   -- Disable for these file types, ignored if enabled_filetypes is set. e.g., { "TelescopePrompt", "NvimTree" }
+    -- Show the position of the latest input mode positions. 
+    -- A value of "enter" means the position will be updated when entering the mode.
+    -- A value of "leave" means the position will be updated when leaving the mode.
+    -- `nil` = disabled
+    show_last_positions = nil,  
 })
 ```
 
@@ -119,6 +124,7 @@ https://github.com/gen740/SmoothCursor.nvim/assets/54583542/ba3f90b1-e9ff-4729-b
 | :SmoothCursorFancyOn           | Turn on fancy mode                               |
 | :SmoothCursorFancyOff          | Turn off fancy mode                              |
 | :SmoothCursorDeleteSigns       | Delete all signs if exist                        |
+| :SmoothCursorJump <mode>       | Jump to the given <mode>'s last position         |
 
 ## FAQs
 
@@ -154,4 +160,20 @@ autocmd({ 'ModeChanged' }, {
 ```
 
 https://user-images.githubusercontent.com/54583542/220056425-a7698013-7173-4247-9d40-d468b24df47a.mov
+
+
+### How do I add icons (signs) for mode's last positions?
+
+You can decide which modes should be added. 
+Define the `smoothcursor_<mode>` sign group and set your icon.
+Each `<mode>` is a lowercase letter, e.g., `n` for normal mode, `i` for insert mode, etc.
+
+**example**
+```lua
+vim.fn.sign_define('smoothcursor_v', { text = ' ' })
+vim.fn.sign_define('smoothcursor_V', { text = '' })
+vim.fn.sign_define('smoothcursor_i', { text = '' })
+vim.fn.sign_define('smoothcursor_�', { text = '' })
+vim.fn.sign_define('smoothcursor_R', { text = '󰊄' })
+```
 

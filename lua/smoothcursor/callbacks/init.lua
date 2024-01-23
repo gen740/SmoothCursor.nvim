@@ -21,7 +21,6 @@ local function buffer_set_all(value)
   buffer['prev'] = value
   buffer:all(value)
 
-  -- Debug
   sc_debug.debug_callback(buffer, { 'Buffer Reset' }, function()
     sc_debug.reset_counter = sc_debug.reset_counter + 1
   end)
@@ -45,7 +44,11 @@ local function place_sign(position, name, priority)
   if position < buffer['w0'] or position > buffer['w$'] then
     return
   end
-  if name ~= nil then
+
+  -- if len == 0, then sign is undefined
+  local is_sign_defined = #vim.fn.sign_getdefined(name) > 0
+
+  if is_sign_defined and name ~= nil then
     vim.fn.sign_place(
       0,
       'SmoothCursor',
