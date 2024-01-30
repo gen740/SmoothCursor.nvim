@@ -75,7 +75,7 @@ local function smoothcursor_define_signs(args)
   -- from disappearing
   vim.fn.sign_define('smoothcursor_dummy', {
     text = ' ',
-    texthl = 'Normal',
+    texthl = 'SignColumn',
   })
 
   if args.type == 'matrix' then
