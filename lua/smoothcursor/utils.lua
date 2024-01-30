@@ -189,6 +189,21 @@ sc.smoothcursor_fancy_off = function()
   sc.smoothcursor_fancy_set(false)
 end
 
+---@param bufname string
+sc.smoothcursor_redraw = function(bufname)
+  bufname = bufname or vim.fn.bufname()
+  for _, sign in ipairs(vim.fn.sign_getplaced(bufname, { group = 'SmoothCursor' })[1].signs) do
+    vim.fn.sign_unplace('SmoothCursor', { buffer = bufname, id = sign.id })
+    vim.fn.sign_place(
+      0,
+      'SmoothCursor',
+      sign.name,
+      bufname,
+      { lnum = sign.lnum, priority = config.value.priority }
+    )
+  end
+end
+
 sc.set_smoothcursor_highlight = function()
   if vim.api.nvim_get_namespaces().SmoothCursor == nil then
     vim.api.nvim_create_namespace('SmoothCursor')
