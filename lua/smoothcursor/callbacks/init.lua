@@ -50,11 +50,18 @@ local function place_sign(position, name, priority, group)
   if position < buffer['w0'] or position > buffer['w$'] then
     return
   end
+  local bufname = vim.fn.bufname()
 
   -- if len == 0, then sign is undefined
   local is_sign_defined = #vim.fn.sign_getdefined(name) > 0
 
   if is_sign_defined and name ~= nil then
+    for _, sign in ipairs(vim.fn.sign_getplaced(bufname, { group = 'SmoothCursor' })[1].signs) do
+      vim.print(sign)
+      if sign.lnum == position then
+        vim.fn.sign_unplace('SmoothCursor', { buffer = bufname, id = sign.id })
+      end
+    end
     vim.fn.sign_place(
       0,
       group,
@@ -80,7 +87,7 @@ end
 
 local function replace_signs()
   unplace_signs()
-  place_sign(buffer['.'], 'smoothcursor_dummy', -999)
+  place_sign(buffer['.'], 'smoothcursor_dummy')
   for i = buffer.length, 2, -1 do
     if
       not (
