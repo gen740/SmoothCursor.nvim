@@ -21,7 +21,7 @@ local function sc_default()
 
   local value = math.abs(buffer['diff'])
 
-  if value > config.value.threshold and value < config.value.max_threshold then
+  if value > config.value.threshold and value <= config.value.max_threshold then
     local counter = 1
     callback.sc_timer:post(function()
       buffer['.'] = vim.fn.line('.')

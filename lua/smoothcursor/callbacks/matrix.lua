@@ -22,7 +22,7 @@ local function sc_matrix()
 
   if
     config.value.matrix.unstop
-    or (value > config.value.threshold and value < config.value.max_threshold)
+    or (value > config.value.threshold and value <= config.value.max_threshold)
   then
     local counter = 1
     callback.sc_timer:post(function()
