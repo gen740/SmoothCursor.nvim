@@ -51,6 +51,7 @@ local config = require('smoothcursor.config')
 ---@field timeout integer
 ---@field type string
 ---@field threshold integer
+---@field max_threshold integer
 ---@field speed integer
 ---@field autostart boolean
 ---@field priority integer

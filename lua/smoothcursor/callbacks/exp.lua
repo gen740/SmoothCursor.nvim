@@ -17,7 +17,10 @@ local function sc_exp()
   buffer['diff'] = math.min(buffer['diff'], vim.fn.winheight(0) * 2)
   buffer['w0'] = vim.fn.line('w0')
   buffer['w$'] = vim.fn.line('w$')
-  if math.abs(buffer['diff']) > config.value.threshold then
+
+  local value = math.abs(buffer['diff'])
+
+  if value > config.value.threshold and value < config.value.max_threshold then
     local counter = 1
     callback.sc_timer:post(function()
       buffer['.'] = vim.fn.line('.')
