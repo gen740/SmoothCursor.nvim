@@ -80,6 +80,7 @@ setup({opts})
             priority = 10,              -- Set marker priority
             timeout = 3000,             -- Timeout for animations in milliseconds
             threshold = 3,              -- Animate only if cursor moves more than this many lines
+	    max_threshold = 500         -- If you move more than this many lines, don't animate
             disable_float_win = false,  -- Disable in floating windows
             enabled_filetypes = nil,    -- Enable only for specific file types, e.g., { "lua", "vim" }
             disabled_filetypes = nil,   -- Disable for these file types, ignored if enabled_filetypes is set. e.g., { "TelescopePrompt", "NvimTree" }
