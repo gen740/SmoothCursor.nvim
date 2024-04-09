@@ -54,7 +54,7 @@ return {
     timeout = 3000,
     type = 'default',
     threshold = 3,
-    max_threshold = 500,
+    max_threshold = nil,
     speed = 25,
     autostart = true,
     priority = 10,
