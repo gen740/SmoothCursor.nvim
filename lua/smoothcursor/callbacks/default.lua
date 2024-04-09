@@ -14,14 +14,15 @@ local function sc_default()
   if buffer['prev'] == nil then
     buffer['prev'] = buffer['.']
   end
-  buffer['diff'] = buffer['prev'] - buffer['.']
-  buffer['diff'] = math.min(buffer['diff'], vim.fn.winheight(0) * 2)
+  local absolute_diff = math.abs(buffer['prev'] - buffer['.'])
+  local relative_diff = math.min(absolute_diff, vim.fn.winheight(0) * 2)
   buffer['w0'] = vim.fn.line('w0')
   buffer['w$'] = vim.fn.line('w$')
 
-  local value = math.abs(buffer['diff'])
-
-  if value > config.value.threshold and value <= config.value.max_threshold then
+  if
+    relative_diff > config.value.threshold
+    and (config.value.max_threshold == nil or absolute_diff <= config.value.max_threshold)
+  then
     local counter = 1
     callback.sc_timer:post(function()
       buffer['.'] = vim.fn.line('.')
