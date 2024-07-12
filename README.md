@@ -92,7 +92,7 @@ require('smoothcursor').setup({
     priority = 10,              -- Set marker priority
     timeout = 3000,             -- Timeout for animations in milliseconds
     threshold = 3,              -- Animate only if cursor moves more than this many lines
-    max_threshold = nil         -- If you move more than this many lines, don't animate (if `nil`, deactivate check)
+    max_threshold = nil,        -- If you move more than this many lines, don't animate (if `nil`, deactivate check)
     disable_float_win = false,  -- Disable in floating windows
     enabled_filetypes = nil,    -- Enable only for specific file types, e.g., { "lua", "vim" }
     disabled_filetypes = nil,   -- Disable for these file types, ignored if enabled_filetypes is set. e.g., { "TelescopePrompt", "NvimTree" }
